@@ -28,7 +28,9 @@ export const metadata: Metadata = {
 
   // URLs canónicas (evita contenido duplicado)
   metadataBase: new URL(SITE_URL),
-  canonical: SITE_URL,
+  alternates: {
+    canonical: SITE_URL,
+  },
 
   // Open Graph (para redes sociales y compartir)
   openGraph: {

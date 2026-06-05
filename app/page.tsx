@@ -12,7 +12,7 @@
  */
 
 import Image from 'next/image';
-import Link from 'next/link';
+import Navbar from '@/components/Navbar';
 import { FEATURES, PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
 import { SITE_NAME, ROUTES, WHATSAPP_LINK } from '@/lib/config';
 
@@ -25,36 +25,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#05080f]">
-      {/* Barra de navegación principal */}
-      <nav className="sticky top-0 z-50 border-b border-cyan-400/10 bg-slate-950/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4">
-          {/* Logo - Clickeable para ir a home */}
-          <Link href={ROUTES.home} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <Image
-                src="/Imagenes/Group.png"
-                alt={`${SITE_NAME} - Logo`}
-                width={160}
-                height={48}
-                priority
-                className="h-12 w-auto md:h-14"
-              />
-          </Link>
-          <div className="hidden items-center gap-8 text-sm text-slate-400 md:flex">
-            <a href={ROUTES.products} className="hover:text-cyan-300">Torres</a>
-            <a href={ROUTES.quiz} className="hover:text-cyan-300">Quiz</a>
-            <a href={ROUTES.peripherals} className="hover:text-cyan-300">Periféricos</a>
-            <a href={ROUTES.brands} className="hover:text-cyan-300">Marcas</a>
-          </div>
-          <a
-            href={WHATSAPP_LINK}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:bg-emerald-600 transition-colors"
-          >
-            Asesoría
-          </a>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* HERO SECTION - Introducción principal */}
       <section className="relative overflow-hidden px-6 py-20">
@@ -76,7 +47,7 @@ export default function Home() {
             Tecnología minimalista, rendimiento potente
           </span>
           <h1 className="max-w-3xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-white sm:text-6xl">
-           Tu setup <span className="text-cyan-300">tus reglas</span> a otro nivel
+           Tu setup, <span className="text-cyan-300">tus reglas.</span>
           </h1>
           <p className="max-w-2xl text-base text-slate-400 sm:text-lg">
              ¿No sabes qué PC comprar? Encuentra la tuya en 2 minutos. Responde 7 preguntas y te recomendamos el equipo exacto para tu uso y presupuesto.
