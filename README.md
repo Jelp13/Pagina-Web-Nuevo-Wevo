@@ -277,5 +277,5 @@ Proyecto propietario de **Nuevo Wevo** © 2026. Todos los derechos reservados.
 - ✅ Performance optimizado
 
 ---
-
+Creado por el desarrollador Juan Esteban Leon Padilla
 **Último update:** Junio 2026
