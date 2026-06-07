@@ -11,6 +11,7 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL, SITE_KEYWORDS, COMPANY_INFO } from '@/lib/config';
+import WhatsAppButton from '@/components/WhatsAppBubble';
 
 // Configuración de metadatos para SEO
 export const metadata: Metadata = {
@@ -145,8 +146,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="bg-[#05080f] text-[#eef4ff] antialiased">
-        {/* Contenido principal */}
         {children}
+        <WhatsAppButton />
       </body>
     </html>
   );

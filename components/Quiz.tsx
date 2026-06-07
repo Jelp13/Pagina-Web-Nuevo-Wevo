@@ -5,10 +5,7 @@ import { useMemo, useState } from 'react';
 type Question = {
   q: string;
   opts: string[];
-  multiple?: boolean;
 };
-
-type Answer = number | number[] | null;
 
 type Result = {
   name: string;
@@ -18,7 +15,7 @@ type Result = {
 
 type QuizProps = {
   questions?: Question[];
-  getResult?: (answers: Answer[]) => Result;
+  getResult?: (answers: number[]) => Result;
   title?: string;
   subtitle?: string;
 };
@@ -74,7 +71,7 @@ const defaultResults: Record<string, Result> = {
   },
 };
 
-const defaultGetResult = (answers: Answer[]) => {
+const defaultGetResult = (answers: number[]) => {
   const [, presupuesto, experiencia, valor] = answers;
 
   if (valor === 1) return defaultResults.estilo;
@@ -90,48 +87,29 @@ const defaultGetResult = (answers: Answer[]) => {
 };
 
 export default function Quiz({ questions = defaultQuestions, getResult = defaultGetResult, title, subtitle }: QuizProps) {
-  const [answers, setAnswers] = useState<Answer[]>(
-    Array(questions.length).fill(null).map((_, i) => (questions[i]?.multiple ? [] : null))
-  );
+  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
   const [current, setCurrent] = useState(0);
   const [completed, setCompleted] = useState(false);
 
   const selected = answers[current];
   const progress = Math.round(((current + 1) / questions.length) * 100);
-  const isMultiple = questions[current]?.multiple ?? false;
 
   const result = useMemo(() => {
     if (!completed) return null;
-    return getResult(answers);
+    const safeAnswers = answers.map((answer) => (answer === null ? 0 : answer));
+    return getResult(safeAnswers as number[]);
   }, [answers, completed, getResult]);
 
   const handleSelect = (index: number) => {
     const nextAnswers = [...answers];
-    if (isMultiple) {
-      const currentArray = Array.isArray(selected) ? selected : [];
-      if (currentArray.includes(index)) {
-        nextAnswers[current] = currentArray.filter((i) => i !== index);
-      } else {
-        nextAnswers[current] = [...currentArray, index];
-      }
-    } else {
-      nextAnswers[current] = index;
-    }
+    nextAnswers[current] = index;
     setAnswers(nextAnswers);
   };
 
   const handleNext = () => {
-    if (isMultiple) {
-      const currentArray = Array.isArray(selected) ? selected : [];
-      if (currentArray.length === 0) {
-        window.alert('Selecciona al menos una opción para continuar.');
-        return;
-      }
-    } else {
-      if (selected == null) {
-        window.alert('Selecciona una opción para continuar.');
-        return;
-      }
+    if (selected == null) {
+      window.alert('Selecciona una opción para continuar.');
+      return;
     }
 
     if (current === questions.length - 1) {
@@ -149,7 +127,7 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
   };
 
   const handleRestart = () => {
-    setAnswers(Array(questions.length).fill(null).map((_, i) => (questions[i]?.multiple ? [] : null)));
+    setAnswers(Array(questions.length).fill(null));
     setCurrent(0);
     setCompleted(false);
   };
@@ -170,39 +148,20 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
             {subtitle ? <p className="mx-auto mt-4 max-w-2xl text-slate-400">{subtitle}</p> : null}
           </div>
           <div className="grid gap-4">
-            {questions[current].opts.map((option, index) => {
-              const isSelected = isMultiple
-                ? (Array.isArray(selected) && selected.includes(index))
-                : selected === index;
-
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => handleSelect(index)}
-                  className={`rounded-3xl border px-5 py-4 text-left text-sm transition-colors ${
-                    isSelected
-                      ? 'border-cyan-300/60 bg-cyan-300/10 text-white'
-                      : 'border-slate-700 bg-slate-950/80 text-slate-300 hover:border-cyan-300/20 hover:bg-slate-900'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    {isMultiple && (
-                      <div
-                        className={`h-5 w-5 rounded border-2 flex items-center justify-center ${
-                          isSelected
-                            ? 'border-cyan-300 bg-cyan-300'
-                            : 'border-slate-500'
-                        }`}
-                      >
-                        {isSelected && <span className="text-slate-950 text-sm font-bold">✓</span>}
-                      </div>
-                    )}
-                    {option}
-                  </div>
-                </button>
-              );
-            })}
+            {questions[current].opts.map((option, index) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => handleSelect(index)}
+                className={`rounded-3xl border px-5 py-4 text-left text-sm transition-colors ${
+                  selected === index
+                    ? 'border-cyan-300/60 bg-cyan-300/10 text-white'
+                    : 'border-slate-700 bg-slate-950/80 text-slate-300 hover:border-cyan-300/20 hover:bg-slate-900'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <button

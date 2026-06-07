@@ -13,6 +13,7 @@
 
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
+import TikTokSection from '@/components/TikTokSection';
 import { FEATURES, PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
 import { SITE_NAME, ROUTES, WHATSAPP_LINK } from '@/lib/config';
 
@@ -76,6 +77,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <TikTokSection />
 
       {/* PRODUCTS SECTION - Catálogo de torres */}
       <section id="products-anchor" className="mx-auto max-w-[1180px] px-6 py-16">
