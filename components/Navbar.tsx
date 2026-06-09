@@ -41,7 +41,8 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-cyan-400/10 bg-slate-950/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4">
+      <div className="mx-auto grid max-w-[1180px] grid-cols-[auto_1fr_auto] items-center px-6 py-2.5">
+
         <Link href={ROUTES.home} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <Image
             src="/Imagenes/Group.png"
@@ -49,11 +50,11 @@ export default function Navbar() {
             width={160}
             height={48}
             priority
-            className="h-12 w-auto md:h-14"
+            className="h-14 w-auto md:h-14"
           />
         </Link>
 
-        <div className="hidden items-center gap-8 text-xl text-slate-400 md:flex">
+        <div className="hidden items-center justify-center gap-8 ml-[-70px] text-xl text-slate-400 md:flex">
           {navigation.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-cyan-300 transition-colors">
               {item.label}
@@ -61,7 +62,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center gap-3">
           <CartButton />
 
           <button

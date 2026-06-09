@@ -109,8 +109,6 @@ export default function Home() {
         </div>
       </section>
 
-      <TikTokSection />
-
       {/* PRODUCTS SECTION - Catálogo de torres */}
       <section id="products-anchor" className="mx-auto max-w-[1180px] px-6 py-16">
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -132,6 +130,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <TikTokSection />
 
       {/* QUIZ PROMO SECTION - Promoción del recomendador */}
       <section className="mx-auto max-w-[1180px] px-6 py-10">
