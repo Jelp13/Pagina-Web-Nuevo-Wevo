@@ -186,6 +186,7 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
           <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Resultado</p>
           <h3 className="text-3xl font-semibold text-white">{result?.name}</h3>
           <p className="mx-auto max-w-xl text-slate-400">{result?.desc}</p>
+          <p className="mx-auto max-w-xl text-lg text-cyan-400 mt-2">  Si no es lo que buscabas, no te preocupes, contáctanos y te cotizaremos una torre que se acomode a ti.</p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <a
               href={result?.url}
@@ -202,6 +203,12 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
             >
               Reiniciar
             </button>
+             <a
+              href="https://wa.me/573001234567"
+              target="_blank"
+              rel="norteferrer"
+              className="rounded-full border border-green-400/60 bg-green-500/25 px-6 py-3 text-sm font-semibold text-green-300 flex items-center justify-center transition-colors"
+              >Contactanos</a>
           </div>
         </div>
       )}
