@@ -18,13 +18,11 @@
     "jsx": "preserve",
     "incremental": true,
     "module": "esnext",
-    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./*"
       ]
     },
-    "ignoreDeprecations": "6.0",
     "plugins": [
       {
         "name": "next"

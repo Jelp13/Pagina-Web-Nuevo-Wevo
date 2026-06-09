@@ -12,6 +12,7 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL, SITE_KEYWORDS, COMPANY_INFO } from '@/lib/config';
 import WhatsAppButton from '@/components/WhatsAppBubble';
+import CartDrawer from '@/components/CartDrawer';
 
 // Configuración de metadatos para SEO
 export const metadata: Metadata = {
@@ -147,6 +148,7 @@ export default function RootLayout({
       </head>
       <body className="bg-[#05080f] text-[#eef4ff] antialiased">
         {children}
+        <CartDrawer />
         <WhatsAppButton />
       </body>
     </html>

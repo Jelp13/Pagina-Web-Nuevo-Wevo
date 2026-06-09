@@ -14,6 +14,7 @@
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import TikTokSection from '@/components/TikTokSection';
+import ProductCard from '@/components/ProductCard';
 import { FEATURES, PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
 import { SITE_NAME, ROUTES, WHATSAPP_LINK } from '@/lib/config';
 
@@ -28,39 +29,69 @@ export default function Home() {
     <main className="min-h-screen bg-[#05080f]">
       <Navbar />
 
-      {/* HERO SECTION - Introducción principal */}
-      <section className="relative overflow-hidden px-6 py-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_35%,rgba(93,213,255,0.14),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(93,213,255,0.08),transparent_20%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.05),transparent_24%)]" />
-        {/* Logo de marca en segundo plano (debajo del texto) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* HERO SECTION - Cinematográfico con imagen de fondo */}
+      <section className="relative flex min-h-[67vh] items-center overflow-hidden">
+
+        {/*
+         * ── CAPA MULTIMEDIA ──────────────────────────────────────────────
+         * Para cambiar a VIDEO en el futuro, reemplaza el bloque <Image>
+         * con el siguiente snippet y elimina el <Image>:
+         *
+         *   <video
+         *     autoPlay muted loop playsInline
+         *     className="absolute inset-0 h-full w-full object-cover object-center"
+         *   >
+         *     <source src="/Video/hero.mp4" type="video/mp4" />
+         *   </video>
+         *
+         * El resto de capas (overlays, contenido) no cambia.
+         * ─────────────────────────────────────────────────────────────────
+         */}
+        <div aria-hidden="true" className="absolute inset-0 z-0">
           <Image
-            src="/Imagenes/logo-mark.png"
-            alt="Marca - fondo"
-            width={900}
-            height={900}
+            src="/Imagenes/hero-bg2.jpg"
+            alt=""
+            fill
             priority
-            style={{ opacity: 0.06 }}
-            className="max-w-[70%] h-auto"
+            className="object-cover object-[50%_30%]"
+            quality={90}
           />
         </div>
-        <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center gap-8 text-center">
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-100">
+
+        {/* Capa 1 — Vignette: oscuro en bordes, abierto en centro (efecto de profundidad) */}
+        <div aria-hidden="true" className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,rgba(5,8,15,0.45),rgba(5,8,15,0.82))]" />
+
+        {/* Capa 2 — Degradados de color de marca (cyan atmosférico) */}
+        <div aria-hidden="true" className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_25%_40%,rgba(93,213,255,0.10),transparent_55%),radial-gradient(ellipse_at_75%_20%,rgba(93,213,255,0.06),transparent_45%)]" />
+
+        {/* Capa 3 — Desvanecimiento inferior para fusión con la página */}
+        <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 z-10 h-48 bg-gradient-to-t from-[#05080f] to-transparent" />
+
+        {/* ── CAPA DE CONTENIDO ───────────────────────────────────────── */}
+        <div className="relative z-20 mx-auto flex w-full max-w-[1180px] flex-col items-center gap-8 px-6 py-14 text-center sm:py-16">
+
+          <span className="rounded-full border border-cyan-400/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-100 backdrop-blur-sm">
             Tecnología minimalista, rendimiento potente
           </span>
-          <h1 className="max-w-3xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-white sm:text-6xl">
-           Tu setup, <span className="text-cyan-300">tus reglas.</span>
+
+          <h1 className="max-w-4xl text-6xl font-black leading-[1.0] tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">
+            Tu setup,{' '}
+            <span className="text-cyan-300">tus reglas.</span>
           </h1>
-          <p className="max-w-2xl text-base text-slate-400 sm:text-lg">
-             ¿No sabes qué PC comprar? Encuentra la tuya en 2 minutos. Responde 7 preguntas y te recomendamos el equipo exacto para tu uso y presupuesto.
+
+          <p className="max-w-2xl text-base text-slate-300 sm:text-lg">
+            ¿No sabes qué PC comprar? Encuentra la tuya en 2 minutos. Responde 7 preguntas y te recomendamos el equipo exacto para tu uso y presupuesto.
           </p>
+
           <div className="inline-flex flex-wrap items-center justify-center gap-4">
             <a href={ROUTES.quiz} className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-8 py-3 text-sm font-semibold text-slate-950 shadow-lg hover:opacity-95 transition-opacity">
               Encuentra tu PC
             </a>
-            <a href={ROUTES.products} className="rounded-full border border-cyan-400/20 bg-white/5 px-8 py-3 text-sm font-semibold text-slate-100 hover:bg-white/10 transition-colors">
+            <a href={ROUTES.products} className="rounded-full border border-cyan-400/20 bg-white/5 px-8 py-3 text-sm font-semibold text-slate-100 backdrop-blur-sm hover:bg-white/10 transition-colors">
               Ver torres
             </a>
           </div>
+
         </div>
       </section>
 
@@ -97,32 +128,7 @@ export default function Home() {
 
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           {products.map((product) => (
-            <article key={product.name} className="relative flex min-h-[320px] flex-col overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10">
-              <div className="mb-6 flex h-40 items-center justify-center rounded-3xl bg-slate-950/90 text-4xl">
-                🖥️
-              </div>
-              {product.badge ? (
-                <span className="absolute left-6 top-6 rounded-full bg-cyan-300/15 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-cyan-100">
-                  {product.badge}
-                </span>
-              ) : null}
-              <div className="mt-auto flex flex-col gap-4">
-                <span className="text-xs uppercase tracking-[0.18em] text-cyan-300">{product.category}</span>
-                <h3 className="text-xl font-bold text-white">{product.name}</h3>
-                <p className="text-sm text-slate-400">{product.specs}</p>
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-base font-semibold text-cyan-300">{product.price}</span>
-                  <a
-                    href={product.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-full bg-cyan-300/15 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-300/25 transition-colors"
-                  >
-                    Ver
-                  </a>
-                </div>
-              </div>
-            </article>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>

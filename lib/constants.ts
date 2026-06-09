@@ -9,11 +9,14 @@ export interface Feature {
 }
 
 export interface Product {
+  id: string;
   badge: string | null;
   category: string;
   name: string;
   specs: string;
   price: string;
+  numericPrice: number;
+  originalPrice?: number;
   url: string;
 }
 
@@ -46,35 +49,44 @@ export const FEATURES: Feature[] = [
 // Productos destacados del catálogo
 export const PRODUCTS: Product[] = [
   {
+    id: 'torre-wevo-pochado',
     badge: 'TOP',
     category: 'Gaming',
     name: 'Torre Wevo Pochado',
     specs: 'Ryzen 5 7600X · RTX 5060 Ti · 16GB · 1TB SSD',
     price: '$ 8.599.990',
+    numericPrice: 8599990,
     url: 'https://nuevowevo.com/producto/torre-wevo-pochado-amd-ryzen-5-7600x-rtx-5060ti/',
   },
   {
+    id: 'torre-clara-de-wevo',
     badge: 'Nuevo',
     category: 'Estilo',
     name: 'Torre Clara de Wevo',
     specs: 'Ryzen 7 5700X · RTX 5060 · 1TB SSD',
     price: '$ 6.099.990',
+    numericPrice: 6099990,
     url: 'https://nuevowevo.com/producto/torre-clara-de-wevo-amd-ryzen-7-5700x-rtx-5060-blanca/',
   },
   {
+    id: 'torre-wevo-revuelto',
     badge: null,
     category: 'Potencia',
     name: 'Torre Wevo Revuelto',
     specs: 'Ryzen 7 5700X · RTX 5060 Ti · 16GB · 1TB SSD',
     price: '$ 7.399.990',
+    numericPrice: 7399990,
     url: 'https://nuevowevo.com/producto/torre-wevo-revuelto-amd-ryzen-7-5700x-rtx-5060ti/',
   },
   {
+    id: 'torre-wevo-frito',
     badge: 'Oferta',
     category: 'Ahorro',
     name: 'Torre Wevo Frito',
     specs: 'Ryzen 7 5700X · RX 9060 XT · 16GB · 512GB SSD',
     price: '$ 4.849.990',
+    numericPrice: 4849990,
+    originalPrice: 5499990,
     url: 'https://nuevowevo.com/producto/torre-wevo-frito-amd-ryzen-7-5700x-radeon-9060xt/',
   },
 ];
