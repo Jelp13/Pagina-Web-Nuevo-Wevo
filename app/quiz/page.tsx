@@ -108,7 +108,7 @@ export default function QuizPage() {
               href="#quiz-panel"
               className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-8 py-3 text-sm font-semibold text-slate-950 shadow-glow hover:opacity-95 transition-opacity"
             >
-              Iniciar quiz
+              Iniciar la busqueda
             </a>
             <a
               href="#torres"

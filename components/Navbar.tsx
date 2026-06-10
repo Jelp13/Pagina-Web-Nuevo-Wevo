@@ -54,7 +54,7 @@ export default function Navbar() {
           />
         </Link>
 
-        <div className="hidden items-center justify-center gap-8 ml-[-70px] text-xl text-slate-400 md:flex">
+        <div className="hidden items-center justify-center gap-8 ml-[-190px] text-xl text-slate-400 md:flex">
           {navigation.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-cyan-300 transition-colors">
               {item.label}
