@@ -27,3 +27,14 @@ a {
 ::selection {
   background: rgba(93, 213, 255, 0.25);
 }
+
+@keyframes wevoBreath {
+  0%, 100% {
+    filter: drop-shadow(0 0 16px rgba(93, 213, 255, 0.22));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 36px rgba(93, 213, 255, 0.52));
+    transform: scale(1.018);
+  }
+}
