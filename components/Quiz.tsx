@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 type Question = {
   q: string;
   opts: string[];
+  multiple?: boolean;
 };
 
 type Result = {
@@ -15,7 +16,7 @@ type Result = {
 
 type QuizProps = {
   questions?: Question[];
-  getResult?: (answers: number[]) => Result;
+  getResult?: (answers: (number | number[] | null)[]) => Result;
   title?: string;
   subtitle?: string;
 };
@@ -71,63 +72,73 @@ const defaultResults: Record<string, Result> = {
   },
 };
 
-const defaultGetResult = (answers: number[]) => {
+const defaultGetResult = (answers: (number | number[] | null)[]) => {
   const [, presupuesto, experiencia, valor] = answers;
+  const p = typeof presupuesto === 'number' ? presupuesto : 0;
+  const e = typeof experiencia === 'number' ? experiencia : 0;
+  const v = typeof valor === 'number' ? valor : 0;
 
-  if (valor === 1) return defaultResults.estilo;
-  if (experiencia === 0) return defaultResults.entry;
-  if (experiencia === 1) {
-    return presupuesto === 0 ? defaultResults.entry : defaultResults.budget;
-  }
-
-  if (presupuesto === 0) return defaultResults.entry;
-  if (presupuesto === 1) return defaultResults.budget;
-  if (presupuesto === 2) return defaultResults.gaming_medio;
+  if (v === 1) return defaultResults.estilo;
+  if (e === 0) return defaultResults.entry;
+  if (e === 1) return p === 0 ? defaultResults.entry : defaultResults.budget;
+  if (p === 0) return defaultResults.entry;
+  if (p === 1) return defaultResults.budget;
+  if (p === 2) return defaultResults.gaming_medio;
   return defaultResults.gaming_alto;
 };
 
 export default function Quiz({ questions = defaultQuestions, getResult = defaultGetResult, title, subtitle }: QuizProps) {
-  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+  const [answers, setAnswers] = useState<(number | number[] | null)[]>(
+    questions.map((q) => (q.multiple ? [] : null))
+  );
   const [current, setCurrent] = useState(0);
   const [completed, setCompleted] = useState(false);
 
   const selected = answers[current];
+  const isMultiple = questions[current].multiple ?? false;
   const progress = Math.round(((current + 1) / questions.length) * 100);
+
+  const isSelected = (index: number) => {
+    if (isMultiple) return Array.isArray(selected) && selected.includes(index);
+    return selected === index;
+  };
 
   const result = useMemo(() => {
     if (!completed) return null;
-    const safeAnswers = answers.map((answer) => (answer === null ? 0 : answer));
-    return getResult(safeAnswers as number[]);
+    return getResult(answers);
   }, [answers, completed, getResult]);
 
   const handleSelect = (index: number) => {
     const nextAnswers = [...answers];
-    nextAnswers[current] = index;
+    if (isMultiple) {
+      const prev = Array.isArray(nextAnswers[current]) ? (nextAnswers[current] as number[]) : [];
+      nextAnswers[current] = prev.includes(index)
+        ? prev.filter((i) => i !== index)
+        : [...prev, index];
+    } else {
+      nextAnswers[current] = index;
+    }
     setAnswers(nextAnswers);
   };
 
   const handleNext = () => {
-    if (selected == null) {
+    if (!isMultiple && selected == null) {
       window.alert('Selecciona una opción para continuar.');
       return;
     }
-
     if (current === questions.length - 1) {
       setCompleted(true);
       return;
     }
-
     setCurrent((prev) => Math.min(prev + 1, questions.length - 1));
   };
 
   const handlePrev = () => {
-    if (current > 0) {
-      setCurrent((prev) => prev - 1);
-    }
+    if (current > 0) setCurrent((prev) => prev - 1);
   };
 
   const handleRestart = () => {
-    setAnswers(Array(questions.length).fill(null));
+    setAnswers(questions.map((q) => (q.multiple ? [] : null)));
     setCurrent(0);
     setCompleted(false);
   };
@@ -145,6 +156,9 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
           <div className="mb-8 text-center">
             <p className="text-xs uppercase tracking-[0.24em] text-cyan-300">Pregunta {current + 1} de {questions.length}</p>
             <h3 className="mt-4 text-2xl font-semibold text-white">{questions[current].q}</h3>
+            {isMultiple && (
+              <p className="mt-2 text-xs text-slate-500">Puedes seleccionar varias opciones</p>
+            )}
             {subtitle ? <p className="mx-auto mt-4 max-w-2xl text-slate-400">{subtitle}</p> : null}
           </div>
           <div className="grid gap-4">
@@ -154,12 +168,25 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
                 type="button"
                 onClick={() => handleSelect(index)}
                 className={`rounded-3xl border px-5 py-4 text-left text-sm transition-colors ${
-                  selected === index
+                  isSelected(index)
                     ? 'border-cyan-300/60 bg-cyan-300/10 text-white'
                     : 'border-slate-700 bg-slate-950/80 text-slate-300 hover:border-cyan-300/20 hover:bg-slate-900'
                 }`}
               >
-                {option}
+                <span className="flex items-center gap-3">
+                  {isMultiple && (
+                    <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                      isSelected(index) ? 'border-cyan-300 bg-cyan-300/20' : 'border-slate-600'
+                    }`}>
+                      {isSelected(index) && (
+                        <svg className="h-2.5 w-2.5 text-cyan-300" viewBox="0 0 10 10" fill="none">
+                          <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </span>
+                  )}
+                  {option}
+                </span>
               </button>
             ))}
           </div>
@@ -186,7 +213,7 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
           <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Resultado</p>
           <h3 className="text-3xl font-semibold text-white">{result?.name}</h3>
           <p className="mx-auto max-w-xl text-slate-400">{result?.desc}</p>
-          <p className="mx-auto max-w-xl text-lg text-cyan-400 mt-2">  Si no es lo que buscabas, no te preocupes, contáctanos y te cotizaremos una torre que se acomode a ti.</p>
+          <p className="mx-auto max-w-xl text-lg text-cyan-400 mt-2">Si no es lo que buscabas, no te preocupes, contáctanos y te cotizaremos una torre que se acomode a ti.</p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <a
               href={result?.url}
@@ -203,12 +230,14 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
             >
               Reiniciar
             </button>
-             <a
+            <a
               href="https://wa.me/573001234567"
               target="_blank"
-              rel="norteferrer"
-              className="rounded-full border border-green-400/60 bg-green-500/25 px-6 py-3 text-sm font-semibold text-green-300 flex items-center justify-center transition-colors"
-              >Contactanos</a>
+              rel="noreferrer"
+              className="flex items-center justify-center rounded-full border border-green-400/60 bg-green-500/25 px-8 py-3.5 text-sm font-semibold text-green-300 hover:bg-green-500/35 transition-colors"
+            >
+              Contáctanos
+            </a>
           </div>
         </div>
       )}
