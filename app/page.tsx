@@ -13,10 +13,11 @@
 
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import TikTokSection from '@/components/TikTokSection';
 import ProductCard from '@/components/ProductCard';
 import { FEATURES, PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
-import { SITE_NAME, ROUTES, WHATSAPP_LINK } from '@/lib/config';
+import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
 
@@ -188,57 +189,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER - Información y enlaces */}
-      <footer className="border-t border-cyan-400/10 bg-slate-950/70 px-6 py-10">
-        <div className="mx-auto flex max-w-[1180px] flex-col gap-8 md:flex-row md:items-start md:justify-between">
-          <div className="max-w-sm">
-            <p className="text-xl font-black tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500">
-              {SITE_NAME}
-            </p>
-            <p className="mt-4 text-slate-400">PCs gamer y accesorios minimalistas para Colombia con soporte directo y envío rápido.</p>
-          </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Tienda</p>
-              <ul className="mt-4 space-y-3 text-sm text-slate-400">
-                <li><a href="https://nuevowevo.com/shop/?categories=computadores" target="_blank" rel="noreferrer" className="hover:text-cyan-300">Computadores</a></li>
-                <li><a href={ROUTES.products} className="hover:text-cyan-300">Torres</a></li>
-                <li><a href={ROUTES.peripherals} className="hover:text-cyan-300">Periféricos</a></li>
-                <li><a href={ROUTES.brands} className="hover:text-cyan-300">Marcas</a></li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Ayuda</p>
-              <ul className="mt-4 space-y-3 text-sm text-slate-400">
-                <li><a href="https://nuevowevo.com/contact/" target="_blank" rel="noreferrer" className="hover:text-cyan-300">Contacto</a></li>
-                <li><a href="#" className="cursor-not-allowed">Seguimiento</a></li>
-                <li><a href="#" className="cursor-not-allowed">FAQs</a></li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Contacto</p>
-              <ul className="mt-4 space-y-3 text-sm text-slate-400">
-                <li><a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="hover:text-cyan-300">WhatsApp</a></li>
-                <li><a href="mailto:contact@nuevowevo.com" className="hover:text-cyan-300">contact@nuevowevo.com</a></li>
-                <li>Colombia</li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Métodos de pago</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {['NEQUI', 'VISA', 'MASTERCARD', 'EFECTIVO'].map((tag) => (
-                  <span key={tag} className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mx-auto mt-10 max-w-[1180px] border-t border-cyan-400/10 pt-6 text-sm text-slate-500">
-          © 2026 {SITE_NAME}. Todos los derechos reservados.
-        </div>
-      </footer>
+      <Footer />
     </main>
   );
 }

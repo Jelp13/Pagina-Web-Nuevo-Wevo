@@ -41,6 +41,7 @@ export const COMPANY_INFO = {
 export const ROUTES = {
   home: '/',
   quiz: '/quiz',
+  torres: '/torres',
   products: '#products-anchor',
   peripherals: '#perifericos',
   brands: '#brands',

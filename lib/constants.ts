@@ -8,12 +8,41 @@ export interface Feature {
   text: string;
 }
 
+export interface ProductSpec {
+  label: string;
+  value: string;
+}
+
+export interface GamingPerf {
+  game: string;
+  fps: string;
+  resolution: string;
+  quality: string;
+}
+
+export interface CreativePerf {
+  software: string;
+  performance: 'Excelente' | 'Muy bueno' | 'Bueno' | 'Básico';
+  detail: string;
+}
+
+export interface ProductFeature {
+  icon: string;
+  label: string;
+}
+
 export interface Product {
   id: string;
   badge: string | null;
   category: string;
   name: string;
   specs: string;
+  description: string;
+  fullSpecs: ProductSpec[];
+  gamingPerformance: GamingPerf[];
+  creativePerformance: CreativePerf[];
+  features: ProductFeature[];
+  images: string[];
   price: string;
   numericPrice: number;
   originalPrice?: number;
@@ -28,22 +57,10 @@ export interface Peripheral {
 
 // Características principales de Nuevo Wevo
 export const FEATURES: Feature[] = [
-  {
-    icon: '⚡',
-    text: 'Envío exprés en Colombia',
-  },
-  {
-    icon: '💬',
-    text: 'Asesoría rápida por WhatsApp',
-  },
-  {
-    icon: '🔐',
-    text: 'Compra segura y confiable',
-  },
-  {
-    icon: '🛠️',
-    text: 'Montaje y soporte incluidos',
-  },
+  { icon: '⚡', text: 'Envío exprés en Colombia' },
+  { icon: '💬', text: 'Asesoría rápida por WhatsApp' },
+  { icon: '🔐', text: 'Compra segura y confiable' },
+  { icon: '🛠️', text: 'Montaje y soporte incluidos' },
 ];
 
 // Productos destacados del catálogo
@@ -54,6 +71,46 @@ export const PRODUCTS: Product[] = [
     category: 'Gaming',
     name: 'Torre Wevo Pochado',
     specs: 'Ryzen 5 7600X · RTX 5060 Ti · 16GB · 1TB SSD',
+    description: 'La torre más potente de la línea Wevo. Diseñada para gaming AAA en alta resolución, edición de video 4K y transmisiones en vivo sin compromisos. El AMD Ryzen 5 7600X con arquitectura Zen 4 combinado con la NVIDIA RTX 5060 Ti entrega frames brutales en cualquier título moderno, mientras la memoria DDR5 garantiza multitarea sin cuellos de botella.',
+    fullSpecs: [
+      { label: 'Procesador', value: 'AMD Ryzen 5 7600X (6C/12T, hasta 5.3 GHz)' },
+      { label: 'Tarjeta gráfica', value: 'NVIDIA GeForce RTX 5060 Ti 8GB GDDR7' },
+      { label: 'Memoria RAM', value: '16GB DDR5 5200MHz' },
+      { label: 'Almacenamiento', value: '1TB NVMe SSD Gen4 (7,000 MB/s)' },
+      { label: 'Placa base', value: 'B650M · Socket AM5' },
+      { label: 'Fuente de poder', value: '750W 80+ Gold Certificada' },
+      { label: 'Refrigeración', value: 'Cooler de torre 120mm PWM' },
+      { label: 'Chasis', value: 'Torre Mid-Tower ATX con panel lateral' },
+      { label: 'Sistema operativo', value: 'Windows 11 Home (original)' },
+    ],
+    gamingPerformance: [
+      { game: 'Valorant', fps: '400+', resolution: '1080p', quality: 'Ultra' },
+      { game: 'Fortnite', fps: '240+', resolution: '1440p', quality: 'Épico' },
+      { game: 'CS2', fps: '300+', resolution: '1080p', quality: 'Alto' },
+      { game: 'GTA V', fps: '120+', resolution: '4K', quality: 'Ultra' },
+      { game: 'Apex Legends', fps: '200+', resolution: '1440p', quality: 'Alto' },
+      { game: 'League of Legends', fps: '400+', resolution: '1080p', quality: 'Ultra' },
+      { game: 'Warzone', fps: '120+', resolution: '1440p', quality: 'Alto' },
+      { game: 'Cyberpunk 2077', fps: '80+', resolution: '1440p', quality: 'Ultra' },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop', performance: 'Excelente', detail: 'Archivos pesados sin lag' },
+      { software: 'Adobe Illustrator', performance: 'Excelente', detail: 'Vectores complejos fluidos' },
+      { software: 'Adobe Premiere Pro', performance: 'Excelente', detail: 'Edición 4K en tiempo real' },
+      { software: 'After Effects', performance: 'Muy bueno', detail: 'Renders rápidos con CUDA' },
+      { software: 'DaVinci Resolve', performance: 'Excelente', detail: 'Color grading 4K fluido' },
+      { software: 'Blender', performance: 'Muy bueno', detail: 'Renders GPU acelerados' },
+      { software: 'CapCut', performance: 'Excelente', detail: 'Exportación ultrarrápida' },
+    ],
+    features: [
+      { icon: '🎮', label: 'Gaming AAA' },
+      { icon: '📡', label: 'Streaming profesional' },
+      { icon: '🎬', label: 'Edición de video 4K' },
+      { icon: '🎨', label: 'Diseño gráfico' },
+      { icon: '🧊', label: 'Renderizado 3D' },
+      { icon: '⚡', label: 'Multitarea pesada' },
+    ],
+    images: ['/Imagenes/productos/torre-wevo-pochado.jpg'],
     price: '$ 8.599.990',
     numericPrice: 8599990,
     url: 'https://nuevowevo.com/producto/torre-wevo-pochado-amd-ryzen-5-7600x-rtx-5060ti/',
@@ -64,6 +121,46 @@ export const PRODUCTS: Product[] = [
     category: 'Estilo',
     name: 'Torre Clara de Wevo',
     specs: 'Ryzen 7 5700X · RTX 5060 · 1TB SSD',
+    description: 'Elegancia minimalista en un case blanco impecable. La Torre Clara combina potencia real con un diseño sofisticado para quienes quieren rendimiento premium sin renunciar a la estética. El AMD Ryzen 7 5700X de 8 núcleos y la RTX 5060 garantizan gaming fluido y creatividad sin límites, todo en un chasis que destaca en cualquier espacio.',
+    fullSpecs: [
+      { label: 'Procesador', value: 'AMD Ryzen 7 5700X (8C/16T, hasta 4.6 GHz)' },
+      { label: 'Tarjeta gráfica', value: 'NVIDIA GeForce RTX 5060 8GB GDDR7' },
+      { label: 'Memoria RAM', value: '16GB DDR4 3200MHz' },
+      { label: 'Almacenamiento', value: '1TB NVMe SSD Gen3 (3,500 MB/s)' },
+      { label: 'Placa base', value: 'B550M · Socket AM4' },
+      { label: 'Fuente de poder', value: '650W 80+ Bronze Certificada' },
+      { label: 'Refrigeración', value: 'Cooler de torre 120mm silencioso' },
+      { label: 'Chasis', value: 'Case Blanco Mid-Tower con panel de vidrio templado' },
+      { label: 'Sistema operativo', value: 'Windows 11 Home (original)' },
+    ],
+    gamingPerformance: [
+      { game: 'Valorant', fps: '350+', resolution: '1080p', quality: 'Ultra' },
+      { game: 'Fortnite', fps: '200+', resolution: '1440p', quality: 'Alto' },
+      { game: 'CS2', fps: '250+', resolution: '1080p', quality: 'Alto' },
+      { game: 'GTA V', fps: '100+', resolution: '1440p', quality: 'Ultra' },
+      { game: 'Apex Legends', fps: '180+', resolution: '1440p', quality: 'Alto' },
+      { game: 'League of Legends', fps: '400+', resolution: '1080p', quality: 'Ultra' },
+      { game: 'Warzone', fps: '100+', resolution: '1080p', quality: 'Alto' },
+      { game: 'Cyberpunk 2077', fps: '60+', resolution: '1080p', quality: 'Ultra' },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop', performance: 'Excelente', detail: 'Fluido con archivos grandes' },
+      { software: 'Adobe Illustrator', performance: 'Excelente', detail: 'Sin caídas en proyectos complejos' },
+      { software: 'Adobe Premiere Pro', performance: 'Muy bueno', detail: 'Edición 1080p/1440p en tiempo real' },
+      { software: 'After Effects', performance: 'Bueno', detail: 'Renders moderados con GPU' },
+      { software: 'DaVinci Resolve', performance: 'Muy bueno', detail: 'Color grading 1440p fluido' },
+      { software: 'Blender', performance: 'Bueno', detail: 'Escenas medianas sin problema' },
+      { software: 'CapCut', performance: 'Excelente', detail: 'Exportación rápida en alta calidad' },
+    ],
+    features: [
+      { icon: '🎮', label: 'Gaming 1440p' },
+      { icon: '🤍', label: 'Diseño minimalista' },
+      { icon: '🎨', label: 'Diseño gráfico' },
+      { icon: '🎬', label: 'Edición de video' },
+      { icon: '📡', label: 'Streaming' },
+      { icon: '⚡', label: 'Multitarea' },
+    ],
+    images: ['/Imagenes/productos/torre-clara-de-wevo.jpg'],
     price: '$ 6.099.990',
     numericPrice: 6099990,
     url: 'https://nuevowevo.com/producto/torre-clara-de-wevo-amd-ryzen-7-5700x-rtx-5060-blanca/',
@@ -74,6 +171,46 @@ export const PRODUCTS: Product[] = [
     category: 'Potencia',
     name: 'Torre Wevo Revuelto',
     specs: 'Ryzen 7 5700X · RTX 5060 Ti · 16GB · 1TB SSD',
+    description: 'El equilibrio perfecto para el gamer que quiere más sin pagar lo máximo. Con el AMD Ryzen 7 5700X de 8 núcleos y la RTX 5060 Ti, esta torre maneja gaming fluido en 1440p, multitarea pesada y creación de contenido sin sacrificar nada. La opción más inteligente del catálogo.',
+    fullSpecs: [
+      { label: 'Procesador', value: 'AMD Ryzen 7 5700X (8C/16T, hasta 4.6 GHz)' },
+      { label: 'Tarjeta gráfica', value: 'NVIDIA GeForce RTX 5060 Ti 8GB GDDR7' },
+      { label: 'Memoria RAM', value: '16GB DDR4 3200MHz' },
+      { label: 'Almacenamiento', value: '1TB NVMe SSD Gen3 (3,500 MB/s)' },
+      { label: 'Placa base', value: 'B550M · Socket AM4' },
+      { label: 'Fuente de poder', value: '750W 80+ Gold Certificada' },
+      { label: 'Refrigeración', value: 'Cooler de torre dual 120mm' },
+      { label: 'Chasis', value: 'Mid-Tower ATX con flujo de aire optimizado' },
+      { label: 'Sistema operativo', value: 'Windows 11 Home (original)' },
+    ],
+    gamingPerformance: [
+      { game: 'Valorant', fps: '400+', resolution: '1080p', quality: 'Ultra' },
+      { game: 'Fortnite', fps: '240+', resolution: '1440p', quality: 'Épico' },
+      { game: 'CS2', fps: '280+', resolution: '1440p', quality: 'Alto' },
+      { game: 'GTA V', fps: '120+', resolution: '1440p', quality: 'Ultra' },
+      { game: 'Apex Legends', fps: '200+', resolution: '1440p', quality: 'Alto' },
+      { game: 'League of Legends', fps: '400+', resolution: '1440p', quality: 'Ultra' },
+      { game: 'Warzone', fps: '120+', resolution: '1440p', quality: 'Alto' },
+      { game: 'Cyberpunk 2077', fps: '75+', resolution: '1440p', quality: 'Alto' },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop', performance: 'Excelente', detail: 'Fluido con archivos muy pesados' },
+      { software: 'Adobe Illustrator', performance: 'Excelente', detail: 'Vectores complejos sin caída' },
+      { software: 'Adobe Premiere Pro', performance: 'Excelente', detail: 'Edición 4K fluida' },
+      { software: 'After Effects', performance: 'Muy bueno', detail: 'Compositing avanzado con GPU' },
+      { software: 'DaVinci Resolve', performance: 'Excelente', detail: 'Color grading 4K profesional' },
+      { software: 'Blender', performance: 'Muy bueno', detail: 'Renders GPU potentes' },
+      { software: 'CapCut', performance: 'Excelente', detail: 'Exportación ultrarrápida' },
+    ],
+    features: [
+      { icon: '🎮', label: 'Gaming 1440p/4K' },
+      { icon: '📡', label: 'Streaming profesional' },
+      { icon: '🎬', label: 'Edición de video 4K' },
+      { icon: '🎨', label: 'Diseño gráfico' },
+      { icon: '🧊', label: 'Renderizado 3D' },
+      { icon: '⚡', label: 'Multitarea pesada' },
+    ],
+    images: ['/Imagenes/productos/torre-wevo-revuelto.jpg'],
     price: '$ 7.399.990',
     numericPrice: 7399990,
     url: 'https://nuevowevo.com/producto/torre-wevo-revuelto-amd-ryzen-7-5700x-rtx-5060ti/',
@@ -84,6 +221,46 @@ export const PRODUCTS: Product[] = [
     category: 'Ahorro',
     name: 'Torre Wevo Frito',
     specs: 'Ryzen 7 5700X · RX 9060 XT · 16GB · 512GB SSD',
+    description: 'La puerta de entrada al gaming competitivo. Accesible pero potente: capaz de correr los títulos de esports más exigentes con fluidez total. El AMD Ryzen 7 5700X de 8 núcleos y la Radeon RX 9060 XT entregan frames competitivos en Valorant, CS2 y League of Legends sin gastar de más.',
+    fullSpecs: [
+      { label: 'Procesador', value: 'AMD Ryzen 7 5700X (8C/16T, hasta 4.6 GHz)' },
+      { label: 'Tarjeta gráfica', value: 'AMD Radeon RX 9060 XT 8GB GDDR6' },
+      { label: 'Memoria RAM', value: '16GB DDR4 3200MHz' },
+      { label: 'Almacenamiento', value: '512GB NVMe SSD Gen3' },
+      { label: 'Placa base', value: 'B550M · Socket AM4' },
+      { label: 'Fuente de poder', value: '650W 80+ Bronze Certificada' },
+      { label: 'Refrigeración', value: 'Cooler de torre 92mm silencioso' },
+      { label: 'Chasis', value: 'Mid-Tower compacto con ventilación lateral' },
+      { label: 'Sistema operativo', value: 'Windows 11 Home (original)' },
+    ],
+    gamingPerformance: [
+      { game: 'Valorant', fps: '300+', resolution: '1080p', quality: 'Alto' },
+      { game: 'Fortnite', fps: '144+', resolution: '1080p', quality: 'Alto' },
+      { game: 'CS2', fps: '200+', resolution: '1080p', quality: 'Alto' },
+      { game: 'GTA V', fps: '80+', resolution: '1080p', quality: 'Alto' },
+      { game: 'Apex Legends', fps: '144+', resolution: '1080p', quality: 'Alto' },
+      { game: 'League of Legends', fps: '400+', resolution: '1080p', quality: 'Ultra' },
+      { game: 'Warzone', fps: '80+', resolution: '1080p', quality: 'Medio' },
+      { game: 'Cyberpunk 2077', fps: '45+', resolution: '1080p', quality: 'Medio' },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop', performance: 'Muy bueno', detail: 'Archivos medianos sin problema' },
+      { software: 'Adobe Illustrator', performance: 'Muy bueno', detail: 'Proyectos estándar fluidos' },
+      { software: 'Adobe Premiere Pro', performance: 'Bueno', detail: 'Edición 1080p en tiempo real' },
+      { software: 'After Effects', performance: 'Básico', detail: 'Compositing simple recomendado' },
+      { software: 'DaVinci Resolve', performance: 'Bueno', detail: 'Edición 1080p fluida' },
+      { software: 'Blender', performance: 'Básico', detail: 'Escenas simples y medianas' },
+      { software: 'CapCut', performance: 'Muy bueno', detail: 'Exportación rápida en 1080p' },
+    ],
+    features: [
+      { icon: '🎮', label: 'Gaming esports' },
+      { icon: '💰', label: 'Mejor precio-rendimiento' },
+      { icon: '📡', label: 'Streaming básico' },
+      { icon: '🎨', label: 'Diseño gráfico básico' },
+      { icon: '📚', label: 'Trabajo y estudio' },
+      { icon: '⚡', label: 'Multitarea' },
+    ],
+    images: ['/Imagenes/productos/torre-wevo-frito.jpg'],
     price: '$ 4.849.990',
     numericPrice: 4849990,
     originalPrice: 5499990,
@@ -93,36 +270,12 @@ export const PRODUCTS: Product[] = [
 
 // Periféricos recomendados
 export const PERIPHERALS: Peripheral[] = [
-  {
-    icon: '🖱️',
-    name: 'Mouse gaming',
-    desc: 'Precisión avanzada y máximo control.',
-  },
-  {
-    icon: '⌨️',
-    name: 'Teclados mecánicos',
-    desc: 'Switches táctiles y diseño sobrio.',
-  },
-  {
-    icon: '🎧',
-    name: 'Audífonos',
-    desc: 'Sonido envolvente para juego y stream.',
-  },
-  {
-    icon: '🎤',
-    name: 'Micrófonos',
-    desc: 'Voz clara y profesional para todo uso.',
-  },
-  {
-    icon: '🖥️',
-    name: 'Monitores',
-    desc: 'Alta tasa de refresco y colores nítidos.',
-  },
-  {
-    icon: '📷',
-    name: 'Cámaras',
-    desc: 'Imagen limpia para videollamadas y streams.',
-  },
+  { icon: '🖱️', name: 'Mouse gaming', desc: 'Precisión avanzada y máximo control.' },
+  { icon: '⌨️', name: 'Teclados mecánicos', desc: 'Switches táctiles y diseño sobrio.' },
+  { icon: '🎧', name: 'Audífonos', desc: 'Sonido envolvente para juego y stream.' },
+  { icon: '🎤', name: 'Micrófonos', desc: 'Voz clara y profesional para todo uso.' },
+  { icon: '🖥️', name: 'Monitores', desc: 'Alta tasa de refresco y colores nítidos.' },
+  { icon: '📷', name: 'Cámaras', desc: 'Imagen limpia para videollamadas y streams.' },
 ];
 
 // Marcas aliadas

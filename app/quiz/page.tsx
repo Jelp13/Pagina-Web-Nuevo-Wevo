@@ -13,7 +13,7 @@
 import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
 import { PRODUCTS, PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
-import { SITE_NAME, ROUTES } from '@/lib/config';
+
 
 const quizQuestions = QUIZ_QUESTIONS;
 const products = PRODUCTS;
@@ -21,7 +21,7 @@ const peripherals = PERIPHERALS;
 const brands = BRANDS;
 
 const getQuizResult = (answers: (number | number[] | null)[]) => {
-  const [, presupuesto, experiencia, valor, monitor, juegos, resolucion] = answers;
+  const [, presupuesto, experiencia, valor, , , resolucion] = answers;
 
   // Convertir a números seguros
   const presupuestoNum = typeof presupuesto === 'number' ? presupuesto : 0;
@@ -167,9 +167,7 @@ export default function QuizPage() {
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-base font-semibold text-cyan-300">{product.price}</span>
                   <a
-                    href={product.url}
-                    target="_blank"
-                    rel="noreferrer"
+                    href={`/torres/${product.id}`}
                     className="rounded-full bg-cyan-300/15 px-4 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-300/25 transition-colors"
                   >
                     Ver

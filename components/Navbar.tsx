@@ -8,7 +8,7 @@ import { useCartStore, getCartItemCount } from '@/lib/cart-store';
 
 const navigation = [
   { label: 'Inicio', href: ROUTES.home },
-  { label: 'Torres', href: ROUTES.products },
+  { label: 'Torres', href: ROUTES.torres },
   { label: 'Tu Pc', href: ROUTES.quiz },
   { label: 'Periféricos', href: ROUTES.peripherals },
   { label: 'Marcas', href: ROUTES.brands },

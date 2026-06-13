@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useCartStore, formatCOP } from '@/lib/cart-store';
+import ProductImage from '@/components/ProductImage';
 import type { Product } from '@/lib/constants';
 
 interface Props {
@@ -45,9 +47,12 @@ export default function ProductCard({ product }: Props) {
       )}
 
       {/* Imagen / Ícono */}
-      <div className="mb-6 flex h-40 items-center justify-center rounded-3xl bg-slate-950/90 text-5xl">
-        🖥️
-      </div>
+      <ProductImage
+        src={product.images[0]}
+        alt={product.name}
+        className="mb-6 h-56 rounded-3xl bg-slate-950/90"
+        iconSize="text-6xl"
+      />
 
       <div className="mt-auto flex flex-col gap-3">
         <span className="text-xs uppercase tracking-[0.18em] text-cyan-300">{product.category}</span>
@@ -76,14 +81,12 @@ export default function ProductCard({ product }: Props) {
           >
             {added ? '✓ Agregado' : 'Agregar al carrito'}
           </button>
-          <a
-            href={product.url}
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            href={`/torres/${product.id}`}
             className="rounded-full border border-cyan-400/20 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-100 hover:bg-white/10 transition-colors"
           >
             Ver
-          </a>
+          </Link>
         </div>
       </div>
     </article>

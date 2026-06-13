@@ -69,13 +69,7 @@ export const useCartStore = create<CartStore>()(
   )
 );
 
-export const formatCOP = (amount: number): string =>
-  new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount);
+export { formatCOP } from './format';
 
 export const getCartTotal = (items: CartItem[]): number =>
   items.reduce((sum, item) => sum + item.price * item.quantity, 0);
