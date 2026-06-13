@@ -279,7 +279,7 @@ export const PERIPHERALS: Peripheral[] = [
 ];
 
 // Marcas aliadas
-export const BRANDS = ['COUGAR', 'KINGSTON', 'MSI', 'LOGITECH', 'AMD', 'INTEL', 'NVIDIA'];
+export const BRANDS = ['COUGAR', 'KINGSTON', 'MSI', 'LOGITECH'];
 
 // Preguntas del quiz (Encuentre tu PC)
 export interface QuizQuestion {
