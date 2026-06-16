@@ -194,7 +194,7 @@ export default function CartPage() {
 
               {/* Sellos de seguridad */}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 border-t border-cyan-400/10 pt-5">
-                {['SSL', 'WOMPI', 'NEQUI', 'PSE'].map((tag) => (
+                {['SSL', 'MERCADO PAGO', 'NEQUI', 'PSE'].map((tag) => (
                   <span key={tag} className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">
                     {tag}
                   </span>

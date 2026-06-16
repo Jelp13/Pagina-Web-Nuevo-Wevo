@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 
-// Tipos de entrada
 interface CartItem {
   id: string;
   name: string;
@@ -24,7 +24,6 @@ interface CheckoutBody {
   total: number;
 }
 
-// Validación server-side (defensa en profundidad)
 function validateBody(body: CheckoutBody): string | null {
   const { form, items, total } = body;
   if (!form?.nombres?.trim()) return 'Nombres requerido';
@@ -36,11 +35,10 @@ function validateBody(body: CheckoutBody): string | null {
   if (!/^[3]\d{9}$/.test(form.telefono)) return 'Teléfono inválido';
   if (!Array.isArray(items) || items.length === 0) return 'Carrito vacío';
 
-  // Verificar que el total coincide con los ítems (anti-tampering)
+  // Anti-tampering: verificar que el total coincide con los ítems
   const calculatedTotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
   if (Math.abs(calculatedTotal - total) > 1) return 'Total manipulado';
 
-  // Límite mínimo de compra
   if (total < 10000) return 'Monto mínimo de compra: $10.000 COP';
 
   return null;
@@ -50,7 +48,6 @@ export async function POST(req: NextRequest) {
   try {
     const body: CheckoutBody = await req.json();
 
-    // Validación
     const error = validateBody(body);
     if (error) {
       return NextResponse.json({ error }, { status: 400 });
@@ -58,13 +55,10 @@ export async function POST(req: NextRequest) {
 
     const { form, paymentMethod, items, total } = body;
     const reference = `WEVO-${Date.now()}-${randomUUID().split('-')[0].toUpperCase()}`;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-    // Contra entrega: guardar pedido y notificar por WhatsApp/email
+    // Contra entrega: sin pasarela de pago
     if (paymentMethod === 'contra-entrega') {
-      // En producción: guardar en DB + enviar email
-      // await saveOrder({ reference, form, items, total, paymentMethod });
-      // await sendConfirmationEmail(form.email, reference);
-
       return NextResponse.json({
         reference,
         method: 'contra-entrega',
@@ -72,62 +66,59 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Wompi: tarjeta, PSE, Nequi
+    // Mercado Pago: tarjeta, PSE, Nequi
     if (['tarjeta', 'pse', 'nequi'].includes(paymentMethod)) {
-      const wompiKey = process.env.WOMPI_PRIVATE_KEY;
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+      const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 
-      // Si no hay key de Wompi configurada, devolver URL de sandbox para testing
-      if (!wompiKey) {
+      // Sin credenciales: modo desarrollo — redirigir localmente
+      if (!accessToken) {
         return NextResponse.json({
           reference,
-          wompiUrl: `https://checkout.wompi.co/p/?public-key=pub_test_xxxx&currency=COP&amount-in-cents=${total * 100}&reference=${reference}&redirect-url=${siteUrl}/checkout/confirmacion`,
-          message: 'Configure WOMPI_PRIVATE_KEY en .env para pagos reales',
+          checkoutUrl: null,
+          devMode: true,
+          message: 'Configure MERCADOPAGO_ACCESS_TOKEN en .env para pagos reales',
         });
       }
 
-      // Crear link de pago en Wompi
-      const wompiRes = await fetch('https://production.wompi.co/v1/payment_links', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${wompiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: `Pedido Nuevo Wevo ${reference}`,
-          description: items.map((i) => `${i.name} x${i.quantity}`).join(', '),
-          single_use: true,
-          collect_shipping: false,
-          currency: 'COP',
-          amount_in_cents: total * 100,
-          redirect_url: `${siteUrl}/checkout/confirmacion?ref=${reference}`,
-          customer_data: {
-            customer_is_logged_in: false,
-            prefilled_data: {
-              customer_email: form.email,
-              customer_full_name: `${form.nombres} ${form.apellidos}`,
-            },
+      const client = new MercadoPagoConfig({ accessToken });
+      const preferenceClient = new Preference(client);
+
+      const result = await preferenceClient.create({
+        body: {
+          external_reference: reference,
+          items: items.map((item) => ({
+            id: item.id,
+            title: item.name,
+            quantity: item.quantity,
+            unit_price: item.price,
+            currency_id: 'COP',
+          })),
+          payer: {
+            name: form.nombres,
+            surname: form.apellidos,
+            email: form.email,
+            phone: { area_code: '57', number: form.telefono },
           },
-        }),
+          back_urls: {
+            success: `${siteUrl}/checkout/confirmacion?ref=${reference}&status=approved`,
+            failure: `${siteUrl}/checkout/confirmacion?ref=${reference}&status=rejected`,
+            pending: `${siteUrl}/checkout/confirmacion?ref=${reference}&status=pending`,
+          },
+          auto_return: 'approved',
+          statement_descriptor: 'Nuevo Wevo',
+        },
       });
 
-      if (!wompiRes.ok) {
-        const wompiError = await wompiRes.text();
-        console.error('Wompi error:', wompiError);
-        return NextResponse.json({ error: 'Error al conectar con pasarela de pago' }, { status: 502 });
+      if (!result.init_point) {
+        return NextResponse.json({ error: 'Error al crear preferencia de pago' }, { status: 502 });
       }
 
-      const wompiData = await wompiRes.json();
-      return NextResponse.json({
-        reference,
-        wompiUrl: wompiData.data?.url ?? wompiData.url,
-      });
+      return NextResponse.json({ reference, checkoutUrl: result.init_point });
     }
 
-    // ADDI
+    // ADDI (cuotas sin interés — integración independiente)
     if (paymentMethod === 'addi') {
       const addiKey = process.env.ADDI_PUBLIC_KEY;
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
       if (!addiKey) {
         return NextResponse.json({
@@ -151,7 +142,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Solo permitir POST
 export async function GET() {
   return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
 }

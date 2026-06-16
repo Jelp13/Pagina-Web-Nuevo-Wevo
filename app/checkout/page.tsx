@@ -121,9 +121,16 @@ export default function CheckoutPage() {
         return;
       }
 
-      // Para Wompi (tarjeta, PSE, Nequi): redirigir al widget de pago
-      if (data.wompiUrl) {
-        window.location.href = data.wompiUrl;
+      // Mercado Pago (tarjeta, PSE, Nequi): redirigir al checkout de MP
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
+      }
+
+      // Sin credenciales configuradas: redirigir localmente (modo desarrollo)
+      if (data.devMode) {
+        clearCart();
+        router.push(`${ROUTES.confirmation}?ref=${data.reference}&status=approved`);
         return;
       }
 
@@ -363,7 +370,7 @@ export default function CheckoutPage() {
                 {(paymentMethod === 'tarjeta' || paymentMethod === 'pse' || paymentMethod === 'nequi') && (
                   <div className="mt-4 rounded-xl bg-cyan-300/5 border border-cyan-400/20 px-4 py-3">
                     <p className="text-sm text-slate-300">
-                      Serás redirigido a la pasarela segura de <strong className="text-cyan-300">Wompi</strong> para completar tu pago.
+                      Serás redirigido a la pasarela segura de <strong className="text-cyan-300">Mercado Pago</strong> para completar tu pago.
                     </p>
                   </div>
                 )}

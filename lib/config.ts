@@ -53,7 +53,3 @@ export const ROUTES = {
 // Configuración de IVA (productos de tecnología en Colombia)
 export const IVA_RATE = 0.19;
 
-// Wompi (pasarela de pagos recomendada para Colombia)
-// Documentación: https://docs.wompi.co
-export const WOMPI_PUBLIC_KEY = process.env.NEXT_PUBLIC_WOMPI_PUBLIC_KEY || '';
-export const WOMPI_SANDBOX_PUBLIC_KEY = process.env.NEXT_PUBLIC_WOMPI_SANDBOX_KEY || 'pub_test_xxxxx';

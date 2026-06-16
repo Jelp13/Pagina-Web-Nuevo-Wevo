@@ -12,7 +12,8 @@ function ConfirmationContent() {
   const method = params.get('method') ?? '';
   const status = params.get('status') ?? 'APPROVED';
 
-  const isApproved = status === 'APPROVED' || method === 'contra-entrega';
+  // Mercado Pago retorna status en minúsculas: 'approved', 'rejected', 'pending'
+  const isApproved = status === 'approved' || status === 'APPROVED' || method === 'contra-entrega';
   const isContraEntrega = method === 'contra-entrega';
 
   return (
