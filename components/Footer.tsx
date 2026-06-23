@@ -37,12 +37,13 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Métodos de pago</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {['NEQUI', 'VISA', 'MASTERCARD', 'EFECTIVO'].map((tag) => (
-                <span key={tag} className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">{tag}</span>
-              ))}
-            </div>
+            <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Legal</p>
+            <ul className="mt-4 space-y-3 text-sm text-slate-400">
+              <li><a href="/legal/terminos" className="hover:text-cyan-300 transition-colors">Términos</a></li>
+              <li><a href="/legal/datos-personales" className="hover:text-cyan-300 transition-colors">Datos personales</a></li>
+              <li><a href="/legal/politica-privacidad" className="hover:text-cyan-300 transition-colors">Política de privacidad</a></li>
+              <li><a href="/legal/eliminacion-datos" className="hover:text-cyan-300 transition-colors">Eliminación de datos</a></li>
+            </ul>
           </div>
         </div>
       </div>
