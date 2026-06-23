@@ -236,7 +236,7 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
               rel="noreferrer"
               className="flex items-center justify-center rounded-full border border-green-400/60 bg-green-500/25 px-8 py-3.5 text-sm font-semibold text-green-300 hover:bg-green-500/35 transition-colors"
             >
-              Contáctanos
+              Ir a WhatsApp
             </a>
           </div>
         </div>

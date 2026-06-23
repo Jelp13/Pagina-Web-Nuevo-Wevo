@@ -16,6 +16,7 @@ interface CheckoutBody {
     email: string;
     documento: string;
     direccion: string;
+    departamento: string;
     ciudad: string;
     telefono: string;
   };

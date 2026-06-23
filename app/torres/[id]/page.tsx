@@ -3,9 +3,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductGallery from '@/components/ProductGallery';
-import ProductSpecs from '@/components/ProductSpecs';
-import GamingPerformance from '@/components/GamingPerformance';
-import CreativePerformance from '@/components/CreativePerformance';
+import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import RelatedProducts from '@/components/RelatedProducts';
 import AddToCartButton from '@/components/AddToCartButton';
@@ -122,27 +120,13 @@ export default function TowerDetailPage({ params }: { params: { id: string } }) 
         </div>
       </section>
 
-      {/* ── SECCIONES DETALLADAS ───────────────────────────────── */}
-      <section className="mx-auto max-w-[1180px] px-6 pb-8">
-        <div className="grid gap-6 lg:grid-cols-2">
-
-          {/* Especificaciones */}
-          <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-7">
-            <ProductSpecs specs={product.fullSpecs} />
-          </div>
-
-          {/* Rendimiento gaming */}
-          <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-7">
-            <GamingPerformance data={product.gamingPerformance} />
-          </div>
-        </div>
-      </section>
-
-      {/* Rendimiento creativo — ancho completo */}
+      {/* ── PESTAÑAS DE DETALLE ───────────────────────────────── */}
       <section className="mx-auto max-w-[1180px] px-6 pb-16">
-        <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-7">
-          <CreativePerformance data={product.creativePerformance} />
-        </div>
+        <ProductTabs
+          specs={product.fullSpecs}
+          gamingPerformance={product.gamingPerformance}
+          creativePerformance={product.creativePerformance}
+        />
       </section>
 
       {/* Productos relacionados */}

@@ -7,7 +7,7 @@ import Navbar from '@/components/Navbar';
 import { useCartStore, formatCOP, getCartTotal } from '@/lib/cart-store';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 
-type PaymentMethod = 'contra-entrega' | 'tarjeta' | 'pse' | 'addi' | 'nequi';
+type PaymentMethod = 'contra-entrega' | 'tarjeta' | 'pse' | 'addi' | 'nequi' | 'breb';
 
 interface FormData {
   nombres: string;
@@ -15,6 +15,7 @@ interface FormData {
   email: string;
   documento: string;
   direccion: string;
+  departamento: string;
   ciudad: string;
   telefono: string;
 }
@@ -25,22 +26,27 @@ const INITIAL_FORM: FormData = {
   email: '',
   documento: '',
   direccion: '',
+  departamento: '',
   ciudad: '',
   telefono: '',
 };
 
-const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: string }[] = [
+const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: string; disabled?: boolean }[] = [
   { id: 'contra-entrega', label: 'Contra entrega', icon: '🚚', desc: 'Paga cuando recibas tu pedido' },
   { id: 'tarjeta', label: 'Tarjeta de crédito / débito', icon: '💳', desc: 'Visa, Mastercard, American Express' },
   { id: 'pse', label: 'PSE', icon: '🏦', desc: 'Débito directo desde tu cuenta bancaria' },
   { id: 'nequi', label: 'Nequi', icon: '📱', desc: 'Paga desde tu billetera Nequi' },
   { id: 'addi', label: 'ADDI', icon: '💰', desc: 'Compra ahora y paga en cuotas sin interés' },
+  { id: 'breb', label: 'BRE-B', icon: '📷', desc: 'Pago por código QR — Próximamente', disabled: true },
 ];
 
-const CITIES = [
-  'Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena', 'Cúcuta',
-  'Bucaramanga', 'Pereira', 'Manizales', 'Santa Marta', 'Ibagué', 'Pasto',
-  'Villavicencio', 'Montería', 'Valledupar', 'Armenia', 'Popayán', 'Neiva',
+const DEPARTAMENTOS = [
+  'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar',
+  'Boyacá', 'Caldas', 'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó',
+  'Córdoba', 'Cundinamarca', 'Guainía', 'Guaviare', 'Huila', 'La Guajira',
+  'Magdalena', 'Meta', 'Nariño', 'Norte de Santander', 'Putumayo', 'Quindío',
+  'Risaralda', 'San Andrés y Providencia', 'Santander', 'Sucre', 'Tolima',
+  'Valle del Cauca', 'Vaupés', 'Vichada',
 ];
 
 function validate(form: FormData): Partial<Record<keyof FormData, string>> {
@@ -50,7 +56,8 @@ function validate(form: FormData): Partial<Record<keyof FormData, string>> {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'Correo inválido';
   if (!/^\d{6,12}$/.test(form.documento)) errors.documento = 'Documento inválido (6–12 dígitos)';
   if (!form.direccion.trim() || form.direccion.length < 8) errors.direccion = 'Dirección muy corta';
-  if (!form.ciudad) errors.ciudad = 'Selecciona una ciudad';
+  if (!form.departamento) errors.departamento = 'Selecciona un departamento';
+  if (!form.ciudad.trim()) errors.ciudad = 'Campo obligatorio';
   if (!/^[3]\d{9}$/.test(form.telefono)) errors.telefono = 'Teléfono inválido (10 dígitos, empieza por 3)';
   return errors;
 }
@@ -298,22 +305,40 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="ciudad">
-                      Ciudad <span className="text-red-400">*</span>
+                    <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="departamento">
+                      Departamento <span className="text-red-400">*</span>
                     </label>
                     <select
+                      id="departamento"
+                      name="departamento"
+                      value={form.departamento}
+                      onChange={handleChange}
+                      aria-invalid={!!errors.departamento}
+                      className={`${inputClass('departamento')} cursor-pointer`}
+                    >
+                      <option value="">Selecciona tu departamento</option>
+                      {DEPARTAMENTOS.map((dep) => (
+                        <option key={dep} value={dep}>{dep}</option>
+                      ))}
+                    </select>
+                    {errors.departamento && <p className="mt-1 text-xs text-red-400">{errors.departamento}</p>}
+                  </div>
+
+                  <div>
+                    <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="ciudad">
+                      Ciudad / Municipio <span className="text-red-400">*</span>
+                    </label>
+                    <input
                       id="ciudad"
                       name="ciudad"
+                      type="text"
+                      autoComplete="address-level2"
                       value={form.ciudad}
                       onChange={handleChange}
                       aria-invalid={!!errors.ciudad}
-                      className={`${inputClass('ciudad')} cursor-pointer`}
-                    >
-                      <option value="">Selecciona tu ciudad</option>
-                      {CITIES.map((city) => (
-                        <option key={city} value={city}>{city}</option>
-                      ))}
-                    </select>
+                      placeholder="Ej: Medellín, Bello, Envigado..."
+                      className={inputClass('ciudad')}
+                    />
                     {errors.ciudad && <p className="mt-1 text-xs text-red-400">{errors.ciudad}</p>}
                   </div>
                 </div>
@@ -327,12 +352,16 @@ export default function CheckoutPage() {
                     <button
                       key={method.id}
                       type="button"
+                      disabled={method.disabled}
                       onClick={() => {
+                        if (method.disabled) return;
                         setPaymentMethod(method.id);
                         setPaymentError('');
                       }}
                       className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all ${
-                        paymentMethod === method.id
+                        method.disabled
+                          ? 'cursor-not-allowed border-slate-800 bg-slate-900/30 opacity-50'
+                          : paymentMethod === method.id
                           ? 'border-cyan-400/50 bg-cyan-300/10 ring-1 ring-cyan-400/30'
                           : 'border-slate-700 bg-slate-900/60 hover:border-slate-600'
                       }`}
@@ -342,13 +371,15 @@ export default function CheckoutPage() {
                         <p className="text-sm font-semibold text-white">{method.label}</p>
                         <p className="truncate text-xs text-slate-500">{method.desc}</p>
                       </div>
-                      <div
-                        className={`ml-auto h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
-                          paymentMethod === method.id
-                            ? 'border-cyan-300 bg-cyan-300'
-                            : 'border-slate-600 bg-transparent'
-                        }`}
-                      />
+                      {!method.disabled && (
+                        <div
+                          className={`ml-auto h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
+                            paymentMethod === method.id
+                              ? 'border-cyan-300 bg-cyan-300'
+                              : 'border-slate-600 bg-transparent'
+                          }`}
+                        />
+                      )}
                     </button>
                   ))}
                 </div>
