@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { WHATSAPP_LINK } from '@/lib/config';
 
 type Question = {
   q: string;
@@ -231,7 +232,7 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
               Reiniciar
             </button>
             <a
-              href="https://wa.me/573001234567"
+              href={WHATSAPP_LINK}
               target="_blank"
               rel="noreferrer"
               className="flex items-center justify-center rounded-full border border-green-400/60 bg-green-500/25 px-8 py-3.5 text-sm font-semibold text-green-300 hover:bg-green-500/35 transition-colors"

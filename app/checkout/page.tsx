@@ -391,9 +391,13 @@ export default function CheckoutPage() {
                 )}
 
                 {paymentMethod === 'contra-entrega' && (
-                  <div className="mt-4 rounded-xl bg-amber-500/10 border border-amber-500/20 px-4 py-3">
-                    <p className="text-sm text-amber-300">
-                      <strong>Contra entrega:</strong> Nuestro equipo se contactará contigo por WhatsApp para coordinar la entrega y el pago.
+                  <div className={`mt-4 rounded-xl border px-4 py-3 ${subtotal >= 400000 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
+                    <p className={`text-sm ${subtotal >= 400000 ? 'text-amber-300' : 'text-red-300'}`}>
+                      {subtotal >= 400000 ? (
+                        <><strong>Contra entrega:</strong> Nuestro equipo se contactará contigo por WhatsApp para coordinar la entrega y el pago.</>
+                      ) : (
+                        <><strong>Aviso:</strong> La opción de contra entrega aplica únicamente para pedidos mayores a $400.000 COP. Para pedidos de menor valor se cobrará una tarifa de envío adicional.</>
+                      )}
                     </p>
                   </div>
                 )}

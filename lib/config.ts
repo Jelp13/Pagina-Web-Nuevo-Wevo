@@ -5,7 +5,7 @@
 
 // URLs base y contacto
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://nuevowevo.com';
-export const WHATSAPP_LINK = 'https://wa.me/573103050607';
+export const WHATSAPP_LINK = 'https://wa.me/573163713928';
 export const CONTACT_EMAIL = 'contact@nuevowevo.com';
 
 // Metadata y SEO
@@ -34,7 +34,7 @@ export const COMPANY_INFO = {
   name: SITE_NAME,
   description: 'Tienda de PCs gaming minimalista con experiencia 100% local.',
   country: 'Colombia',
-  phone: '+57 310 305 0607',
+  phone: '+57 316 3713928',
 };
 
 // Rutas internas
