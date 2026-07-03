@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 
 function ConfirmationContent() {
@@ -123,6 +124,7 @@ export default function ConfirmationPage() {
       }>
         <ConfirmationContent />
       </Suspense>
+      <Footer />
     </main>
   );
 }

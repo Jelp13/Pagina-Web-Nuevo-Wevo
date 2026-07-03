@@ -8,7 +8,6 @@ export default function Footer() {
           <p className="text-xl font-black tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500">
             {SITE_NAME}
           </p>
-          <p className="mt-4 text-slate-400">PCs gamer y accesorios minimalistas para Colombia con soporte directo y envío rápido.</p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -21,11 +20,12 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Ayuda</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Legal</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
-              <li><a href="https://nuevowevo.com/contact/" target="_blank" rel="noreferrer" className="hover:text-cyan-300">Contacto</a></li>
-              <li><a href="#" className="cursor-not-allowed">Seguimiento</a></li>
-              <li><a href="#" className="cursor-not-allowed">FAQs</a></li>
+              <li><a href="/legal/terminos" className="hover:text-cyan-300 transition-colors">Términos</a></li>
+              <li><a href="/legal/datos-personales" className="hover:text-cyan-300 transition-colors">Datos personales</a></li>
+              <li><a href="/legal/politica-privacidad" className="hover:text-cyan-300 transition-colors">Política de privacidad</a></li>
+              <li><a href="/legal/eliminacion-datos" className="hover:text-cyan-300 transition-colors">Eliminación de datos</a></li>
             </ul>
           </div>
           <div>
@@ -33,16 +33,12 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
               <li><a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="hover:text-cyan-300">WhatsApp</a></li>
               <li><a href="mailto:contact@nuevowevo.com" className="hover:text-cyan-300">contact@nuevowevo.com</a></li>
-              <li>Colombia</li>
             </ul>
           </div>
           <div>
-            <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Legal</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Ayuda</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
-              <li><a href="/legal/terminos" className="hover:text-cyan-300 transition-colors">Términos</a></li>
-              <li><a href="/legal/datos-personales" className="hover:text-cyan-300 transition-colors">Datos personales</a></li>
-              <li><a href="/legal/politica-privacidad" className="hover:text-cyan-300 transition-colors">Política de privacidad</a></li>
-              <li><a href="/legal/eliminacion-datos" className="hover:text-cyan-300 transition-colors">Eliminación de datos</a></li>
+              <li><a href="/contacto" className="hover:text-cyan-300">Contacto</a></li>
             </ul>
           </div>
         </div>

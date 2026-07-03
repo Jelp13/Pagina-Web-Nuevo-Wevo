@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
 import { PRODUCTS } from '@/lib/constants';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
@@ -101,11 +102,12 @@ export default function TorresPage() {
               href={ROUTES.quiz}
               className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-8 py-3 text-sm font-semibold text-slate-950 hover:opacity-95 transition-opacity"
             >
-              Hacer el quiz
+              Recomendacion inteligente
             </Link>
           </div>
         </div>
       </section>
+      <Footer />
     </main>
   );
 }

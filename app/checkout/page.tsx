@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { useCartStore, formatCOP, getCartTotal } from '@/lib/cart-store';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 
@@ -484,6 +485,7 @@ export default function CheckoutPage() {
           </div>
         </form>
       </div>
+      <Footer />
     </main>
   );
 }

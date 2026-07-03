@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { useCartStore, formatCOP, getCartTotal } from '@/lib/cart-store';
 import { ROUTES } from '@/lib/config';
 
@@ -207,6 +208,7 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      <Footer />
     </main>
   );
 }

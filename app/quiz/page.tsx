@@ -12,6 +12,8 @@
 
 import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
+import Footer from '@/components/Footer';
+import ProductImage from '@/components/ProductImage';
 import { PRODUCTS, PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
 
 
@@ -150,9 +152,7 @@ export default function QuizPage() {
               key={product.name}
               className="relative flex min-h-[320px] flex-col overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
             >
-              <div className="mb-6 flex h-40 items-center justify-center rounded-3xl bg-slate-950/90 text-4xl">
-                🖥️
-              </div>
+              <ProductImage src={product.images[0]} alt={product.name} className="mb-6 h-40 rounded-3xl bg-slate-950/90" iconSize="text-4xl" />
 
               {product.badge && (
                 <span className="absolute left-6 top-6 rounded-full bg-cyan-300/15 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-cyan-100">
@@ -211,7 +211,7 @@ export default function QuizPage() {
           <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Marcas</p>
           <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">Aliados de confianza.</h2>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7">
+        <div className="flex flex-wrap justify-center gap-4">
           {brands.map((brand) => (
             <div
               key={brand}
@@ -222,6 +222,7 @@ export default function QuizPage() {
           ))}
         </div>
       </section>
+       <Footer />
     </main>
   );
 }

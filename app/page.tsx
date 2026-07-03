@@ -122,7 +122,7 @@ export default function Home() {
               Selección premium con componentes elegidos para gaming, creación y productividad.
             </p>
           </div>
-          <a href="https://nuevowevo.com/shop/" target="_blank" rel="noreferrer" className="rounded-full border border-cyan-400/20 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100 hover:bg-white/10 transition-colors">
+          <a href={ROUTES.torres} className="rounded-full border border-cyan-400/20 bg-white/5 px-6 py-3 text-sm font-semibold text-slate-100 hover:bg-white/10 transition-colors">
             Ver todas
           </a>
         </div>
@@ -146,7 +146,7 @@ export default function Home() {
             href={ROUTES.quiz}
             className="mt-8 inline-flex rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-8 py-4 text-sm font-semibold text-slate-950 shadow-lg hover:opacity-95 transition-opacity"
           >
-            Iniciar quiz ahora
+            Encunentra tu PC ideal 
           </a>
         </div>
       </section>
