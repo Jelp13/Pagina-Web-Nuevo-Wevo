@@ -48,6 +48,7 @@ export const ROUTES = {
   cart: '/carrito',
   checkout: '/checkout',
   confirmation: '/checkout/confirmacion',
+  mantenimientos: '/mantenimientos',
 };
 
 // Configuración de IVA (productos de tecnología en Colombia)

@@ -11,7 +11,7 @@ const navigation = [
   { label: 'Torres', href: ROUTES.torres },
   { label: 'Tu Pc', href: ROUTES.quiz },
   { label: 'Periféricos', href: ROUTES.peripherals },
-  
+  { label: 'Mantenimientos', href: ROUTES.mantenimientos },
 ];
 
 function CartButton() {
