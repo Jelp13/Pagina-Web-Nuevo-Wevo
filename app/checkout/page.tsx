@@ -7,6 +7,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCartStore, formatCOP, getCartTotal } from '@/lib/cart-store';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
+import SearchableSelect from '@/components/SearchableSelect';
+import { DEPARTAMENTOS, getMunicipios } from '@/lib/colombia-geo';
 
 type PaymentMethod = 'contra-entrega' | 'tarjeta' | 'pse' | 'addi' | 'nequi' | 'breb';
 
@@ -41,14 +43,6 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: s
   { id: 'breb', label: 'BRE-B', icon: '📷', desc: 'Pago por código QR — Próximamente', disabled: true },
 ];
 
-const DEPARTAMENTOS = [
-  'Amazonas', 'Antioquia', 'Arauca', 'Atlántico', 'Bogotá D.C.', 'Bolívar',
-  'Boyacá', 'Caldas', 'Caquetá', 'Casanare', 'Cauca', 'Cesar', 'Chocó',
-  'Córdoba', 'Cundinamarca', 'Guainía', 'Guaviare', 'Huila', 'La Guajira',
-  'Magdalena', 'Meta', 'Nariño', 'Norte de Santander', 'Putumayo', 'Quindío',
-  'Risaralda', 'San Andrés y Providencia', 'Santander', 'Sucre', 'Tolima',
-  'Valle del Cauca', 'Vaupés', 'Vichada',
-];
 
 function validate(form: FormData): Partial<Record<keyof FormData, string>> {
   const errors: Partial<Record<keyof FormData, string>> = {};
@@ -89,12 +83,22 @@ export default function CheckoutPage() {
     );
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+  }
+
+  function handleDepartamentoChange(dep: string) {
+    setForm((prev) => ({ ...prev, departamento: dep, ciudad: '' }));
+    setErrors((prev) => ({ ...prev, departamento: undefined, ciudad: undefined }));
+  }
+
+  function handleCiudadChange(city: string) {
+    setForm((prev) => ({ ...prev, ciudad: city }));
+    if (errors.ciudad) setErrors((prev) => ({ ...prev, ciudad: undefined }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -309,19 +313,14 @@ export default function CheckoutPage() {
                     <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="departamento">
                       Departamento <span className="text-red-400">*</span>
                     </label>
-                    <select
+                    <SearchableSelect
                       id="departamento"
-                      name="departamento"
                       value={form.departamento}
-                      onChange={handleChange}
-                      aria-invalid={!!errors.departamento}
-                      className={`${inputClass('departamento')} cursor-pointer`}
-                    >
-                      <option value="">Selecciona tu departamento</option>
-                      {DEPARTAMENTOS.map((dep) => (
-                        <option key={dep} value={dep}>{dep}</option>
-                      ))}
-                    </select>
+                      onChange={handleDepartamentoChange}
+                      options={DEPARTAMENTOS}
+                      placeholder="Selecciona tu departamento"
+                      hasError={!!errors.departamento}
+                    />
                     {errors.departamento && <p className="mt-1 text-xs text-red-400">{errors.departamento}</p>}
                   </div>
 
@@ -329,16 +328,14 @@ export default function CheckoutPage() {
                     <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="ciudad">
                       Ciudad / Municipio <span className="text-red-400">*</span>
                     </label>
-                    <input
+                    <SearchableSelect
                       id="ciudad"
-                      name="ciudad"
-                      type="text"
-                      autoComplete="address-level2"
                       value={form.ciudad}
-                      onChange={handleChange}
-                      aria-invalid={!!errors.ciudad}
-                      placeholder="Ej: Medellín, Bello, Envigado..."
-                      className={inputClass('ciudad')}
+                      onChange={handleCiudadChange}
+                      options={getMunicipios(form.departamento)}
+                      placeholder={form.departamento ? 'Selecciona tu ciudad' : 'Primero selecciona un departamento'}
+                      disabled={!form.departamento}
+                      hasError={!!errors.ciudad}
                     />
                     {errors.ciudad && <p className="mt-1 text-xs text-red-400">{errors.ciudad}</p>}
                   </div>
