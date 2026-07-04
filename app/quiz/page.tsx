@@ -10,6 +10,7 @@
  * - Resultado personalizado con CTA directo al producto
  */
 
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
 import Footer from '@/components/Footer';
@@ -94,10 +95,15 @@ export default function QuizPage() {
       {/* HERO SECTION - Presentación y CTA */}
       <section className="relative overflow-hidden px-6 py-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(93,213,255,0.16),transparent_24%),radial-gradient(circle_at_85%_15%,rgba(93,213,255,0.1),transparent_20%),radial-gradient(circle_at_50%_80%,rgba(255,255,255,0.04),transparent_24%)]" />
+        <Image
+          src="/Imagenes/logo-wevo-solo.png"
+          alt=""
+          aria-hidden="true"
+          width={880}
+          height={480}
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none object-contain opacity-[0.07]"
+        />
         <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-8 text-center">
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-100">
-            Recomendador inteligente
-          </span>
           <h1 className="max-w-3xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-white sm:text-6xl">
             Encuentra tu PC ideal con unas pocas preguntas.
           </h1>

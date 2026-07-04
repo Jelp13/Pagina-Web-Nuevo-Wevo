@@ -13,6 +13,40 @@ export default function TerminosPage() {
       updated="Junio de 2026 | www.nuevowevo.com"
     >
 
+      <h2>Recepción para Garantía</h2>
+      <p>
+        Para realizar cualquier evaluación por garantía, el cliente deberá entregar el producto en nuestras
+        instalaciones, debidamente empacado y con sus accesorios cuando aplique. Los costos de envío o transporte
+        hasta nuestro punto de atención serán asumidos inicialmente por el cliente.
+      </p>
+      <p>
+        Si, una vez realizada la evaluación técnica, se determina que la falla está cubierta por la garantía
+        legal o la garantía ofrecida por Nuevo Wevo, los costos de transporte asociados al cumplimiento de la
+        garantía serán asumidos por Nuevo Wevo.
+      </p>
+      <p>
+        Si la garantía es rechazada por no cumplir las condiciones de cobertura, los costos de transporte y
+        devolución serán asumidos por el cliente.
+      </p>
+
+      <h2>Ámbito de Aplicación</h2>
+      <p>
+        Los presentes Términos y Condiciones aplican a todas las compras realizadas a Nuevo Wevo,
+        independientemente del canal utilizado por el cliente, incluyendo, entre otros:
+      </p>
+      <ul>
+        <li>Sitio web oficial.</li>
+        <li>WhatsApp.</li>
+        <li>Redes sociales (Facebook, Instagram, TikTok y demás plataformas).</li>
+        <li>Atención telefónica.</li>
+        <li>Venta presencial en nuestras instalaciones.</li>
+        <li>Cualquier otro canal oficial autorizado por Nuevo Wevo.</li>
+      </ul>
+      <p>
+        Al realizar una compra por cualquiera de estos medios, el cliente declara haber leído, comprendido y
+        aceptado los presentes Términos y Condiciones.
+      </p>
+
       <h2>Errores en Información</h2>
       <p>
         Nuevo Wevo S.A.S. realiza sus mejores esfuerzos para mantener la información del sitio web actualizada y

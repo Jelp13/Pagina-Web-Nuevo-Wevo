@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MantenimientosCarousel from '@/components/MantenimientosCarousel';
@@ -16,11 +17,16 @@ export default function MantenimientosPage() {
       {/* Header */}
       <section className="relative overflow-hidden px-6 py-20 text-center">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(34,211,238,0.10),transparent_60%)]" aria-hidden="true" />
+         <Image
+          src="/Imagenes/logo-wevo-solo.png"
+          alt=""
+          aria-hidden="true"
+          width={880}
+          height={480}
+          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none object-contain opacity-[0.07]"
+        /> 
         <div className="relative mx-auto max-w-2xl">
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-100">
-            Servicio técnico
-          </span>
-          <h1 className="mt-6 text-5xl font-black tracking-[-0.03em] text-white sm:text-6xl">
+          <h1 className="text-5xl font-black tracking-[-0.03em] text-white sm:text-6xl">
             Mantenimientos
           </h1>
           <p className="mt-4 text-base text-slate-400 sm:text-lg">
