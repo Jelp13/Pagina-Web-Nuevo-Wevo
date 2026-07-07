@@ -16,13 +16,13 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TikTokSection from '@/components/TikTokSection';
 import ProductCard from '@/components/ProductCard';
-import { FEATURES, PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
+import { FEATURES, FEATURED_PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
 import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
 
 export default function Home() {
-  const products = PRODUCTS;
+  const products = FEATURED_PRODUCTS;
   const peripherals = PERIPHERALS;
   const brands = BRANDS;
 

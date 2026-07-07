@@ -7,7 +7,7 @@ import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import RelatedProducts from '@/components/RelatedProducts';
 import AddToCartButton from '@/components/AddToCartButton';
-import { PRODUCTS } from '@/lib/constants';
+import { PRODUCTS, FEATURED_PRODUCTS } from '@/lib/constants';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
@@ -28,7 +28,7 @@ export default function TowerDetailPage({ params }: { params: { id: string } }) 
   const product = PRODUCTS.find((p) => p.id === params.id);
   if (!product) notFound();
 
-  const related = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 3);
+  const related = FEATURED_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.numericPrice) / product.originalPrice) * 100)

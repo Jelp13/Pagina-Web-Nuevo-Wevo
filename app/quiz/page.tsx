@@ -15,11 +15,11 @@ import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { PRODUCTS, PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
+import { FEATURED_PRODUCTS, PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
 
 
 const quizQuestions = QUIZ_QUESTIONS;
-const products = PRODUCTS;
+const products = FEATURED_PRODUCTS;
 const peripherals = PERIPHERALS;
 const brands = BRANDS;
 
