@@ -1,10 +1,14 @@
 import type { CreativePerf } from '@/lib/constants';
 
 const levelConfig = {
-  'Excelente':  { color: 'text-cyan-300',  bg: 'bg-cyan-300/10',  bar: 'w-full' },
-  'Muy bueno':  { color: 'text-green-400', bg: 'bg-green-400/10', bar: 'w-3/4'  },
-  'Bueno':      { color: 'text-yellow-400',bg: 'bg-yellow-400/10',bar: 'w-1/2'  },
-  'Básico':     { color: 'text-slate-400', bg: 'bg-slate-400/10', bar: 'w-1/4'  },
+  'Excelente':      { color: 'text-cyan-300',   bg: 'bg-cyan-300/10',   bar: 'w-full'     },
+  'Fluido':         { color: 'text-green-400',  bg: 'bg-green-400/10',  bar: 'w-3/4'      },
+  'Muy bueno':      { color: 'text-green-400',  bg: 'bg-green-400/10',  bar: 'w-3/4'      },
+  'Bueno':          { color: 'text-yellow-400', bg: 'bg-yellow-400/10', bar: 'w-1/2'      },
+  'Aceptable':      { color: 'text-amber-400',  bg: 'bg-amber-400/10',  bar: 'w-[38%]'    },
+  'Básico':         { color: 'text-orange-400', bg: 'bg-orange-400/10', bar: 'w-1/4'      },
+  'Limitado':       { color: 'text-orange-400', bg: 'bg-orange-400/10', bar: 'w-[12%]'    },
+  'No recomendado': { color: 'text-slate-500',  bg: 'bg-slate-500/10',  bar: 'w-0'        },
 };
 
 export default function CreativePerformance({ data }: { data: CreativePerf[] }) {

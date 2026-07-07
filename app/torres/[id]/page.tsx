@@ -92,7 +92,11 @@ export default function TowerDetailPage({ params }: { params: { id: string } }) 
             </div>
 
             {/* Descripción corta */}
-            <p className="text-slate-400 leading-relaxed">{product.description}</p>
+            {(product.shortDescription || product.description) && (
+              <p className="text-slate-400 leading-relaxed">
+                {product.shortDescription ?? product.description}
+              </p>
+            )}
 
             {/* Características rápidas */}
             <ProductFeatures features={product.features} />
@@ -126,6 +130,7 @@ export default function TowerDetailPage({ params }: { params: { id: string } }) 
           specs={product.fullSpecs}
           gamingPerformance={product.gamingPerformance}
           creativePerformance={product.creativePerformance}
+          description={product.description}
         />
       </section>
 

@@ -10,18 +10,20 @@ interface Props {
   specs: ProductSpec[];
   gamingPerformance: GamingPerf[];
   creativePerformance: CreativePerf[];
+  description?: string;
 }
 
-type Tab = 'specs' | 'gaming' | 'creative';
+type Tab = 'descripcion' | 'specs' | 'gaming' | 'creative';
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'specs',    label: 'Especificaciones' },
-  { id: 'gaming',   label: 'Gaming' },
-  { id: 'creative', label: 'Diseño y Edición' },
+  { id: 'descripcion', label: 'Descripción' },
+  { id: 'specs',       label: 'Especificaciones' },
+  { id: 'gaming',      label: 'Gaming' },
+  { id: 'creative',    label: 'Diseño y Edición' },
 ];
 
-export default function ProductTabs({ specs, gamingPerformance, creativePerformance }: Props) {
-  const [active, setActive] = useState<Tab>('specs');
+export default function ProductTabs({ specs, gamingPerformance, creativePerformance, description }: Props) {
+  const [active, setActive] = useState<Tab>('descripcion');
 
   return (
     <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 overflow-hidden">
@@ -45,6 +47,20 @@ export default function ProductTabs({ specs, gamingPerformance, creativePerforma
 
       {/* Contenido activo */}
       <div className="p-7">
+        {active === 'descripcion' && (
+          <div>
+            <h2 className="mb-4 text-xl font-bold text-white">📋 Descripción del producto</h2>
+            {description ? (
+              <div className="space-y-4">
+                {description.split('\n\n').map((paragraph, i) => (
+                  <p key={i} className="text-slate-400 leading-relaxed">{paragraph}</p>
+                ))}
+              </div>
+            ) : (
+              <p className="text-slate-500 italic">Descripción no disponible aún.</p>
+            )}
+          </div>
+        )}
         {active === 'specs' && <ProductSpecs specs={specs} />}
         {active === 'gaming' && <GamingPerformance data={gamingPerformance} />}
         {active === 'creative' && <CreativePerformance data={creativePerformance} />}

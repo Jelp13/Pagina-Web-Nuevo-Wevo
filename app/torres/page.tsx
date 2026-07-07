@@ -62,7 +62,7 @@ export default function TorresPage() {
                 <div className="flex flex-col gap-3">
                   <span className="text-xs uppercase tracking-[0.18em] text-cyan-300">{product.category}</span>
                   <h2 className="text-2xl font-bold text-white group-hover:text-cyan-100 transition-colors">{product.name}</h2>
-                  <p className="text-sm text-slate-400">{product.description}</p>
+                  <p className="text-sm text-slate-400">{product.shortDescription ?? product.description}</p>
                   <p className="text-xs text-slate-500">{product.specs}</p>
 
                   <div className="mt-2 flex items-center justify-between">
