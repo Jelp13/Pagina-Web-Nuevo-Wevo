@@ -219,7 +219,6 @@ export const PRODUCTS: Product[] = [
     numericPrice: 7399990,
     url: 'https://nuevowevo.com/producto/torre-wevo-revuelto-amd-ryzen-7-5700x-rtx-5060ti/',
   },
- 
   {
     id: 'torre-broce',
     badge: null,
@@ -722,33 +721,85 @@ export interface QuizQuestion {
 
 export const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    q: '¿Para qué vas a usar tu PC principalmente?',
-    opts: ['Gaming intenso', 'Diseño/edición', 'Trabajo y estudio', 'Uso casual'],
+    // [0] uso: 0=competitivo, 1=AAA, 2=diseño, 3=trabajo, 4=mixto
+    q: '¿Cuál será el uso principal de tu PC?',
+    opts: [
+      'Gaming competitivo (Valorant, CS2, LoL)',
+      'Gaming AAA (Cyberpunk, GTA V, Warzone)',
+      'Diseño gráfico y edición de video',
+      'Trabajo y estudio (Office, streaming, video)',
+      'Todo un poco (gaming + trabajo o creación)',
+    ],
   },
   {
-    q: '¿Cuál es tu presupuesto?',
-    opts: ['Hasta $4.5M', '$4.5M–$6M', '$6M–$8M', 'Más de $8M'],
+    // [1] presupuesto: 0=<3.5M, 1=3.5-5M, 2=5-7M, 3=7-10M, 4=>10M
+    q: '¿Cuál es tu presupuesto disponible?',
+    opts: [
+      'Hasta $3.5M',
+      '$3.5M – $5M',
+      '$5M – $7M',
+      '$7M – $10M',
+      'Más de $10M',
+    ],
   },
   {
-    q: '¿Qué experiencia tienes con los PC?',
-    opts: ['Principiante', 'Intermedio', 'Avanzado'],
+    // [2] resolución: 0=1080p, 1=1440p, 2=4K, 3=noSé
+    q: '¿En qué resolución planeas usar tu equipo?',
+    opts: [
+      '1080p (Full HD) — la más común',
+      '1440p (2K) — mejor nitidez',
+      '4K — la máxima calidad',
+      'No sé / aún no tengo monitor',
+    ],
   },
   {
-    q: '¿Qué valoras más?',
-    opts: ['Rendimiento', 'Estilo', 'Silencio', 'Precio'],
+    // [3] fps: 0=60fps/casual, 1=120fps, 2=200fps/competitivo, 3=noJuega
+    q: '¿Cuántos FPS necesitas al jugar?',
+    opts: [
+      '60 FPS me basta (gaming casual)',
+      '120+ FPS para jugar cómodamente',
+      '200+ FPS para gaming competitivo',
+      'No juego videojuegos',
+    ],
   },
   {
-    q: '¿Ya tienes monitor o necesitas uno?',
-    opts: ['Ya tengo', 'Necesito uno'],
-  },
-  {
-    q: '¿Qué juegos quieres jugar?',
-    opts: ['Valorant', 'League of Legends', 'Fortnite', 'Cyberpunk 2077', 'CoD Warzone', 'GTA V', 'No quiero jugar'],
+    // [4] software: multiple — 0=PS/AI, 1=Premiere/DV, 2=Blender/C4D, 3=ninguno
+    q: '¿Usas o planeas usar alguno de estos programas?',
+    opts: [
+      'Photoshop / Illustrator (diseño gráfico)',
+      'Premiere Pro / DaVinci Resolve (video)',
+      'Blender / Cinema 4D (renderizado 3D)',
+      'Ninguno — no hago trabajo creativo',
+    ],
     multiple: true,
   },
   {
-    q: '¿En qué resolución quieres jugar?',
-    opts: ['1080p', '1440p', '4K'],
-    multiple: true,
+    // [5] estética: 0=negro/RGB, 1=blanco, 2=indiferente
+    q: '¿Qué estética prefieres para tu setup?',
+    opts: [
+      'Negro / RGB (estilo gamer clásico)',
+      'Blanco premium (clean y elegante)',
+      'Me da igual, priorizo el rendimiento',
+    ],
+  },
+  {
+    // [6] valor: 0=máxRendimiento, 1=moderno/actualizable, 2=calidadPrecio, 3=precioMínim
+    q: '¿Qué es lo más importante en tu nuevo equipo?',
+    opts: [
+      'El máximo rendimiento para mi presupuesto',
+      'Plataforma moderna y actualizable (AM5 / DDR5)',
+      'La mejor relación calidad-precio',
+      'El precio más bajo posible',
+    ],
+  },
+  {
+    // [7] intensidad: 0=casual, 1=regular, 2=intensivo, 3=profesional
+    q: '¿Con qué intensidad planeas usar el equipo?',
+    opts: [
+      'Casual (pocas horas, tareas básicas)',
+      'Regular (varias horas al día, gaming y trabajo)',
+      'Intensivo (muchas horas de gaming AAA o trabajo pesado)',
+      'Profesional (dependo del PC para mi trabajo o negocio)',
+    ],
   },
 ];

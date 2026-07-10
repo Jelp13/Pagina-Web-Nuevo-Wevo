@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { WHATSAPP_LINK } from '@/lib/config';
 
 type Question = {
@@ -216,14 +217,23 @@ export default function Quiz({ questions = defaultQuestions, getResult = default
           <p className="mx-auto max-w-xl text-slate-400">{result?.desc}</p>
           <p className="mx-auto max-w-xl text-lg text-cyan-400 mt-2">Si no es lo que buscabas, no te preocupes, contáctanos y te cotizaremos una torre que se acomode a ti.</p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <a
-              href={result?.url}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-cyan-300/90 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-300"
-            >
-              Ver producto
-            </a>
+            {result?.url.startsWith('/') ? (
+              <Link
+                href={result.url}
+                className="rounded-full bg-cyan-300/90 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-300"
+              >
+                Ver producto
+              </Link>
+            ) : (
+              <a
+                href={result?.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full bg-cyan-300/90 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-300"
+              >
+                Ver producto
+              </a>
+            )}
             <button
               type="button"
               onClick={handleRestart}

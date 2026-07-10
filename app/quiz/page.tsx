@@ -15,75 +15,88 @@ import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { FEATURED_PRODUCTS, PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
-
+import { PRODUCTS, FEATURED_PRODUCTS, PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
 
 const quizQuestions = QUIZ_QUESTIONS;
 const products = FEATURED_PRODUCTS;
 const peripherals = PERIPHERALS;
 const brands = BRANDS;
 
+// Devuelve el resultado apuntando a la página interna de la torre
+const findTower = (id: string) => {
+  const tower = PRODUCTS.find((p) => p.id === id)!;
+  return {
+    name: tower.name,
+    desc: tower.shortDescription ?? tower.description,
+    url: `/torres/${id}`,
+  };
+};
+
+/**
+ * Motor de recomendación
+ * [0] uso: 0=competitivo · 1=AAA · 2=diseño · 3=trabajo · 4=mixto
+ * [1] presupuesto: 0=<3.5M · 1=3.5-5M · 2=5-7M · 3=7-10M · 4=>10M
+ * [2] resolución: 0=1080p · 1=1440p · 2=4K · 3=noSé
+ * [3] fps: 0=60fps · 1=120fps · 2=200+fps · 3=noJuega
+ * [4] software: multiple [0=PS/AI · 1=Premiere/DV · 2=Blender/C4D · 3=ninguno]
+ * [5] estética: 0=negro/RGB · 1=blanco · 2=indiferente
+ * [6] valor: 0=máxRend · 1=moderno · 2=calidadPrecio · 3=precioMínimo
+ * [7] intensidad: 0=casual · 1=regular · 2=intensivo · 3=profesional
+ */
 const getQuizResult = (answers: (number | number[] | null)[]) => {
-  const [, presupuesto, experiencia, valor, , , resolucion] = answers;
+  const uso         = typeof answers[0] === 'number' ? answers[0] : 3;
+  const presupuesto = typeof answers[1] === 'number' ? answers[1] : 1;
+  const resolucion  = typeof answers[2] === 'number' ? answers[2] : 0;
+  const fps         = typeof answers[3] === 'number' ? answers[3] : 0;
+  const software    = Array.isArray(answers[4]) ? answers[4] : [];
+  const estetica    = typeof answers[5] === 'number' ? answers[5] : 2;
+  const valor       = typeof answers[6] === 'number' ? answers[6] : 2;
+  const intensidad  = typeof answers[7] === 'number' ? answers[7] : 1;
 
-  // Convertir a números seguros
-  const presupuestoNum = typeof presupuesto === 'number' ? presupuesto : 0;
-  const experienciaNum = typeof experiencia === 'number' ? experiencia : 0;
-  const valorNum = typeof valor === 'number' ? valor : 0;
+  const noJuega        = fps === 3 || uso === 3;
+  const esProductividad = uso === 2 || uso === 3;
+  const quiereDiseño   = uso === 2 || uso === 4;
+  const quiereBlanco   = estetica === 1;
+  const quierePrecio   = valor === 3;
+  const quiereModerno  = valor === 1;
+  const quiere4K       = resolucion === 2;
+  const quiere1440p    = resolucion === 1;
+  const usaBlender     = software.includes(2);
+  const usaVideo       = software.includes(1);
+  const esIntensivo    = intensidad >= 2;
+  const esCompetitivo  = uso === 0 || fps === 2;
 
-  // Lógica de resolucion: si selecciona 4K, necesita máxima potencia
-  const resolucionArray = Array.isArray(resolucion) ? resolucion : [];
-  const quiereUltra4K = resolucionArray.includes(2);
-
-  if (valorNum === 1) {
-    return {
-      name: 'Torre Clara de Wevo',
-      desc: 'Diseño blanco elegante con potencia confiable.',
-      url: 'https://nuevowevo.com/producto/torre-clara-de-wevo-amd-ryzen-7-5700x-rtx-5060-blanca/',
-    };
+  // ── PRESUPUESTO 0 · Hasta $3.5M ─────────────────────────────
+  if (presupuesto === 0) {
+    if (quierePrecio || (noJuega && !esIntensivo)) return findTower('torre-broce');
+    return findTower('torre-wevo-con-jamon');
   }
 
-  if (quiereUltra4K) {
-    return {
-      name: 'Torre Wevo Pochado',
-      desc: 'Máxima potencia para gaming 4K sin compromisos.',
-      url: 'https://nuevowevo.com/producto/torre-wevo-pochado-amd-ryzen-5-7600x-rtx-5060ti/',
-    };
+  // ── PRESUPUESTO 1 · $3.5M – $5M ─────────────────────────────
+  if (presupuesto === 1) {
+    if (noJuega || esProductividad) return findTower('torre-wevo-tibio');
+    return findTower('torre-wevo-extra');
   }
 
-  if (experienciaNum === 0) {
-    return {
-      name: 'Torre Wevo Tibio',
-      desc: 'Ideal para principiantes: estudio, oficina y uso casual.',
-      url: 'https://nuevowevo.com/producto/torre-wevo-tibio-amd-ryzen-5-8600g/',
-    };
+  // ── PRESUPUESTO 2 · $5M – $7M ───────────────────────────────
+  if (presupuesto === 2) {
+    if (quiereBlanco) return findTower('torre-clara-de-wevo');
+    if (noJuega || esProductividad) return findTower('torre-wevo-cosido');
+    return findTower('torre-wevo-de-codorniz');
   }
 
-  if (experienciaNum === 1) {
-    return presupuestoNum <= 1
-      ? {
-          name: 'Torre Wevo Frito',
-          desc: 'Accesible pero potente para gaming intermedio.',
-          url: 'https://nuevowevo.com/producto/torre-wevo-frito-amd-ryzen-7-5700x-radeon-9060xt/',
-        }
-      : {
-          name: 'Torre Wevo Revuelto',
-          desc: 'Equilibrio perfecto para usuarios intermedios.',
-          url: 'https://nuevowevo.com/producto/torre-wevo-revuelto-amd-ryzen-7-5700x-rtx-5060ti/',
-        };
+  // ── PRESUPUESTO 3 · $7M – $10M ──────────────────────────────
+  if (presupuesto === 3) {
+    if ((quiereDiseño || usaVideo) && esIntensivo) return findTower('torre-wevo-ranchero');
+    if (esCompetitivo || quiere1440p || quiereModerno) return findTower('torre-wevo-pochado');
+    return findTower('torre-wevo-revuelto');
   }
 
-  return presupuestoNum < 3
-    ? {
-        name: 'Torre Wevo Revuelto',
-        desc: 'Rendimiento sólido para jugadores avanzados.',
-        url: 'https://nuevowevo.com/producto/torre-wevo-revuelto-amd-ryzen-7-5700x-rtx-5060ti/',
-      }
-    : {
-        name: 'Torre Wevo Pochado',
-        desc: 'Máxima potencia para gaming AAA y creación avanzada.',
-        url: 'https://nuevowevo.com/producto/torre-wevo-pochado-amd-ryzen-5-7600x-rtx-5060ti/',
-      };
+  // ── PRESUPUESTO 4 · Más de $10M ─────────────────────────────
+  if (usaBlender || (quiere4K && esIntensivo)) return findTower('torre-wevo-tortilla');
+  if (quiereDiseño || usaVideo || quiere4K)    return findTower('torre-wevo-perico');
+  if (uso === 1 && quiere1440p)                return findTower('torre-wevo-tortilla');
+  return findTower('torre-wevo-perico');
 };
 
 export default function QuizPage() {
