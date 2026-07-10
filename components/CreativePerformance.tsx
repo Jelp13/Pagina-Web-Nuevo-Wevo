@@ -1,7 +1,8 @@
 import type { CreativePerf } from '@/lib/constants';
 
 const levelConfig = {
-  'Excelente':      { color: 'text-cyan-300',   bg: 'bg-cyan-300/10',   bar: 'w-full'     },
+  'Excepcional':    { color: 'text-violet-400', bg: 'bg-violet-400/10', bar: 'w-full'     },
+  'Excelente':      { color: 'text-cyan-300',   bg: 'bg-cyan-300/10',   bar: 'w-[90%]'    },
   'Fluido':         { color: 'text-green-400',  bg: 'bg-green-400/10',  bar: 'w-3/4'      },
   'Muy bueno':      { color: 'text-green-400',  bg: 'bg-green-400/10',  bar: 'w-3/4'      },
   'Bueno':          { color: 'text-yellow-400', bg: 'bg-yellow-400/10', bar: 'w-1/2'      },
