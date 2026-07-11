@@ -45,9 +45,14 @@ export default function PageTransition() {
       if (href.includes('wa.me') || href.includes('whatsapp')) return;
       if (href.startsWith('http') && !href.includes(window.location.hostname)) return;
 
-      // Ignorar si ya estamos en esa página
-      const destPath = href.startsWith('http') ? new URL(href).pathname : href;
-      if (destPath === window.location.pathname) return;
+      // Ignorar si la ruta destino es la misma (solo cambian los searchParams)
+      const destUrl = new URL(
+        href.startsWith('http') ? href : `${window.location.origin}${href}`,
+      );
+      if (destUrl.pathname === window.location.pathname) {
+        router.push(href);
+        return;
+      }
 
       // Prevenir navegación inmediata
       e.preventDefault();

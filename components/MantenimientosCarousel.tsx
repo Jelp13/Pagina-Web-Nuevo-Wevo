@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback } from 'react';
 
-interface Card {
+export interface Card {
   id: string;
   gama: string;
   title: string;
@@ -12,7 +12,7 @@ interface Card {
   services: string[] | null;
 }
 
-const CARDS: Card[] = [
+export const TORRES_CARDS: Card[] = [
   {
     id: 'torres-alta',
     gama: 'Gama Alta',
@@ -64,6 +64,9 @@ const CARDS: Card[] = [
       'Aumento de almacenamiento',
     ],
   },
+];
+
+export const PORTATILES_CARDS: Card[] = [
   {
     id: 'portatiles-alta',
     gama: 'Gama Alta',
@@ -74,7 +77,7 @@ const CARDS: Card[] = [
     accentColor: 'rgba(34,211,238,0.18)',
     services: [
       'Mantenimiento preventivo',
-      'Cambio de partes',
+      'Reparación de bisagras',
       'Diagnóstico',
       'Cambio de teclado',
       'Cambio de pantalla',
@@ -92,7 +95,7 @@ const CARDS: Card[] = [
     accentColor: 'rgba(59,130,246,0.18)',
     services: [
       'Mantenimiento preventivo',
-      'Cambio de partes',
+      'Reparación de bisagras',
       'Diagnóstico',
       'Cambio de teclado',
       'Cambio de pantalla',
@@ -110,7 +113,7 @@ const CARDS: Card[] = [
     accentColor: 'rgba(100,116,139,0.25)',
     services: [
       'Mantenimiento preventivo',
-      'Cambio de partes',
+      'Reparación de bisagras',
       'Diagnóstico',
       'Cambio de teclado',
       'Cambio de pantalla',
@@ -118,6 +121,9 @@ const CARDS: Card[] = [
       'Aumento de almacenamiento',
     ],
   },
+];
+
+export const OTROS_CARDS: Card[] = [
   {
     id: 'consolas',
     gama: 'Consolas',
@@ -126,7 +132,12 @@ const CARDS: Card[] = [
       'Mantenimiento preventivo para consolas de videojuegos de todas las generaciones. Limpieza interna, cambio de pasta térmica y revisión completa para un rendimiento óptimo.',
     icon: '🎮',
     accentColor: 'rgba(168,85,247,0.18)',
-    services: null,
+    services: [
+      'Mantenimiento preventivo',
+      'Diagnóstico',
+      'Mantenimiento controles',
+      'Aumento de almacenamiento (Dependiendo la consola)',
+    ],
   },
   {
     id: 'all-in-one',
@@ -136,44 +147,52 @@ const CARDS: Card[] = [
       'Mantenimiento preventivo para equipos All in One. Cuidamos cada componente integrado para garantizar el mejor rendimiento y la máxima durabilidad de tu equipo.',
     icon: '🖥️',
     accentColor: 'rgba(20,184,166,0.18)',
-    services: null,
+    services: [
+      'Mantenimiento preventivo',
+      'Diagnóstico',
+      'Aumento de memoria RAM',
+      'Aumento de almacenamiento',
+    ],
   },
 ];
 
-export default function MantenimientosCarousel() {
+export default function MantenimientosCarousel({ cards, height }: { cards: Card[]; height?: number }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const dragScrollLeft = useRef(0);
 
-  const getCardEls = useCallback(() =>
-    Array.from(trackRef.current?.querySelectorAll('[data-mcard]') ?? []) as HTMLElement[],
-  []);
+  const getCardEls = useCallback(
+    () => Array.from(trackRef.current?.querySelectorAll('[data-mcard]') ?? []) as HTMLElement[],
+    [],
+  );
 
-  const scrollToIdx = useCallback((idx: number) => {
-    const track = trackRef.current;
-    const cards = getCardEls();
-    if (!track || !cards[idx]) return;
-    track.scrollTo({ left: cards[idx].offsetLeft, behavior: 'smooth' });
-    setActiveIdx(idx);
-  }, [getCardEls]);
+  const scrollToIdx = useCallback(
+    (idx: number) => {
+      const track = trackRef.current;
+      const cardEls = getCardEls();
+      if (!track || !cardEls[idx]) return;
+      track.scrollTo({ left: cardEls[idx].offsetLeft, behavior: 'smooth' });
+      setActiveIdx(idx);
+    },
+    [getCardEls],
+  );
 
   const handleScroll = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    const cards = getCardEls();
+    const cardEls = getCardEls();
     const scrollLeft = track.scrollLeft;
     let closestIdx = 0;
     let minDist = Infinity;
-    cards.forEach((card, i) => {
+    cardEls.forEach((card, i) => {
       const dist = Math.abs(card.offsetLeft - scrollLeft);
       if (dist < minDist) { minDist = dist; closestIdx = i; }
     });
     setActiveIdx(closestIdx);
   }, [getCardEls]);
 
-  // Mouse drag handlers
   const onMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
     dragStartX.current = e.clientX;
@@ -193,22 +212,22 @@ export default function MantenimientosCarousel() {
         onClick={() => scrollToIdx(Math.max(0, activeIdx - 1))}
         disabled={activeIdx === 0}
         aria-label="Anterior"
-        className="absolute left-0 top-[calc(50%-2rem)] z-10 -translate-x-1 flex h-10 w-10 items-center justify-center rounded-full border border-cyan-400/20 bg-slate-900/90 text-slate-200 shadow-lg backdrop-blur-sm transition hover:border-cyan-300/50 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed sm:-translate-x-4"
+        className="absolute left-0 top-[calc(50%-2rem)] z-10 -translate-x-3 flex h-10 w-10 items-center justify-center rounded-full border border-cyan-400/20 bg-slate-900/90 text-slate-200 shadow-lg backdrop-blur-sm transition hover:border-cyan-300/50 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
       {/* Next arrow */}
       <button
-        onClick={() => scrollToIdx(Math.min(CARDS.length - 1, activeIdx + 1))}
-        disabled={activeIdx === CARDS.length - 1}
+        onClick={() => scrollToIdx(Math.min(cards.length - 1, activeIdx + 1))}
+        disabled={activeIdx === cards.length - 1}
         aria-label="Siguiente"
-        className="absolute right-0 top-[calc(50%-2rem)] z-10 translate-x-1 flex h-10 w-10 items-center justify-center rounded-full border border-cyan-400/20 bg-slate-900/90 text-slate-200 shadow-lg backdrop-blur-sm transition hover:border-cyan-300/50 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed sm:translate-x-4"
+        className="absolute right-0 top-[calc(50%-2rem)] z-10 translate-x-3 flex h-10 w-10 items-center justify-center rounded-full border border-cyan-400/20 bg-slate-900/90 text-slate-200 shadow-lg backdrop-blur-sm transition hover:border-cyan-300/50 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed"
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
@@ -220,7 +239,7 @@ export default function MantenimientosCarousel() {
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseUp}
         onScroll={handleScroll}
-        className="flex gap-5 overflow-x-scroll pb-2 select-none"
+        className="flex overflow-x-scroll pb-2 select-none"
         style={{
           scrollSnapType: 'x mandatory',
           scrollbarWidth: 'none',
@@ -228,13 +247,12 @@ export default function MantenimientosCarousel() {
           WebkitOverflowScrolling: 'touch',
         } as React.CSSProperties}
       >
-
-        {CARDS.map((card) => (
+        {cards.map((card) => (
           <div
             key={card.id}
             data-mcard
             className="shrink-0 w-full"
-            style={{ scrollSnapAlign: 'start' }}
+            style={{ scrollSnapAlign: 'start', ...(height !== undefined ? { height: `${height}px` } : {}) }}
           >
             <div className="flex h-full flex-col overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5 shadow-lg">
 
@@ -246,14 +264,13 @@ export default function MantenimientosCarousel() {
                 }}
               >
                 <div className="flex-1 min-w-0">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cyan-300">
+                  <span className={`font-bold text-cyan-300 ${card.gama === card.title ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl'}`}>
                     {card.gama === card.title ? 'Mantenimiento' : card.gama}
                   </span>
-                  <h3 className="mt-2 text-2xl font-bold text-white sm:text-3xl">{card.title}</h3>
+                  <h3 className="mt-1 text-2xl font-bold text-white sm:text-3xl">{card.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-slate-400 max-w-xs">{card.description}</p>
                 </div>
 
-                {/* Device icon */}
                 <div
                   className="shrink-0 flex h-[88px] w-[88px] items-center justify-center rounded-2xl text-5xl border border-white/5"
                   style={{ background: card.accentColor }}
@@ -289,12 +306,11 @@ export default function MantenimientosCarousel() {
             </div>
           </div>
         ))}
-
       </div>
 
       {/* Dot indicators */}
       <div className="mt-6 flex justify-center gap-2">
-        {CARDS.map((card, i) => (
+        {cards.map((card, i) => (
           <button
             key={card.id}
             onClick={() => scrollToIdx(i)}

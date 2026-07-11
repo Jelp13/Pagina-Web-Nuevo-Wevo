@@ -27,7 +27,7 @@ export default function TorresPage() {
 
       {/* Grid de productos */}
       <section className="mx-auto max-w-[1180px] px-6 pb-24">
-        <div className="grid gap-8 sm:grid-cols-2">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((product) => {
             const discount = product.originalPrice
               ? Math.round(((product.originalPrice - product.numericPrice) / product.originalPrice) * 100)

@@ -54,6 +54,26 @@ export interface Peripheral {
   icon: string;
   name: string;
   desc: string;
+  slug: string;
+}
+
+export interface PeripheralProduct {
+  id: string;
+  badge: string | null;
+  category: string;
+  categorySlug: string;
+  name: string;
+  specs: string;
+  description: string;
+  shortDescription?: string;
+  fullSpecs: ProductSpec[];
+  gamingPerformance: GamingPerf[];
+  creativePerformance: CreativePerf[];
+  features: ProductFeature[];
+  images: string[];
+  price: string;
+  numericPrice: number;
+  originalPrice?: number;
 }
 
 // Características principales de Nuevo Wevo
@@ -164,7 +184,7 @@ export const PRODUCTS: Product[] = [
       { icon: '🌐', label: 'WiFi integrado' },
       { icon: '🎬', label: 'Edición 4K fluida' },
     ],
-    images: ['/Imagenes/productos/set-up-pagina-principal.jpg'],
+    images: ['/Imagenes/productos/set-up-pagina-principal2.jpeg'],
     price: '$ 5.999.990',
     numericPrice: 5999990,
     url: 'https://nuevowevo.com/producto/torre-clara-de-wevo-amd-ryzen-7-5700x-rtx-5060-blanca/',
@@ -214,7 +234,7 @@ export const PRODUCTS: Product[] = [
       { icon: '🧊', label: 'Renderizado 3D' },
       { icon: '⚡', label: 'Multitarea pesada' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-revuelto.jpeg'],
     price: '$ 7.399.990',
     numericPrice: 7399990,
     url: 'https://nuevowevo.com/producto/torre-wevo-revuelto-amd-ryzen-7-5700x-rtx-5060ti/',
@@ -264,7 +284,7 @@ export const PRODUCTS: Product[] = [
       { icon: '🎮', label: 'Gaming casual' },
       { icon: '🔒', label: 'Windows 11 Pro' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-broce.jpeg'],
     price: '$ 2.849.990',
     numericPrice: 2849990,
     url: '#',
@@ -315,7 +335,7 @@ export const PRODUCTS: Product[] = [
       { icon: '🎬', label: 'Edición de video' },
       { icon: '🔵', label: 'Plataforma Intel' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-cosido.jpeg'],
     price: '$ 6.199.990',
     numericPrice: 6199990,
     url: '#',
@@ -365,7 +385,7 @@ export const PRODUCTS: Product[] = [
       { icon: '⚡', label: 'DDR5' },
       { icon: '🏆', label: 'Windows 11 Pro' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-con-jamon.jpeg'],
     price: '$ 3.499.990',
     numericPrice: 3499990,
     url: '#',
@@ -416,7 +436,7 @@ export const PRODUCTS: Product[] = [
       { icon: '💡', label: 'Cougar FV150 · 4 fans ARGB' },
       { icon: '🎬', label: 'Edición 4K fluida' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-de-codorniz.jpeg'],
     price: '$ 5.699.990',
     numericPrice: 5699990,
     url: '#',
@@ -466,7 +486,7 @@ export const PRODUCTS: Product[] = [
       { icon: '🎨', label: 'Diseño y edición' },
       { icon: '🏆', label: 'Windows 11 Pro' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-extra.jpeg'],
     price: '$ 4.099.990',
     numericPrice: 4099990,
     url: '#',
@@ -518,7 +538,7 @@ export const PRODUCTS: Product[] = [
       { icon: '⚡', label: '32GB DDR5 Dual Channel' },
       { icon: '🎬', label: 'Edición 8K profesional' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-perico.jpeg'],
     price: '$ 11.149.990',
     numericPrice: 11149990,
     url: '#',
@@ -570,7 +590,7 @@ export const PRODUCTS: Product[] = [
       { icon: '⚡', label: '32GB DDR5 Dual Channel' },
       { icon: '🏆', label: 'Windows 11 Pro' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-ranchero.jpeg'],
     price: '$ 9.299.990',
     numericPrice: 9299990,
     url: '#',
@@ -620,7 +640,7 @@ export const PRODUCTS: Product[] = [
       { icon: '💡', label: 'Cougar FV150 · 4 fans ARGB' },
       { icon: '🏆', label: 'Windows 11 Pro' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-tibio.jpeg'],
     price: '$ 4.149.990',
     numericPrice: 4149990,
     url: '#',
@@ -672,7 +692,7 @@ export const PRODUCTS: Product[] = [
       { icon: '⚡', label: '32GB DDR5 Dual Channel' },
       { icon: '🎬', label: 'Edición 8K sin limitaciones' },
     ],
-    images: [],
+    images: ['/Imagenes/productos/torre-wevo-tortilla.jpeg'],
     price: '$ 12.699.990',
     numericPrice: 12699990,
     url: '#',
@@ -701,12 +721,464 @@ export const FEATURED_PRODUCTS = PRODUCTS.filter((p) =>
 
 // Periféricos recomendados
 export const PERIPHERALS: Peripheral[] = [
-  { icon: '🖱️', name: 'Mouse gaming', desc: 'Precisión avanzada y máximo control.' },
-  { icon: '⌨️', name: 'Teclados mecánicos', desc: 'Switches táctiles y diseño sobrio.' },
-  { icon: '🎧', name: 'Audífonos', desc: 'Sonido envolvente para juego y stream.' },
-  { icon: '🎤', name: 'Micrófonos', desc: 'Voz clara y profesional para todo uso.' },
-  { icon: '🖥️', name: 'Monitores', desc: 'Alta tasa de refresco y colores nítidos.' },
-  { icon: '📷', name: 'Cámaras', desc: 'Imagen limpia para videollamadas y streams.' },
+  { icon: '🖱️', name: 'Mouse gaming',      desc: 'Precisión avanzada y máximo control.',           slug: 'mouse'      },
+  { icon: '⌨️', name: 'Teclados mecánicos', desc: 'Switches táctiles y diseño sobrio.',             slug: 'teclados'   },
+  { icon: '🎧', name: 'Audífonos',          desc: 'Sonido envolvente para juego y stream.',          slug: 'audifonos'  },
+  { icon: '🎤', name: 'Micrófonos',         desc: 'Voz clara y profesional para todo uso.',          slug: 'microfonos' },
+  { icon: '🖥️', name: 'Monitores',          desc: 'Alta tasa de refresco y colores nítidos.',        slug: 'monitores'  },
+  { icon: '📷', name: 'Cámaras',            desc: 'Imagen limpia para videollamadas y streams.',     slug: 'camaras'    },
+];
+
+export const PERIPHERAL_PRODUCTS: PeripheralProduct[] = [
+  {
+    id: 'monitor-acer-ed270',
+    badge: 'Nuevo',
+    category: 'Monitores',
+    categorySlug: 'monitores',
+    name: 'Monitor Acer ED270',
+    specs: 'Curvo 27" · FHD 1080p · VA · 240 Hz · 1ms GTG · HDMI / DP',
+    shortDescription:
+      'Monitor Acer ED270 – Curvo 27″ FHD VA 240Hz | Setup Gamer Inmersivo\n\nMonitor gaming curvo de 27 pulgadas con panel VA Full HD, 240Hz de frecuencia y ángulos de visión de 178°. La curvatura envolvente mejora la inmersión en shooters, carreras y juegos de mundo abierto.',
+    description:
+      'El Monitor Acer ED270 redefine la experiencia gaming con su panel VA curvo de 27 pulgadas y curvatura 1800R, diseñado para envolverte en cada partida. Su frecuencia de refresco de 240 Hz elimina el desenfoque en movimiento, mientras que su tiempo de respuesta GTG de 1 ms garantiza reacciones instantáneas: exactamente lo que necesitas en CS2, Valorant y los shooters más exigentes.\n\nLa resolución Full HD 1920 × 1080 aprovecha al máximo la tasa de refresco sin sacrificar rendimiento en la GPU, y la compatibilidad con AMD FreeSync elimina el tearing para una imagen siempre estable. Con un contraste nativo de 3000:1, los negros son profundos y los colores vibrantes, ofreciendo una imagen impactante en cualquier género.\n\nSu conectividad incluye dos puertos HDMI 1.4 y un DisplayPort 1.2, permitiéndote conectar consola y PC simultáneamente. Los ángulos de visión de 178° en ambos ejes hacen que la imagen sea consistente desde cualquier ángulo, y su diseño sin bordes en tres lados lo hace ideal para setups multi-monitor. La curvatura 1800R no solo mejora la inmersión, sino que también reduce la fatiga visual en sesiones prolongadas de juego o trabajo.',
+    fullSpecs: [
+      { label: 'Tamaño',                value: '27 pulgadas' },
+      { label: 'Tipo de panel',         value: 'VA (Vertical Alignment)' },
+      { label: 'Curvatura',             value: '1800R' },
+      { label: 'Resolución',            value: '1920 × 1080 (Full HD)' },
+      { label: 'Frecuencia de refresco',value: '240 Hz' },
+      { label: 'Tiempo de respuesta',   value: '1ms GTG' },
+      { label: 'Brillo',                value: '250 cd/m²' },
+      { label: 'Contraste',             value: '3000:1 (nativo)' },
+      { label: 'Cobertura de color',    value: 'sRGB 72%' },
+      { label: 'Ángulos de visión',     value: '178° / 178°' },
+      { label: 'Conectividad',          value: '2× HDMI 1.4 · 1× DisplayPort 1.2' },
+      { label: 'Sync adaptativo',       value: 'AMD FreeSync' },
+      { label: 'Dimensiones (sin pie)', value: '612 × 368 × 62 mm' },
+      { label: 'Peso (con pie)',        value: '5.5 kg aprox.' },
+    ],
+    gamingPerformance: [
+      { game: 'CS2 / Valorant',         fps: '240 Hz',  resolution: '1080p Full HD', quality: 'Competitivo máximo'   },
+      { game: 'Warzone / Fortnite',     fps: '240 Hz',  resolution: '1080p Full HD', quality: 'Fluidez total'         },
+      { game: 'Simuladores y carreras', fps: '240 Hz',  resolution: '1080p Full HD', quality: 'Inmersión 1800R'       },
+      { game: 'RPG y aventura AAA',     fps: '240 Hz',  resolution: '1080p Full HD', quality: 'Impacto visual alto'   },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop / Lightroom', performance: 'Bueno',     detail: 'sRGB 72% adecuado para retoque y diseño web; no apto para imprenta profesional.' },
+      { software: 'Adobe Premiere Pro',          performance: 'Aceptable', detail: 'Edición de video posible; corrección de color limitada por cobertura sRGB 72%.' },
+      { software: 'Illustrator / Diseño gráfico',performance: 'Bueno',     detail: 'Contraste VA 3000:1 facilita la composición visual y el diseño de interfaces.' },
+      { software: 'OBS Studio / Streaming',      performance: 'Excelente', detail: 'Alta fluidez y baja latencia ideales para monitoreo en tiempo real de transmisiones.' },
+    ],
+    features: [
+      { icon: '🖥️', label: 'Panel VA Curvo 1800R 27"' },
+      { icon: '⚡', label: '240 Hz · 1ms GTG' },
+      { icon: '🎮', label: 'AMD FreeSync compatible' },
+      { icon: '🔌', label: '2× HDMI · 1× DisplayPort' },
+      { icon: '👁️', label: '178° ángulos de visión' },
+      { icon: '🌑', label: 'Contraste nativo 3000:1' },
+    ],
+    images: ['/Imagenes/productos/monitor-acer-ed270.jpeg'],
+    price: '$ 999.990',
+    numericPrice: 999990,
+  },
+  {
+    id: 'monitor-acer-nitro-kg270',
+    badge: 'Nuevo',
+    category: 'Monitores',
+    categorySlug: 'monitores',
+    name: 'Monitor Acer Nitro KG270',
+    specs: '27" FHD · IPS · 180 Hz · 1ms VRB · FreeSync Premium · Zero Frame',
+    shortDescription:
+      'Monitor Acer Nitro KG270 – 27″ FHD IPS 180Hz | 1ms VRB | Gaming Colombia\n\nMonitor gaming de 27 pulgadas Full HD con panel IPS, 180Hz de actualización y 1ms VRB. Colores precisos y ángulos amplios para gaming inmersivo y trabajo multimedia. Gran formato para tu setup.',
+    description:
+      'El Monitor Acer Nitro KG270 combina la precisión de color de un panel IPS con la velocidad de una tasa de refresco de 180 Hz, ofreciendo la combinación perfecta para gamers exigentes y creadores de contenido. A diferencia de los paneles VA, el IPS garantiza colores uniformes y precisos desde cualquier ángulo, con ángulos de visión de 178° en ambos ejes y una cobertura de color sRGB del 99% que hace que cada escena se vea exactamente como fue diseñada.\n\nCon sus 27 pulgadas en Full HD y un diseño Zero Frame en tres lados, este monitor maximiza el área visible y es ideal para setups multi-monitor o espacios donde el diseño importa. La tecnología VRB (Visual Response Boost) reduce el blur en movimiento hasta 1ms percibido, mientras que la compatibilidad con AMD FreeSync Premium elimina el tearing y garantiza una experiencia fluida en todo el rango de frecuencias.\n\nSu conectividad incluye dos puertos HDMI 2.0 y un DisplayPort 1.2, permitiéndote conectar múltiples dispositivos sin perder calidad de señal. El soporte ajustable con inclinación de -5° a 20° se adapta a cualquier postura ergonómica. Un monitor versátil que rinde igual en gaming, diseño gráfico, edición de video y trabajo diario.',
+    fullSpecs: [
+      { label: 'Tamaño',                value: '27 pulgadas' },
+      { label: 'Tipo de panel',         value: 'IPS (In-Plane Switching)' },
+      { label: 'Diseño',                value: 'Zero Frame (3 lados sin bordes)' },
+      { label: 'Resolución',            value: '1920 × 1080 (Full HD)' },
+      { label: 'Frecuencia de refresco',value: '180 Hz' },
+      { label: 'Tiempo de respuesta',   value: '1ms VRB (Visual Response Boost)' },
+      { label: 'Brillo',                value: '250 cd/m²' },
+      { label: 'Contraste',             value: '1000:1 (nativo)' },
+      { label: 'Cobertura de color',    value: 'sRGB 99%' },
+      { label: 'Ángulos de visión',     value: '178° / 178°' },
+      { label: 'Conectividad',          value: '2× HDMI 2.0 · 1× DisplayPort 1.2' },
+      { label: 'Sync adaptativo',       value: 'AMD FreeSync Premium' },
+      { label: 'Ajuste de inclinación', value: '-5° a 20°' },
+      { label: 'Peso (con pie)',        value: '5.4 kg aprox.' },
+    ],
+    gamingPerformance: [
+      { game: 'CS2 / Valorant',         fps: '180 Hz',  resolution: '1080p Full HD', quality: 'Competitivo alto'        },
+      { game: 'Warzone / Fortnite',     fps: '180 Hz',  resolution: '1080p Full HD', quality: 'Fluidez excelente'       },
+      { game: 'RPG y aventura AAA',     fps: '180 Hz',  resolution: '1080p Full HD', quality: 'Colores IPS fieles'      },
+      { game: 'Simuladores / Racing',   fps: '180 Hz',  resolution: '1080p Full HD', quality: 'Campo visual Zero Frame' },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop / Lightroom', performance: 'Excelente', detail: 'sRGB 99% con panel IPS — colores uniformes ideales para retoque y edición fotográfica.' },
+      { software: 'Adobe Premiere Pro',          performance: 'Muy bueno', detail: 'Cobertura de color IPS amplia y 180Hz permiten revisar secuencias con fluidez y precisión.' },
+      { software: 'Illustrator / Diseño gráfico',performance: 'Excelente', detail: 'Ángulos de visión de 178° y sRGB 99% garantizan colores consistentes en diseño de interfaces y composición.' },
+      { software: 'OBS Studio / Streaming',      performance: 'Muy bueno', detail: '180Hz y 1ms VRB para monitoreo en tiempo real sin blur, ideal para streamers y productores de contenido.' },
+    ],
+    features: [
+      { icon: '🖥️', label: 'Panel IPS Zero Frame 27"' },
+      { icon: '⚡', label: '180 Hz · 1ms VRB' },
+      { icon: '🎮', label: 'AMD FreeSync Premium' },
+      { icon: '🎨', label: 'sRGB 99% colores precisos' },
+      { icon: '🔌', label: '2× HDMI 2.0 · 1× DisplayPort' },
+      { icon: '👁️', label: '178° ángulos de visión IPS' },
+    ],
+    images: ['/Imagenes/productos/monitor-acer-nitro-kg270.jpeg'],
+    price: '$ 889.990',
+    numericPrice: 889990,
+  },
+  {
+    id: 'monitor-acer-nitro-xv240y',
+    badge: 'Nuevo',
+    category: 'Monitores',
+    categorySlug: 'monitores',
+    name: 'Monitor Acer Nitro XV240Y',
+    specs: '23.8" FHD · IPS · 200 Hz · 0.5ms GTG · PIVOT · FreeSync Premium',
+    shortDescription:
+      'Monitor Acer Nitro XV240Y – 23.8″ FHD IPS 200Hz | 0.5ms | PIVOT | AMD FreeSync Premium\n\nMonitor gaming de 23.8 pulgadas IPS Full HD con 200Hz, 0.5ms de respuesta, función PIVOT para rotación 90°, AMD FreeSync Premium y doble HDMI 2.0 + DisplayPort. El más rápido de la línea Nitro 24″.',
+    description:
+      'El Monitor Acer Nitro XV240Y es el monitor gaming más rápido de la línea Nitro de 24 pulgadas, combinando un panel IPS de 23.8" con una frecuencia de refresco de 200 Hz y un tiempo de respuesta de 0.5ms GTG, el más bajo de su categoría. Esta combinación lo convierte en la elección ideal para gamers competitivos que buscan cada milisegundo de ventaja sin sacrificar la precisión de color característica de los paneles IPS.\n\nLa función PIVOT permite rotar el monitor 90° para trabajar en modo vertical, perfecta para programadores, editores de código, lectores de documentos extensos o setups creativos que requieren más altura que anchura. Junto con el ajuste de altura y la inclinación ergonómica de -5° a 25°, este monitor se adapta completamente a tu postura y flujo de trabajo.\n\nCon AMD FreeSync Premium, el XV240Y elimina el tearing y el stuttering en todo el rango de frecuencias, garantizando una imagen siempre fluida. Su cobertura de color sRGB 99% y los ángulos de visión IPS de 178° aseguran colores uniformes y precisos, convirtiéndolo en un monitor dual capaz de rendir tanto en gaming de alto rendimiento como en diseño gráfico y edición multimedia.',
+    fullSpecs: [
+      { label: 'Tamaño',                value: '23.8 pulgadas' },
+      { label: 'Tipo de panel',         value: 'IPS (In-Plane Switching)' },
+      { label: 'Resolución',            value: '1920 × 1080 (Full HD)' },
+      { label: 'Frecuencia de refresco',value: '200 Hz' },
+      { label: 'Tiempo de respuesta',   value: '0.5ms GTG' },
+      { label: 'Brillo',                value: '250 cd/m²' },
+      { label: 'Contraste',             value: '1000:1 (nativo)' },
+      { label: 'Cobertura de color',    value: 'sRGB 99%' },
+      { label: 'Ángulos de visión',     value: '178° / 178°' },
+      { label: 'Conectividad',          value: '2× HDMI 2.0 · 1× DisplayPort 1.4' },
+      { label: 'Sync adaptativo',       value: 'AMD FreeSync Premium' },
+      { label: 'Función PIVOT',         value: 'Sí — rotación 90°' },
+      { label: 'Ajuste ergonómico',     value: 'Altura · Inclinación -5° a 25° · PIVOT' },
+      { label: 'Peso (con pie)',        value: '5.8 kg aprox.' },
+    ],
+    gamingPerformance: [
+      { game: 'CS2 / Valorant',       fps: '200 Hz', resolution: '1080p Full HD', quality: 'Elite competitivo'         },
+      { game: 'Warzone / Fortnite',   fps: '200 Hz', resolution: '1080p Full HD', quality: 'Sin tearing absoluto'      },
+      { game: 'RPG y aventura AAA',   fps: '200 Hz', resolution: '1080p Full HD', quality: 'Visual IPS fiel y fluido'  },
+      { game: 'Simuladores / Racing', fps: '200 Hz', resolution: '1080p Full HD', quality: 'Máxima precisión 0.5ms'   },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop / Lightroom', performance: 'Excelente', detail: 'sRGB 99% IPS garantiza colores uniformes en toda la pantalla, ideal para retoque y edición fotográfica precisa.' },
+      { software: 'Adobe Premiere Pro',          performance: 'Muy bueno', detail: 'Reproducción fluida a 200Hz y cobertura IPS amplia para revisión de secuencias con precisión de color.' },
+      { software: 'Illustrator / Diseño gráfico',performance: 'Excelente', detail: 'IPS 99% sRGB + función PIVOT para diseño en modo vertical: ideal para composición web, UI y documentos largos.' },
+      { software: 'OBS Studio / Streaming',      performance: 'Excelente', detail: '200Hz y 0.5ms permiten monitoreo ultra fluido en tiempo real, sin artefactos ni blur en escenas en movimiento.' },
+    ],
+    features: [
+      { icon: '🖥️', label: 'Panel IPS 23.8" Full HD' },
+      { icon: '⚡', label: '200 Hz · 0.5ms GTG' },
+      { icon: '🔄', label: 'PIVOT — rotación 90°' },
+      { icon: '🎮', label: 'AMD FreeSync Premium' },
+      { icon: '🎨', label: 'sRGB 99% colores precisos' },
+      { icon: '🔌', label: '2× HDMI 2.0 · 1× DisplayPort' },
+    ],
+    images: ['/Imagenes/productos/monitor-acer-nitro-xv240y.jpeg'],
+    price: '$ 759.990',
+    numericPrice: 759990,
+  },
+  {
+    id: 'monitor-acer-nitro-xz322qu',
+    badge: 'Nuevo',
+    category: 'Monitores',
+    categorySlug: 'monitores',
+    name: 'Monitor Acer Nitro XZ322QU',
+    specs: 'Curvo 31.5" · 2K QHD 2560×1440 · VA · 180 Hz · 1ms VRB · FreeSync Premium',
+    shortDescription:
+      'Monitor Acer Nitro XZ322QU – Curvo 31.5″ 2K 2560×1440 180Hz | 1ms VRB | VA\n\nMonitor gaming curvo de 31.5 pulgadas con resolución 2K QHD 2560×1440, panel VA, 180Hz y 1ms VRB. Conectividad dual HDMI + DisplayPort. El monitor ideal para gaming en alta resolución y trabajo creativo.',
+    description:
+      'El Monitor Acer Nitro XZ322QU representa un salto cualitativo en la experiencia visual gaming: 31.5 pulgadas de panel VA curvo con resolución 2K QHD 2560 × 1440 que ofrece el doble de píxeles que el Full HD, traduciendo esa diferencia en una nitidez sorprendente en texturas, interfaces y detalles de escena. La curvatura 1500R envuelve tu campo visual de forma natural, reduciendo la fatiga ocular en sesiones prolongadas y maximizando la inmersión en cada género.\n\nEl panel VA entrega un contraste nativo excepcional de 4000:1, con negros profundos y blancos brillantes que hacen destacar la imagen especialmente en juegos oscuros, películas y contenido de alto rango dinámico. Con 180 Hz de tasa de refresco y 1ms VRB, la fluidez y la respuesta son comparables a monitores competitivos de menor tamaño, sin sacrificar el impacto visual de la alta resolución.\n\nSu conectividad con dos HDMI 2.0 y DisplayPort permite conectar PC y consola simultáneamente sin perder calidad de señal. La compatibilidad con AMD FreeSync Premium elimina el tearing en toda la gama de frecuencias. Con 31.5 pulgadas 2K, este monitor no es solo un periférico — es el centro de un setup gaming y creativo de alto nivel que transforma cómo percibes cada píxel.',
+    fullSpecs: [
+      { label: 'Tamaño',                value: '31.5 pulgadas' },
+      { label: 'Tipo de panel',         value: 'VA (Vertical Alignment) Curvo' },
+      { label: 'Curvatura',             value: '1500R' },
+      { label: 'Resolución',            value: '2560 × 1440 (QHD / 2K)' },
+      { label: 'Frecuencia de refresco',value: '180 Hz' },
+      { label: 'Tiempo de respuesta',   value: '1ms VRB' },
+      { label: 'Brillo',                value: '250 cd/m²' },
+      { label: 'Contraste',             value: '4000:1 (nativo)' },
+      { label: 'Cobertura de color',    value: 'DCI-P3 90% · sRGB 125%' },
+      { label: 'Ángulos de visión',     value: '178° / 178°' },
+      { label: 'Conectividad',          value: '2× HDMI 2.0 · 1× DisplayPort 1.2' },
+      { label: 'Sync adaptativo',       value: 'AMD FreeSync Premium' },
+      { label: 'Dimensiones (sin pie)', value: '714 × 421 × 87 mm' },
+      { label: 'Peso (con pie)',        value: '9.5 kg aprox.' },
+    ],
+    gamingPerformance: [
+      { game: 'CS2 / Valorant',         fps: '180 Hz', resolution: '2K QHD',      quality: 'Competitivo alta resolución' },
+      { game: 'Warzone / Fortnite',     fps: '180 Hz', resolution: '2K QHD',      quality: 'Inmersión curva total'       },
+      { game: 'Cyberpunk / Elden Ring', fps: '180 Hz', resolution: '2K QHD',      quality: 'Experiencia visual élite'    },
+      { game: 'Simuladores / Racing',   fps: '180 Hz', resolution: '2K QHD 31.5"',quality: 'Campo visual máximo 1500R'   },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop / Lightroom', performance: 'Muy bueno', detail: 'DCI-P3 90% y gran superficie 2K 31.5" ofrecen espacio y precisión de color para edición fotográfica profesional.' },
+      { software: 'Adobe Premiere Pro',          performance: 'Muy bueno', detail: 'Resolución 2K QHD permite ver el timeline con mayor detalle y precisión de color VA para corrección básica.' },
+      { software: 'Illustrator / Diseño gráfico',performance: 'Muy bueno', detail: 'La superficie 2K de 31.5" brinda un espacio de trabajo amplio para composición visual, UI y diseño de marca.' },
+      { software: 'OBS Studio / Streaming',      performance: 'Bueno',     detail: '180Hz y resolución 2K permiten monitorear transmisiones con alta nitidez; el formato 31.5" facilita el multitarea.' },
+    ],
+    features: [
+      { icon: '🖥️', label: 'VA Curvo 1500R 31.5" 2K' },
+      { icon: '⚡', label: '180 Hz · 1ms VRB' },
+      { icon: '🎮', label: 'AMD FreeSync Premium' },
+      { icon: '🌈', label: 'DCI-P3 90% · contraste 4000:1' },
+      { icon: '📐', label: '2K QHD 2560×1440' },
+      { icon: '🔌', label: '2× HDMI 2.0 · 1× DisplayPort' },
+    ],
+    images: ['/Imagenes/productos/monitor-acer-nitro-xz322qu.jpeg'],
+    price: '$ 1.399.990',
+    numericPrice: 1399990,
+  },
+
+  // ── MOUSE ────────────────────────────────────────────────────────────────
+  {
+    id: 'mouse-logitech-g203',
+    badge: 'Ejemplo',
+    category: 'Mouse gaming',
+    categorySlug: 'mouse',
+    name: 'Logitech G203 LIGHTSYNC',
+    specs: 'Sensor óptico 8000 DPI · 1000Hz · 6 botones · 85g · RGB LIGHTSYNC',
+    shortDescription:
+      'Logitech G203 LIGHTSYNC – Mouse gaming ligero | 8000 DPI | RGB | Colombia\n\nMouse gaming con sensor óptico de hasta 8000 DPI, polling rate de 1000Hz, 6 botones programables y peso de solo 85g. Diseño ambidiestro con iluminación RGB LIGHTSYNC. Ideal para FPS competitivo y uso diario.',
+    description:
+      'El Logitech G203 LIGHTSYNC es la puerta de entrada al gaming de rendimiento real: sensor óptico capaz de hasta 8000 DPI con seguimiento preciso a cualquier velocidad, sin aceleración ni predicción de movimiento. Con un polling rate de 1000Hz, el cursor responde 8 veces más rápido que un mouse estándar, garantizando una latencia mínima crítica en FPS competitivos.\n\nCon tan solo 85g, el G203 elimina la fatiga en sesiones prolongadas sin sacrificar solidez en la construcción. Su forma simétrica lo hace cómodo para usuarios con agarre palm, claw o fingertip. Los 6 botones son totalmente programables mediante Logitech G HUB, permitiéndote asignar macros, DPI on-the-fly y accesos directos personalizados.\n\nLa iluminación RGB LIGHTSYNC ofrece 16.8 millones de colores sincronizables con otros dispositivos Logitech G y con el contenido en pantalla. El cable trenzado de 2.1m reduce el enredo y garantiza durabilidad a largo plazo. Un mouse que cumple en gaming, trabajo y diseño por igual.',
+    fullSpecs: [
+      { label: 'Sensor',              value: 'Óptico — hasta 8000 DPI' },
+      { label: 'Polling rate',        value: '1000Hz (1ms de latencia)' },
+      { label: 'Botones',             value: '6 programables' },
+      { label: 'Peso',                value: '85g (sin cable)' },
+      { label: 'Cable',               value: 'Trenzado 2.1m · USB-A' },
+      { label: 'Iluminación',         value: 'RGB LIGHTSYNC 16.8M colores' },
+      { label: 'Agarre',              value: 'Ambidiestro — palm / claw / fingertip' },
+      { label: 'Durabilidad clics',   value: '10 millones de clics' },
+      { label: 'Software',            value: 'Logitech G HUB' },
+      { label: 'Compatibilidad',      value: 'Windows / macOS / Linux' },
+    ],
+    gamingPerformance: [
+      { game: 'FPS Competitivo (CS2, Valorant)', fps: '800 DPI',  resolution: 'Sensor óptico 8K', quality: 'Preciso y ágil'      },
+      { game: 'MOBA / RTS (LoL, DOTA 2)',        fps: '1600 DPI', resolution: 'Sensor óptico 8K', quality: 'Control fluido'      },
+      { game: 'Battle Royale (Warzone)',          fps: '3200 DPI', resolution: 'Sensor óptico 8K', quality: 'Respuesta exacta'   },
+      { game: 'RPG / Uso general',               fps: '8000 DPI', resolution: 'Sensor óptico 8K', quality: 'Versatilidad total' },
+    ],
+    creativePerformance: [
+      { software: 'Adobe Photoshop / Illustrator', performance: 'Bueno',     detail: 'Sensor óptico preciso para selecciones y trazados; peso ligero de 85g reduce fatiga en sesiones largas.' },
+      { software: 'Diseño UI/UX (Figma)',          performance: 'Bueno',     detail: 'DPI ajustable on-the-fly para cambiar entre trabajo detallado y navegación rápida sin levantar la mano.' },
+      { software: 'Edición de video (Premiere)',   performance: 'Bueno',     detail: 'Movimiento fluido en línea de tiempo; polling 1000Hz garantiza precisión al cortar y ajustar clips.' },
+      { software: 'Trabajo diario / Oficina',      performance: 'Muy bueno', detail: 'Liviano, diseño ambidiestro y cable largo; cómodo para uso todo el día en oficina o home office.' },
+    ],
+    features: [
+      { icon: '🖱️', label: 'Sensor óptico 8000 DPI' },
+      { icon: '⚡', label: '1000Hz polling rate' },
+      { icon: '🌈', label: 'RGB LIGHTSYNC 16.8M colores' },
+      { icon: '🪶', label: '85g ultral igero' },
+      { icon: '🎮', label: '6 botones programables' },
+      { icon: '🔌', label: 'Cable trenzado 2.1m' },
+    ],
+    images: [],
+    price: '$ 139.990',
+    numericPrice: 139990,
+  },
+
+  // ── TECLADO MECÁNICO ─────────────────────────────────────────────────────
+  {
+    id: 'teclado-redragon-k552',
+    badge: 'Ejemplo',
+    category: 'Teclados mecánicos',
+    categorySlug: 'teclados',
+    name: 'Redragon K552 KUMARA',
+    specs: 'TKL 87 teclas · Switches Outemu Red · RGB · Anti-ghosting · USB',
+    shortDescription:
+      'Redragon K552 KUMARA – Teclado mecánico TKL | Outemu Red | RGB | Gaming Colombia\n\nTeclado mecánico TKL de 87 teclas con switches Outemu Red (lineales), retroiluminación RGB, anti-ghosting completo y construcción compacta sin teclado numérico. Ideal para gaming competitivo y escritura prolongada.',
+    description:
+      'El Redragon K552 KUMARA es uno de los teclados mecánicos más populares en el segmento de entrada al gaming profesional: switches Outemu Red lineales con accionamiento suave a 45g de fuerza y sin punto táctil, perfectos para pulsaciones rápidas en FPS y para escritura prolongada sin fatiga.\n\nEl formato TKL de 87 teclas elimina el teclado numérico para ganar espacio en el escritorio y permitir una posición del mouse más cercana al cuerpo, reduciendo la tensión en el hombro. Sin sacrificar ninguna función esencial, mantiene todas las teclas de función, flechas y navegación en su lugar.\n\nLa retroiluminación RGB individual por tecla ofrece múltiples modos preconfigurados sin necesidad de software adicional, con hasta 19 efectos seleccionables directamente desde el teclado. El anti-ghosting completo garantiza que todas las pulsaciones simultáneas sean registradas sin errores, crucial en situaciones de alta acción. Construcción resistente con base metálica y cable USB trenzado de 1.8m.',
+    fullSpecs: [
+      { label: 'Tipo de switches',    value: 'Outemu Red (lineales, 45g)' },
+      { label: 'Distribución',        value: 'TKL — 87 teclas' },
+      { label: 'Retroiluminación',    value: 'RGB individual por tecla · 19 efectos' },
+      { label: 'Anti-ghosting',       value: 'Completo (N-Key Rollover)' },
+      { label: 'Durabilidad switches',value: '50 millones de pulsaciones' },
+      { label: 'Construcción',        value: 'Base metálica + cubierta ABS' },
+      { label: 'Cable',               value: 'USB trenzado 1.8m' },
+      { label: 'Fuerza de accionamiento', value: '45g' },
+      { label: 'Pre-travel',          value: '2mm · Total: 4mm' },
+      { label: 'Software',            value: 'Sin necesidad de software (configuración onboard)' },
+    ],
+    gamingPerformance: [
+      { game: 'FPS Competitivo (CS2, Valorant)', fps: 'Outemu Red', resolution: 'TKL 87 teclas', quality: 'Respuesta lineal rápida'  },
+      { game: 'MOBA / RTS (LoL, StarCraft)',      fps: 'Outemu Red', resolution: 'TKL 87 teclas', quality: 'Accionamiento preciso'   },
+      { game: 'RPG / Aventura',                   fps: 'Outemu Red', resolution: 'TKL 87 teclas', quality: 'Pulsaciones suaves'      },
+      { game: 'Uso mixto gaming + trabajo',       fps: 'Outemu Red', resolution: 'TKL 87 teclas', quality: 'Versátil y compacto'    },
+    ],
+    creativePerformance: [
+      { software: 'Escritura / Documentos',          performance: 'Muy bueno', detail: 'Switches Red lineales cómodos para escritura prolongada; 50M pulsaciones garantizan años de durabilidad.' },
+      { software: 'Programación (VS Code)',           performance: 'Muy bueno', detail: 'Formato TKL compacto con teclas de función completas; ideal para shortcuts de desarrollo y navegación.' },
+      { software: 'Edición de video / Shortcuts',    performance: 'Bueno',     detail: 'Cubre todos los atajos de Premiere y DaVinci; sin teclas macro nativas pero con buen registro simultáneo.' },
+      { software: 'Diseño gráfico (Photoshop/Figma)',performance: 'Bueno',     detail: 'Anti-ghosting completo activa todos los atajos de herramientas sin pérdida de pulsaciones.' },
+    ],
+    features: [
+      { icon: '⌨️', label: 'Switches Outemu Red lineales' },
+      { icon: '📐', label: 'Formato TKL 87 teclas' },
+      { icon: '🌈', label: 'RGB individual · 19 efectos' },
+      { icon: '🛡️', label: 'Anti-ghosting N-Key Rollover' },
+      { icon: '🏗️', label: 'Base metálica resistente' },
+      { icon: '🔌', label: 'Cable USB trenzado 1.8m' },
+    ],
+    images: [],
+    price: '$ 159.990',
+    numericPrice: 159990,
+  },
+
+  // ── MICRÓFONO ────────────────────────────────────────────────────────────
+  {
+    id: 'microfono-hyperx-solocast',
+    badge: 'Ejemplo',
+    category: 'Micrófonos',
+    categorySlug: 'microfonos',
+    name: 'HyperX SoloCast',
+    specs: 'USB · Cardioide · 16-bit / 48kHz · Tap-to-mute · Soporte flexible',
+    shortDescription:
+      'HyperX SoloCast – Micrófono USB cardioide | 16-bit / 48kHz | Streaming Colombia\n\nMicrófono USB de condensador con patrón cardioide, resolución 16-bit / 48kHz, función tap-to-mute y soporte articulado incluido. Plug-and-play sin drivers. Ideal para streaming, podcast y gaming.',
+    description:
+      'El HyperX SoloCast es el micrófono USB diseñado específicamente para streamers y gamers que buscan calidad de audio profesional sin la complejidad de una interfaz de audio. Plug-and-play total: conecta y habla — Windows y macOS lo reconocen automáticamente sin instalar ningún driver.\n\nSu patrón polar cardioide captura la voz directamente al frente mientras rechaza los sonidos laterales y traseros, minimizando el ruido del teclado mecánico, el ventilador del PC y el ambiente de la habitación. La resolución de 16-bit / 48kHz garantiza una voz nítida, cálida y sin artefactos digitales en cualquier plataforma.\n\nLa función tap-to-mute con LED indicador permite silenciar el micrófono con un solo toque, sin interrumpir el flujo de una partida o transmisión. El soporte articulado incluido ofrece ajuste de ángulo y rotación de 180°, adaptándose a cualquier posición del escritorio. Compatible con Discord, OBS, Streamlabs, Zoom y cualquier software de audio estándar.',
+    fullSpecs: [
+      { label: 'Tipo',                value: 'Condensador USB' },
+      { label: 'Patrón polar',        value: 'Cardioide' },
+      { label: 'Resolución',          value: '16-bit / 48kHz' },
+      { label: 'Respuesta en frecuencia', value: '20Hz – 20kHz' },
+      { label: 'Sensibilidad',        value: '-42dBFS (1 Pa a 1kHz)' },
+      { label: 'Mute',                value: 'Tap-to-mute con LED indicador' },
+      { label: 'Conexión',            value: 'USB-C (cable USB-C a USB-A incluido)' },
+      { label: 'Soporte',             value: 'Articulado ajustable incluido · 180°' },
+      { label: 'Compatibilidad',      value: 'Windows / macOS — sin drivers' },
+      { label: 'Peso',                value: '238g (con soporte)' },
+    ],
+    gamingPerformance: [
+      { game: 'Streaming en vivo (Twitch, YouTube)', fps: 'Cardioide', resolution: '16-bit / 48kHz', quality: 'Voz clara y definida'    },
+      { game: 'Gaming con equipo (Discord)',          fps: 'Cardioide', resolution: '16-bit / 48kHz', quality: 'Captura vocal directa'  },
+      { game: 'Podcast y entrevistas',               fps: 'Cardioide', resolution: '16-bit / 48kHz', quality: 'Sonido cálido y natural' },
+      { game: 'Videollamadas (Zoom, Meet)',           fps: 'Cardioide', resolution: '16-bit / 48kHz', quality: 'Voz inteligible y limpia'},
+    ],
+    creativePerformance: [
+      { software: 'OBS Studio / Streamlabs',     performance: 'Excelente', detail: 'Plug-and-play, patrón cardioide y tap-to-mute integrado — la combinación perfecta para streaming profesional.' },
+      { software: 'Discord / TeamSpeak',         performance: 'Excelente', detail: 'Voz nítida en tiempo real; el cardioide rechaza ruido de teclado y ambiente en comunicación gaming.' },
+      { software: 'Adobe Audition / Audacity',   performance: 'Bueno',     detail: 'Captura 16-bit / 48kHz limpia para voz en off, podcasts y locución; sin control de ganancia físico.' },
+      { software: 'Grabación musical básica',    performance: 'Aceptable', detail: 'Funciona para demos y voz; no reemplaza un micrófono XLR de condensador para producción profesional.' },
+    ],
+    features: [
+      { icon: '🎤', label: 'Patrón cardioide USB-C' },
+      { icon: '🔇', label: 'Tap-to-mute con LED' },
+      { icon: '🎵', label: '16-bit / 48kHz estudio' },
+      { icon: '🔌', label: 'Plug-and-play sin drivers' },
+      { icon: '🔄', label: 'Soporte articulado 180°' },
+      { icon: '💻', label: 'Windows y macOS compatible' },
+    ],
+    images: [],
+    price: '$ 229.990',
+    numericPrice: 229990,
+  },
+
+  // ── AUDÍFONOS ────────────────────────────────────────────────────────────
+  {
+    id: 'audifonos-hyperx-cloud-stinger',
+    badge: 'Ejemplo',
+    category: 'Audífonos',
+    categorySlug: 'audifonos',
+    name: 'HyperX Cloud Stinger',
+    specs: 'Drivers 50mm · 7.1 Virtual · Micrófono abatible · USB / 3.5mm · 275g',
+    shortDescription:
+      'HyperX Cloud Stinger – Audífonos gaming | Drivers 50mm | 7.1 Virtual | Colombia\n\nAudífonos gaming con drivers de 50mm orientados hacia el oído para mayor inmersión, audio 7.1 virtual, micrófono abatible con mute automático y almohadillas de cuero suave. Livianos (275g) para sesiones largas.',
+    description:
+      'Los HyperX Cloud Stinger son los audífonos gaming diseñados para el jugador que valora la comodidad en sesiones largas sin sacrificar la calidad de audio. Los drivers de 50mm orientados hacia el oído crean un sonido más envolvente y detallado, especialmente en la localización de pasos y disparos en juegos FPS donde el audio es una ventaja competitiva real.\n\nCon un peso de solo 275g y almohadillas de cuero suave con memoria de forma, el Cloud Stinger minimiza la fatiga incluso en partidas de varias horas. El arco de metal ajustable garantiza durabilidad y se adapta a cualquier tamaño de cabeza. El control de volumen en la copa derecha permite ajustes rápidos sin interrumpir el juego.\n\nEl micrófono abatible con cancelación de ruido activa el mute automáticamente al subirlo, evitando que el equipo te escuche involuntariamente. Compatible con PC vía USB para 7.1 virtual, y con consolas, móvil y cualquier dispositivo vía jack 3.5mm. Software HyperX NGENUITY disponible para personalización de ecualizador y efectos de audio.',
+    fullSpecs: [
+      { label: 'Drivers',              value: '50mm orientados al oído' },
+      { label: 'Respuesta en frecuencia', value: '10Hz – 28kHz' },
+      { label: 'Impedancia',           value: '30 Ω' },
+      { label: 'Audio',                value: '7.1 Virtual (USB) · Stereo (3.5mm)' },
+      { label: 'Micrófono',            value: 'Abatible · Mute automático al subir' },
+      { label: 'Frecuencia del mic',   value: '100Hz – 6.8kHz' },
+      { label: 'Conexión',             value: 'USB + 3.5mm (ambos incluidos)' },
+      { label: 'Peso',                 value: '275g' },
+      { label: 'Almohadillas',         value: 'Cuero suave con memoria de forma' },
+      { label: 'Software',             value: 'HyperX NGENUITY (opcional)' },
+    ],
+    gamingPerformance: [
+      { game: 'FPS Competitivo (CS2, Valorant)', fps: 'Drivers 50mm', resolution: '7.1 Virtual', quality: 'Posicionamiento preciso' },
+      { game: 'Battle Royale (Warzone, PUBG)',   fps: 'Drivers 50mm', resolution: '7.1 Virtual', quality: 'Sonido envolvente'       },
+      { game: 'RPG / Aventura AAA',              fps: 'Drivers 50mm', resolution: 'Stereo',      quality: 'Audio inmersivo'         },
+      { game: 'Streaming y multimedia',          fps: 'Drivers 50mm', resolution: 'Stereo',      quality: 'Voz y música equilibradas'},
+    ],
+    creativePerformance: [
+      { software: 'OBS Studio / Streaming',     performance: 'Muy bueno', detail: 'Micrófono con cancelación de ruido y mute automático al levantar; cómodo para sesiones largas de transmisión.' },
+      { software: 'Discord / Comunicación',     performance: 'Excelente', detail: 'Voz clara con el micrófono abatible; mute intuitivo sin tocar software y respuesta de frecuencia vocal precisa.' },
+      { software: 'Adobe Premiere / Edición',   performance: 'Bueno',     detail: 'Drivers 50mm con buena representación de bajos y medios; adecuado para revisión de audio en edición básica.' },
+      { software: 'Música / Entretenimiento',   performance: 'Bueno',     detail: 'Sonido balanceado y agradable para consumo multimedia; no está orientado a mezcla ni masterización.' },
+    ],
+    features: [
+      { icon: '🎧', label: 'Drivers 50mm orientados al oído' },
+      { icon: '🔊', label: 'Audio 7.1 Virtual USB' },
+      { icon: '🎤', label: 'Micrófono abatible mute auto' },
+      { icon: '🪶', label: '275g ultraligero' },
+      { icon: '🔌', label: 'USB + jack 3.5mm incluidos' },
+      { icon: '🛋️', label: 'Almohadillas cuero memoria' },
+    ],
+    images: [],
+    price: '$ 249.990',
+    numericPrice: 249990,
+  },
+
+  // ── CÁMARA ───────────────────────────────────────────────────────────────
+  {
+    id: 'camara-logitech-c920',
+    badge: 'Ejemplo',
+    category: 'Cámaras',
+    categorySlug: 'camaras',
+    name: 'Logitech C920 HD Pro',
+    specs: 'Full HD 1080p / 30fps · Óptica Carl Zeiss · Autofocus · Micrófono estéreo · USB',
+    shortDescription:
+      'Logitech C920 HD Pro – Webcam Full HD | 1080p | Autofocus | Streaming Colombia\n\nWebcam Full HD 1080p con óptica Carl Zeiss, autofocus automático, micrófono estéreo dual con cancelación de ruido y corrección de luz automática. La cámara de referencia para streaming, videollamadas y creación de contenido.',
+    description:
+      'La Logitech C920 HD Pro es la webcam más reconocida del mercado para streaming y videollamadas profesionales: décadas de confianza en la industria respaldada por la óptica Carl Zeiss de vidrio, que garantiza imágenes nítidas, colores naturales y una reproducción fiel de la realidad que las lentes plásticas simplemente no logran.\n\nEl autofocus automático mantiene tu imagen siempre en foco, incluso si te mueves o acercas a la cámara, mientras que la corrección de luz automática adapta la exposición en tiempo real sin necesidad de ajustes manuales. Todo esto hace que la C920 se vea bien en cualquier condición de iluminación, desde escritorios oscuros hasta habitaciones bien iluminadas.\n\nEl micrófono estéreo dual con cancelación de ruido captura audio claro y natural desde dos ángulos, creando una sensación de presencia más amplia que los micrófonos mono. Compatible con Zoom, Teams, Google Meet, OBS, Streamlabs y cualquier software de videoconferencia o streaming. Plug-and-play sin drivers en Windows, macOS y Chrome OS.',
+    fullSpecs: [
+      { label: 'Resolución máxima',   value: '1080p Full HD / 30fps' },
+      { label: 'Resolución alternativa', value: '720p / 30fps' },
+      { label: 'Óptica',              value: 'Carl Zeiss (vidrio) con autofocus' },
+      { label: 'Campo visual (FOV)',   value: '78°' },
+      { label: 'Micrófono',           value: 'Estéreo dual con cancelación de ruido' },
+      { label: 'Corrección de luz',   value: 'Automática (RightLight 2)' },
+      { label: 'Conexión',            value: 'USB-A · Clip universal incluido' },
+      { label: 'Compatibilidad',      value: 'Windows / macOS / Chrome OS — sin drivers' },
+      { label: 'Longitud del cable',  value: '1.5m' },
+      { label: 'Software',            value: 'Logi Tune (opcional)' },
+    ],
+    gamingPerformance: [
+      { game: 'Streaming en vivo (Twitch, YouTube)', fps: '1080p / 30fps', resolution: 'Full HD',  quality: 'Imagen nítida y estable'   },
+      { game: 'Videollamadas (Zoom, Teams)',          fps: '1080p / 30fps', resolution: 'Full HD',  quality: 'Autofocus automático'      },
+      { game: 'Grabación de tutoriales / Vlogs',     fps: '1080p / 30fps', resolution: 'Full HD',  quality: 'Color natural Carl Zeiss'  },
+      { game: 'Facecam gaming / Overlay',            fps: '720p / 30fps',  resolution: 'HD Ready', quality: 'Movimiento fluido y limpio' },
+    ],
+    creativePerformance: [
+      { software: 'OBS Studio / Streamlabs',       performance: 'Excelente', detail: 'Imagen 1080p estable con autofocus y corrección de luz automática RightLight 2; plug-and-play sin drivers.' },
+      { software: 'Zoom / Google Meet / Teams',    performance: 'Excelente', detail: 'Micrófono estéreo dual con cancelación de ruido y video Full HD nítido — la referencia para videollamadas.' },
+      { software: 'Adobe Premiere (grabación B-roll)', performance: 'Bueno', detail: 'Captura 1080p con óptica Carl Zeiss; ideal para grabación de tutoriales, unboxings y contenido casual.' },
+      { software: 'Fotografía / Referencia visual', performance: 'Aceptable', detail: 'No sustituye una cámara dedicada; sin control manual de apertura, ISO ni obturador para trabajo profesional.' },
+    ],
+    features: [
+      { icon: '📷', label: 'Full HD 1080p / 30fps' },
+      { icon: '🔍', label: 'Óptica Carl Zeiss + autofocus' },
+      { icon: '🎤', label: 'Micrófono estéreo dual' },
+      { icon: '💡', label: 'Corrección de luz automática' },
+      { icon: '🔌', label: 'Plug-and-play sin drivers' },
+      { icon: '🖥️', label: 'Clip universal incluido' },
+    ],
+    images: [],
+    price: '$ 349.990',
+    numericPrice: 349990,
+  },
 ];
 
 // Marcas aliadas

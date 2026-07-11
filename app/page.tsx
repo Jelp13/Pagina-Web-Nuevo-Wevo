@@ -12,6 +12,7 @@
  */
 
 import Image from 'next/image';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TikTokSection from '@/components/TikTokSection';
@@ -163,13 +164,17 @@ export default function Home() {
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {peripherals.map((item) => (
-            <div key={item.name} className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10">
+            <Link
+              key={item.name}
+              href={`/perifericos?categoria=${item.slug}`}
+              className="group rounded-[28px] border border-cyan-400/10 bg-white/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
+            >
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-3xl bg-cyan-300/10 text-2xl" role="img" aria-label={item.name}>
                 {item.icon}
               </div>
-              <h3 className="text-xl font-semibold text-white">{item.name}</h3>
+              <h3 className="text-xl font-semibold text-white group-hover:text-cyan-100 transition-colors">{item.name}</h3>
               <p className="mt-2 text-sm text-slate-400">{item.desc}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

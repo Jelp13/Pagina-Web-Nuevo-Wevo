@@ -43,12 +43,13 @@ export const ROUTES = {
   quiz: '/quiz',
   torres: '/torres',
   products: '#products-anchor',
-  peripherals: '#perifericos',
+  peripherals: '/perifericos',
   brands: '#brands',
   cart: '/carrito',
   checkout: '/checkout',
   confirmation: '/checkout/confirmacion',
   mantenimientos: '/mantenimientos',
+  perifericos: '/perifericos',
 };
 
 // Configuración de IVA (productos de tecnología en Colombia)
