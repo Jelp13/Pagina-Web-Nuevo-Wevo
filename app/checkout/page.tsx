@@ -3,10 +3,11 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCartStore, formatCOP, getCartTotal } from '@/lib/cart-store';
-import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
+import { ROUTES, WHATSAPP_LINK, BREB_KEY } from '@/lib/config';
 import SearchableSelect from '@/components/SearchableSelect';
 import { DEPARTAMENTOS, getMunicipios } from '@/lib/colombia-geo';
 
@@ -40,7 +41,7 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: s
   { id: 'pse', label: 'PSE', icon: '🏦', desc: 'Débito directo desde tu cuenta bancaria' },
   { id: 'nequi', label: 'Nequi', icon: '📱', desc: 'Paga desde tu billetera Nequi' },
   { id: 'addi', label: 'ADDI', icon: '💰', desc: 'Compra ahora y paga en cuotas sin interés' },
-  { id: 'breb', label: 'BRE-B', icon: '📷', desc: 'Pago por código QR — Próximamente', disabled: true },
+  { id: 'breb', label: 'BRE-B', icon: '📷', desc: 'Pago por código QR' },
 ];
 
 
@@ -65,6 +66,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
   const [paymentError, setPaymentError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [keyCopied, setKeyCopied] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
   const subtotal = getCartTotal(items);
@@ -101,6 +103,16 @@ export default function CheckoutPage() {
     if (errors.ciudad) setErrors((prev) => ({ ...prev, ciudad: undefined }));
   }
 
+  async function handleCopyKey() {
+    try {
+      await navigator.clipboard.writeText(BREB_KEY);
+      setKeyCopied(true);
+      setTimeout(() => setKeyCopied(false), 2000);
+    } catch {
+      setKeyCopied(false);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const fieldErrors = validate(form);
@@ -130,6 +142,15 @@ export default function CheckoutPage() {
       if (paymentMethod === 'contra-entrega') {
         clearCart();
         router.push(`${ROUTES.confirmation}?ref=${data.reference}&method=contra-entrega`);
+        return;
+      }
+
+      // BRE-B: pago por QR — enviar comprobante por WhatsApp
+      if (paymentMethod === 'breb') {
+        const whatsappMessage = `Hola, acabo de realizar el pago con BRE-B para mi pedido *${data.reference}* por un total de ${formatCOP(subtotal)}. Adjunto el comprobante de pago.`;
+        window.open(`${WHATSAPP_LINK}?text=${encodeURIComponent(whatsappMessage)}`, '_blank', 'noopener,noreferrer');
+        clearCart();
+        router.push(`${ROUTES.confirmation}?ref=${data.reference}&method=breb`);
         return;
       }
 
@@ -412,6 +433,51 @@ export default function CheckoutPage() {
                   <div className="mt-4 rounded-xl bg-purple-500/10 border border-purple-500/20 px-4 py-3">
                     <p className="text-sm text-purple-300">
                       Paga en cuotas sin interés con ADDI. Serás redirigido para completar tu solicitud de crédito.
+                    </p>
+                  </div>
+                )}
+
+                {paymentMethod === 'breb' && (
+                  <div className="mt-4 rounded-2xl border border-cyan-400/20 bg-cyan-300/5 px-4 py-5">
+                    <p className="text-sm text-slate-300">
+                      Escanea este código QR con tu app bancaria (Bancolombia, Nequi, DaviPlata, etc.) y paga el total de{' '}
+                      <strong className="text-cyan-300">{formatCOP(subtotal)}</strong>.
+                    </p>
+                    <div className="mt-4 flex justify-center">
+                      <div className="rounded-2xl border border-cyan-400/20 bg-white p-3">
+                        <Image
+                          src="/Imagenes/Qr.png"
+                          alt="Código QR de pago BRE-B"
+                          width={280}
+                          height={280}
+                          className="h-auto w-[280px]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-4 text-center">
+                      <p className="text-xs text-slate-500">¿El código no te funciona? Paga con la llave BRE-B</p>
+                      <button
+                        type="button"
+                        onClick={handleCopyKey}
+                        className="mt-2 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-slate-900/80 px-4 py-2 text-sm font-semibold text-white transition-colors hover:border-cyan-400/50"
+                      >
+                        <span className="font-mono tracking-wide">{BREB_KEY}</span>
+                        {keyCopied ? (
+                          <svg className="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <svg className="h-4 w-4 text-cyan-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                        )}
+                      </button>
+                      {keyCopied && <p className="mt-1.5 text-xs text-green-400">¡Llave copiada!</p>}
+                    </div>
+
+                    <p className="mt-4 text-sm text-slate-400">
+                      Cuando termines el pago, presiona <strong className="text-white">&quot;Confirmar y pagar&quot;</strong>: te llevaremos a WhatsApp para que nos envíes el comprobante y así confirmar y hacer entrega de tu pedido en los próximos días.
                     </p>
                   </div>
                 )}

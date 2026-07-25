@@ -20,7 +20,7 @@ interface CheckoutBody {
     ciudad: string;
     telefono: string;
   };
-  paymentMethod: 'contra-entrega' | 'tarjeta' | 'pse' | 'nequi' | 'addi';
+  paymentMethod: 'contra-entrega' | 'tarjeta' | 'pse' | 'nequi' | 'addi' | 'breb';
   items: CartItem[];
   total: number;
 }
@@ -115,6 +115,15 @@ export async function POST(req: NextRequest) {
       }
 
       return NextResponse.json({ reference, checkoutUrl: result.init_point });
+    }
+
+    // BRE-B: pago por código QR — se verifica manualmente vía comprobante por WhatsApp
+    if (paymentMethod === 'breb') {
+      return NextResponse.json({
+        reference,
+        method: 'breb',
+        message: 'Pedido creado. Envíanos el comprobante de pago por WhatsApp.',
+      });
     }
 
     // ADDI (cuotas sin interés — integración independiente)

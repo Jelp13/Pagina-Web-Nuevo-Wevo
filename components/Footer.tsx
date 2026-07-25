@@ -44,7 +44,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="mx-auto mt-10 max-w-[1180px] border-t border-cyan-400/10 pt-6 text-sm text-slate-500">
-        © 2026 {SITE_NAME}. Todos los derechos reservados.
+        © 2026 {SITE_NAME}. Todos los derechos reservados. · Creador JELP
       </div>
     </footer>
   );

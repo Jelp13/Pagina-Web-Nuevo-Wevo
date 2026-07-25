@@ -14,8 +14,9 @@ function ConfirmationContent() {
   const status = params.get('status') ?? 'APPROVED';
 
   // Mercado Pago retorna status en minúsculas: 'approved', 'rejected', 'pending'
-  const isApproved = status === 'approved' || status === 'APPROVED' || method === 'contra-entrega';
+  const isApproved = status === 'approved' || status === 'APPROVED' || method === 'contra-entrega' || method === 'breb';
   const isContraEntrega = method === 'contra-entrega';
+  const isBreb = method === 'breb';
 
   return (
     <div className="mx-auto max-w-lg px-6 py-20 text-center">
@@ -28,7 +29,7 @@ function ConfirmationContent() {
 
       <h1 className="text-3xl font-black text-white">
         {isApproved
-          ? isContraEntrega
+          ? isContraEntrega || isBreb
             ? '¡Pedido recibido!'
             : '¡Pago exitoso!'
           : 'Pago no completado'}
@@ -36,7 +37,9 @@ function ConfirmationContent() {
 
       <p className="mt-4 text-slate-400">
         {isApproved
-          ? isContraEntrega
+          ? isBreb
+            ? 'Hemos recibido tu pedido. En cuanto verifiquemos tu comprobante de pago por WhatsApp, confirmaremos tu pedido.'
+            : isContraEntrega
             ? 'Hemos recibido tu pedido. Nuestro equipo se comunicará contigo por WhatsApp para coordinar la entrega.'
             : 'Tu pago fue procesado correctamente. Recibirás un correo de confirmación con los detalles de tu pedido.'
           : 'Hubo un problema al procesar tu pago. No se realizó ningún cargo. Por favor intenta de nuevo o usa otro método de pago.'}
@@ -52,7 +55,14 @@ function ConfirmationContent() {
       {isApproved && (
         <div className="mb-8 rounded-2xl border border-cyan-400/10 bg-white/5 p-5 text-left space-y-2 text-sm">
           <h2 className="font-semibold text-white mb-3">Próximos pasos</h2>
-          {isContraEntrega ? (
+          {isBreb ? (
+            <>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">1.</span> Envíanos el comprobante de pago por WhatsApp</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">2.</span> Verificamos tu pago</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">3.</span> Confirmamos tu pedido por WhatsApp</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">4.</span> Te hacemos entrega de tu pedido en los próximos días</p>
+            </>
+          ) : isContraEntrega ? (
             <>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">1.</span> Revisamos disponibilidad de tu equipo</p>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">2.</span> Te contactamos por WhatsApp en menos de 2 horas</p>

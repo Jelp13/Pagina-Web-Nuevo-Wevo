@@ -6,6 +6,7 @@
 // URLs base y contacto
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://nuevowevo.com';
 export const WHATSAPP_LINK = 'https://wa.me/573163713928';
+export const BREB_KEY = '3058165474';
 export const CONTACT_EMAIL = 'contact@nuevowevo.com';
 
 // Metadata y SEO
