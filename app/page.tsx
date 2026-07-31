@@ -185,10 +185,19 @@ export default function Home() {
           <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Marcas</p>
           <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">Confiadas por los mejores aliados.</h2>
         </div>
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-6">
           {brands.map((brand) => (
-            <div key={brand} className="rounded-3xl border border-cyan-400/10 bg-white/5 px-5 py-6 text-center text-sm font-semibold uppercase tracking-[0.18em] text-slate-300 transition duration-300 hover:border-cyan-300/20 hover:text-white">
-              {brand}
+            <div
+              key={brand.name}
+              className="flex h-32 w-56 items-center justify-center rounded-3xl bg-white px-10 py-8 shadow-lg shadow-black/30 transition duration-300 hover:-translate-y-1 hover:shadow-cyan-400/20"
+            >
+              <Image
+                src={brand.logo}
+                alt={brand.name}
+                width={200}
+                height={100}
+                className="max-h-16 w-auto object-contain"
+              />
             </div>
           ))}
         </div>

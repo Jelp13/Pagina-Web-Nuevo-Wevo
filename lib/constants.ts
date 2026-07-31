@@ -1182,7 +1182,17 @@ export const PERIPHERAL_PRODUCTS: PeripheralProduct[] = [
 ];
 
 // Marcas aliadas
-export const BRANDS = ['COUGAR', 'KINGSTON', 'MSI', 'LOGITECH'];
+export interface Brand {
+  name: string;
+  logo: string;
+}
+
+export const BRANDS: Brand[] = [
+  { name: 'COUGAR', logo: '/Imagenes/logo-cougar.jpg' },
+  { name: 'KINGSTON', logo: '/Imagenes/logo-kingston.png' },
+  { name: 'MSI', logo: '/Imagenes/logo-msi.png' },
+  { name: 'LOGITECH', logo: '/Imagenes/logo-logitech.png' },
+];
 
 // Preguntas del quiz (Encuentre tu PC)
 export interface QuizQuestion {

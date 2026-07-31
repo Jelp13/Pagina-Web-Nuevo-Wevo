@@ -43,7 +43,7 @@ export default function ContactoPage() {
 
       {/* Canales de contacto */}
       <section className="mx-auto max-w-[1180px] px-6 pb-12">
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <a
             href={WHATSAPP_LINK}
             target="_blank"
@@ -54,6 +54,16 @@ export default function ContactoPage() {
             <p className="font-bold text-white">WhatsApp</p>
             <p className="text-sm text-slate-400">Respuesta inmediata en horario de atención. La forma más rápida de cotizar tu PC.</p>
             <span className="mt-auto text-sm font-semibold text-green-300">316 3713928 →</span>
+          </a>
+
+          <a
+            href="tel:+573163713928"
+            className="flex flex-col gap-3 rounded-[24px] border border-cyan-400/20 bg-cyan-300/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-cyan-300/10"
+          >
+            <span className="text-3xl">📞</span>
+            <p className="font-bold text-white">Llamadas</p>
+            <p className="text-sm text-slate-400">¿Prefieres hablar directamente? Llámanos en nuestro horario de atención.</p>
+            <span className="mt-auto text-sm font-semibold text-cyan-300">316 3713928 →</span>
           </a>
 
           <a
