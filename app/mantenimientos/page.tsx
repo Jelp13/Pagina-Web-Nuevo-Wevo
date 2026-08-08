@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import MantenimientosGrid from '@/components/MantenimientosGrid';
+import MantenimientosEmpresas from '@/components/MantenimientosEmpresas';
 import ContactoMantenimientos from '@/components/ContactoMantenimientos';
 
 export const metadata = {
@@ -55,6 +56,8 @@ export default function MantenimientosPage() {
 
         <MantenimientosGrid />
       </section>
+
+      <MantenimientosEmpresas />
 
       <ContactoMantenimientos />
       <Footer />
