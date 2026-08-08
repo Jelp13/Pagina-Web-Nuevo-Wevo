@@ -45,6 +45,7 @@ export const ROUTES = {
   torres: '/torres',
   products: '#products-anchor',
   peripherals: '/perifericos',
+  portatiles: '/portatiles',
   brands: '#brands',
   cart: '/carrito',
   checkout: '/checkout',

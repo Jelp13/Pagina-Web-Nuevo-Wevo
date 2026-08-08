@@ -2,84 +2,32 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { PERIPHERAL_PRODUCTS, PERIPHERALS } from '@/lib/constants';
+import { LAPTOP_PRODUCTS } from '@/lib/constants';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
 export const metadata = {
-  title: 'Periféricos | Nuevo Wevo',
-  description: 'Catálogo completo de periféricos gaming: monitores, mouse, teclados, audífonos y más.',
+  title: 'Portátiles | Nuevo Wevo',
+  description: 'Catálogo completo de portátiles para gaming, estudio y trabajo diario.',
 };
 
-export default function Perifericos({
-  searchParams,
-}: {
-  searchParams: { categoria?: string };
-}) {
-  const categoriaActiva = searchParams.categoria ?? null;
-
-  const productosSinPortatiles = PERIPHERAL_PRODUCTS.filter(
-    (p) => p.categorySlug !== 'portatiles',
-  );
-
-  const productos = categoriaActiva
-    ? productosSinPortatiles.filter((p) => p.categorySlug === categoriaActiva)
-    : productosSinPortatiles;
-
-  const categoriaLabel =
-    PERIPHERALS.find((p) => p.slug === categoriaActiva)?.name ?? null;
-
+export default function PortatilesPage() {
   return (
     <main className="min-h-screen bg-[#05080f]">
       <Navbar />
 
       {/* Header */}
       <section className="mx-auto max-w-[1180px] px-6 py-16">
-        <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">
-          {categoriaLabel ? categoriaLabel : 'Catálogo completo'}
-        </p>
-        <h1 className="mt-3 text-4xl font-black text-white sm:text-5xl">
-          {categoriaLabel ? categoriaLabel : 'Periféricos.'}
-        </h1>
+        <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Catálogo completo</p>
+        <h1 className="mt-3 text-4xl font-black text-white sm:text-5xl">Portátiles.</h1>
         <p className="mt-4 max-w-xl text-slate-400">
-          {categoriaLabel
-            ? `Todos los productos disponibles en la categoría ${categoriaLabel.toLowerCase()}.`
-            : 'Todo lo que necesitas para completar tu setup: monitores, periféricos y accesorios gaming.'}
+          Equipos móviles para gaming, estudio y trabajo diario, con configuraciones para cada presupuesto.
         </p>
-      </section>
-
-      {/* Filtros de categoría */}
-      <section className="mx-auto max-w-[1180px] px-6 pb-8">
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/perifericos"
-            className={`rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
-              !categoriaActiva
-                ? 'border-cyan-300/60 bg-cyan-300/10 text-cyan-300'
-                : 'border-slate-700 bg-white/5 text-slate-400 hover:border-cyan-300/30 hover:text-slate-200'
-            }`}
-          >
-            Todos
-          </Link>
-          {PERIPHERALS.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/perifericos?categoria=${cat.slug}`}
-              className={`rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
-                categoriaActiva === cat.slug
-                  ? 'border-cyan-300/60 bg-cyan-300/10 text-cyan-300'
-                  : 'border-slate-700 bg-white/5 text-slate-400 hover:border-cyan-300/30 hover:text-slate-200'
-              }`}
-            >
-              {cat.name}
-            </Link>
-          ))}
-        </div>
       </section>
 
       {/* Grid de productos */}
       <section className="mx-auto max-w-[1180px] px-6 pb-24">
-        {productos.length === 0 ? (
+        {LAPTOP_PRODUCTS.length === 0 ? (
           <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 py-20 text-center">
             <p className="text-slate-500">
               Próximamente agregaremos productos en esta categoría.
@@ -87,7 +35,7 @@ export default function Perifericos({
           </div>
         ) : (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {productos.map((product) => {
+            {LAPTOP_PRODUCTS.map((product) => {
               const discount = product.originalPrice
                 ? Math.round(
                     ((product.originalPrice - product.numericPrice) /
@@ -99,7 +47,7 @@ export default function Perifericos({
               return (
                 <Link
                   key={product.id}
-                  href={`/perifericos/${product.id}`}
+                  href={`/portatiles/${product.id}`}
                   className="group relative flex flex-col overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5 p-7 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
                 >
                   {product.badge && (
@@ -161,11 +109,11 @@ export default function Perifericos({
             ¿No encuentras lo que buscas?
           </p>
           <h2 className="mt-4 text-2xl font-bold text-white">
-            Te cotizamos el periférico que necesitas.
+            Te cotizamos el portátil que necesitas.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-slate-400">
-            Dinos qué accesorio estás buscando y te conseguimos la mejor opción
-            para tu setup.
+            Dinos qué equipo estás buscando y te conseguimos la mejor opción
+            para tu presupuesto.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <a

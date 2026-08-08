@@ -7,18 +7,16 @@ import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductImage from '@/components/ProductImage';
-import { PERIPHERAL_PRODUCTS } from '@/lib/constants';
+import { LAPTOP_PRODUCTS } from '@/lib/constants';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
-const PRODUCTS = PERIPHERAL_PRODUCTS.filter((p) => p.categorySlug !== 'portatiles');
-
 export async function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ id: p.id }));
+  return LAPTOP_PRODUCTS.map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = PRODUCTS.find((p) => p.id === params.id);
+  const product = LAPTOP_PRODUCTS.find((p) => p.id === params.id);
   if (!product) return {};
   return {
     title: `${product.name} | Nuevo Wevo`,
@@ -26,15 +24,15 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default function PerifericoDetailPage({
+export default function PortatilDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const product = PRODUCTS.find((p) => p.id === params.id);
+  const product = LAPTOP_PRODUCTS.find((p) => p.id === params.id);
   if (!product) notFound();
 
-  const related = PRODUCTS.filter((p) => p.id !== product.id).slice(
+  const related = LAPTOP_PRODUCTS.filter((p) => p.id !== product.id).slice(
     0,
     3,
   );
@@ -62,15 +60,8 @@ export default function PerifericoDetailPage({
             Inicio
           </Link>
           <span>/</span>
-          <Link href={ROUTES.perifericos} className="hover:text-cyan-300 transition-colors">
-            Periféricos
-          </Link>
-          <span>/</span>
-          <Link
-            href={`/perifericos?categoria=${product.categorySlug}`}
-            className="hover:text-cyan-300 transition-colors"
-          >
-            {product.category}
+          <Link href={ROUTES.portatiles} className="hover:text-cyan-300 transition-colors">
+            Portátiles
           </Link>
           <span>/</span>
           <span className="text-slate-300">{product.name}</span>
@@ -177,13 +168,13 @@ export default function PerifericoDetailPage({
               También te puede interesar
             </p>
             <h2 className="mt-2 mb-8 text-2xl font-bold text-white">
-              Más periféricos
+              Más portátiles
             </h2>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
                 <Link
                   key={p.id}
-                  href={`/perifericos/${p.id}`}
+                  href={`/portatiles/${p.id}`}
                   className="group relative flex flex-col gap-4 rounded-[24px] border border-cyan-400/10 bg-white/5 p-5 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
                 >
                   <ProductImage

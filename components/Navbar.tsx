@@ -10,6 +10,7 @@ const navigation = [
   { label: 'Inicio', href: ROUTES.home },
   { label: 'Torres', href: ROUTES.torres },
   { label: 'Tu Pc', href: ROUTES.quiz },
+  { label: 'Portátiles', href: ROUTES.portatiles },
   { label: 'Periféricos', href: ROUTES.peripherals },
   { label: 'Mantenimientos', href: ROUTES.mantenimientos },
 ];
