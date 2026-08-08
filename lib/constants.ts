@@ -1813,7 +1813,7 @@ export const PERIPHERAL_PRODUCTS: PeripheralProduct[] = [
   // ── CÁMARA ───────────────────────────────────────────────────────────────
   {
     id: 'camara-logitech-c920',
-    badge: 'Ejemplo',
+    badge: null,
     category: 'Cámaras',
     categorySlug: 'camaras',
     name: 'Logitech C920 HD Pro',

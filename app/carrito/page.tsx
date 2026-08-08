@@ -45,7 +45,7 @@ export default function CartPage() {
               Agrega productos desde nuestra tienda y aparecerán aquí.
             </p>
             <Link
-              href={ROUTES.home}
+              href={ROUTES.peripherals}
               className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-8 py-3 text-sm font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
             >
               Explorar productos

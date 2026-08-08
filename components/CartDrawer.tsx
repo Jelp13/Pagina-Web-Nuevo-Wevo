@@ -74,12 +74,13 @@ export default function CartDrawer() {
                 🛒
               </div>
               <p className="text-slate-400">Tu carrito está vacío</p>
-              <button
+              <Link
+                href={ROUTES.peripherals}
                 onClick={closeCart}
                 className="rounded-full bg-cyan-300/15 px-6 py-2.5 text-sm font-semibold text-cyan-300 hover:bg-cyan-300/25 transition-colors"
               >
                 Explorar productos
-              </button>
+              </Link>
             </div>
           ) : (
             <ul className="flex flex-col gap-4">
