@@ -9,10 +9,9 @@
   },
   "dependencies": {
     "mercadopago": "^3.1.0",
-    "next": "14.2.35",
+    "next": "14.2.5",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "sharp": "^0.35.3",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.14"
   },
