@@ -19,14 +19,14 @@ export default function PageTransition() {
     setTimeout(() => setPhase('hidden'), 480);
   }, []);
 
-  // Cuando cambia la ruta → ocultar overlay (con tiempo mínimo de 520ms)
+  // Cuando cambia la ruta → ocultar overlay (con tiempo mínimo de 200ms)
   useEffect(() => {
     if (pathname === prevPathname.current) return;
     prevPathname.current = pathname;
     clearTimeout(safetyTimer.current);
 
     const elapsed = Date.now() - shownAt.current;
-    const remaining = Math.max(0, 520 - elapsed);
+    const remaining = Math.max(0, 200 - elapsed);
     setTimeout(hide, remaining);
   }, [pathname, hide]);
 
@@ -65,11 +65,12 @@ export default function PageTransition() {
         requestAnimationFrame(() => setPhase('visible'))
       );
 
-      // Navegar después de 2 segundos
+      // Navegar de inmediato (el overlay ya se está mostrando con fade-in)
+      router.push(href);
+
+      // Salvavidas: si por alguna razón la ruta nunca cambia, ocultar el overlay igual
       clearTimeout(safetyTimer.current);
-      safetyTimer.current = setTimeout(() => {
-        router.push(href);
-      }, 800);
+      safetyTimer.current = setTimeout(hide, 4000);
     };
 
     document.addEventListener('click', handleClick, true);

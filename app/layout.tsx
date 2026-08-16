@@ -141,7 +141,6 @@ export default function RootLayout({
         />
 
         {/* Preconectar a dominios externos para mejorar velocidad */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://wa.me" />
 
         {/* Favicon y app icons */}
