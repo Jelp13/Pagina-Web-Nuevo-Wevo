@@ -9,11 +9,14 @@ interface CartItem {
   quantity: number;
 }
 
+type TipoDocumento = 'CC' | 'CE' | 'PA';
+
 interface CheckoutBody {
   form: {
     nombres: string;
     apellidos: string;
     email: string;
+    tipoDocumento: TipoDocumento;
     documento: string;
     direccion: string;
     departamento: string;
@@ -25,12 +28,23 @@ interface CheckoutBody {
   total: number;
 }
 
+const NAME_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+
+function validateDocumento(tipo: TipoDocumento, doc: string): boolean {
+  if (tipo === 'CC') return /^[1-9]\d{5,9}$/.test(doc);
+  if (tipo === 'CE') return /^\d{6,9}$/.test(doc);
+  if (tipo === 'PA') return /^[A-Za-z0-9]{6,12}$/.test(doc);
+  return false;
+}
+
 function validateBody(body: CheckoutBody): string | null {
   const { form, items, total } = body;
-  if (!form?.nombres?.trim()) return 'Nombres requerido';
-  if (!form?.apellidos?.trim()) return 'Apellidos requerido';
+  if (!form?.nombres?.trim() || !NAME_REGEX.test(form.nombres)) return 'Nombres inválidos';
+  if (!form?.apellidos?.trim() || !NAME_REGEX.test(form.apellidos)) return 'Apellidos inválidos';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Email inválido';
-  if (!/^\d{6,12}$/.test(form.documento)) return 'Documento inválido';
+  if (!['CC', 'CE', 'PA'].includes(form.tipoDocumento) || !validateDocumento(form.tipoDocumento, form.documento)) {
+    return 'Documento inválido';
+  }
   if (!form.direccion?.trim() || form.direccion.length < 8) return 'Dirección inválida';
   if (!form.ciudad?.trim()) return 'Ciudad requerida';
   if (!/^[3]\d{9}$/.test(form.telefono)) return 'Teléfono inválido';
@@ -99,6 +113,7 @@ export async function POST(req: NextRequest) {
             surname: form.apellidos,
             email: form.email,
             phone: { area_code: '57', number: form.telefono },
+            identification: { type: form.tipoDocumento, number: form.documento },
           },
           back_urls: {
             success: `${siteUrl}/checkout/confirmacion?ref=${reference}&status=approved`,

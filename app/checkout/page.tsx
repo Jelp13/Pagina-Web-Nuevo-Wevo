@@ -13,10 +13,13 @@ import { DEPARTAMENTOS, getMunicipios } from '@/lib/colombia-geo';
 
 type PaymentMethod = 'contra-entrega' | 'tarjeta' | 'pse' | 'addi' | 'nequi' | 'breb';
 
+type TipoDocumento = 'CC' | 'CE' | 'PA';
+
 interface FormData {
   nombres: string;
   apellidos: string;
   email: string;
+  tipoDocumento: TipoDocumento;
   documento: string;
   direccion: string;
   departamento: string;
@@ -28,12 +31,30 @@ const INITIAL_FORM: FormData = {
   nombres: '',
   apellidos: '',
   email: '',
+  tipoDocumento: 'CC',
   documento: '',
   direccion: '',
   departamento: '',
   ciudad: '',
   telefono: '',
 };
+
+const NAME_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]+$/;
+
+function sanitizeName(value: string) {
+  return value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s]/g, '');
+}
+
+function validateDocumento(tipo: TipoDocumento, doc: string): string | null {
+  if (tipo === 'CC') {
+    if (!/^[1-9]\d{5,9}$/.test(doc)) return 'Cédula inválida (6–10 dígitos, no puede iniciar en 0)';
+  } else if (tipo === 'CE') {
+    if (!/^\d{6,9}$/.test(doc)) return 'Cédula de extranjería inválida (6–9 dígitos)';
+  } else if (tipo === 'PA') {
+    if (!/^[A-Za-z0-9]{6,12}$/.test(doc)) return 'Pasaporte inválido (6–12 caracteres alfanuméricos)';
+  }
+  return null;
+}
 
 const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: string; disabled?: boolean }[] = [
   { id: 'contra-entrega', label: 'Contra entrega', icon: '🚚', desc: 'Paga cuando recibas tu pedido' },
@@ -48,9 +69,12 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: s
 function validate(form: FormData): Partial<Record<keyof FormData, string>> {
   const errors: Partial<Record<keyof FormData, string>> = {};
   if (!form.nombres.trim()) errors.nombres = 'Campo obligatorio';
+  else if (!NAME_REGEX.test(form.nombres)) errors.nombres = 'Solo letras y espacios (sin números ni caracteres especiales)';
   if (!form.apellidos.trim()) errors.apellidos = 'Campo obligatorio';
+  else if (!NAME_REGEX.test(form.apellidos)) errors.apellidos = 'Solo letras y espacios (sin números ni caracteres especiales)';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'Correo inválido';
-  if (!/^\d{6,12}$/.test(form.documento)) errors.documento = 'Documento inválido (6–12 dígitos)';
+  const docError = validateDocumento(form.tipoDocumento, form.documento);
+  if (docError) errors.documento = docError;
   if (!form.direccion.trim() || form.direccion.length < 8) errors.direccion = 'Dirección muy corta';
   if (!form.departamento) errors.departamento = 'Selecciona un departamento';
   if (!form.ciudad.trim()) errors.ciudad = 'Campo obligatorio';
@@ -87,10 +111,24 @@ export default function CheckoutPage() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    let filtered = value;
+    if (name === 'nombres' || name === 'apellidos') {
+      filtered = sanitizeName(value);
+    } else if (name === 'documento') {
+      filtered = form.tipoDocumento === 'PA'
+        ? value.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
+        : value.replace(/\D/g, '');
+    }
+    setForm((prev) => ({ ...prev, [name]: filtered }));
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+  }
+
+  function handleTipoDocumentoChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const tipo = e.target.value as TipoDocumento;
+    setForm((prev) => ({ ...prev, tipoDocumento: tipo, documento: '' }));
+    setErrors((prev) => ({ ...prev, documento: undefined }));
   }
 
   function handleDepartamentoChange(dep: string) {
@@ -267,6 +305,23 @@ export default function CheckoutPage() {
                   </div>
 
                   <div>
+                    <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="tipoDocumento">
+                      Tipo de documento <span className="text-red-400">*</span>
+                    </label>
+                    <select
+                      id="tipoDocumento"
+                      name="tipoDocumento"
+                      value={form.tipoDocumento}
+                      onChange={handleTipoDocumentoChange}
+                      className={inputClass('tipoDocumento')}
+                    >
+                      <option value="CC">Cédula de ciudadanía (CC)</option>
+                      <option value="CE">Cédula de extranjería (CE)</option>
+                      <option value="PA">Pasaporte</option>
+                    </select>
+                  </div>
+
+                  <div>
                     <label className="mb-1.5 block text-xs font-medium text-slate-300" htmlFor="documento">
                       Número de documento <span className="text-red-400">*</span>
                     </label>
@@ -274,13 +329,13 @@ export default function CheckoutPage() {
                       id="documento"
                       name="documento"
                       type="text"
-                      inputMode="numeric"
+                      inputMode={form.tipoDocumento === 'PA' ? 'text' : 'numeric'}
                       autoComplete="off"
                       value={form.documento}
                       onChange={handleChange}
                       aria-invalid={!!errors.documento}
-                      placeholder="1234567890"
-                      maxLength={12}
+                      placeholder={form.tipoDocumento === 'PA' ? 'AB123456' : '1234567890'}
+                      maxLength={form.tipoDocumento === 'PA' ? 12 : 10}
                       className={inputClass('documento')}
                     />
                     {errors.documento && <p className="mt-1 text-xs text-red-400">{errors.documento}</p>}
