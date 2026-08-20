@@ -7,16 +7,20 @@ import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import RelatedProducts from '@/components/RelatedProducts';
 import AddToCartButton from '@/components/AddToCartButton';
-import { PRODUCTS, FEATURED_PRODUCTS } from '@/lib/constants';
+import { FEATURED_IDS } from '@/lib/constants';
+import { getTorres, getTorreById, getFeaturedTorres } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ id: p.id }));
+  const products = await getTorres();
+  return products.map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = PRODUCTS.find((p) => p.id === params.id);
+  const product = await getTorreById(params.id);
   if (!product) return {};
   return {
     title: `${product.name} | Nuevo Wevo`,
@@ -24,11 +28,12 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default function TowerDetailPage({ params }: { params: { id: string } }) {
-  const product = PRODUCTS.find((p) => p.id === params.id);
+export default async function TowerDetailPage({ params }: { params: { id: string } }) {
+  const product = await getTorreById(params.id);
   if (!product) notFound();
 
-  const related = FEATURED_PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
+  const featured = await getFeaturedTorres(FEATURED_IDS);
+  const related = featured.filter((p) => p.id !== product.id).slice(0, 4);
 
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.numericPrice) / product.originalPrice) * 100)

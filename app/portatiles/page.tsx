@@ -2,16 +2,19 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { LAPTOP_PRODUCTS } from '@/lib/constants';
+import { getLaptopProducts } from '@/lib/products-db';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+
+export const revalidate = 60;
 
 export const metadata = {
   title: 'Portátiles | Nuevo Wevo',
   description: 'Catálogo completo de portátiles para gaming, estudio y trabajo diario.',
 };
 
-export default function PortatilesPage() {
+export default async function PortatilesPage() {
+  const LAPTOP_PRODUCTS = await getLaptopProducts();
   return (
     <main className="min-h-screen bg-[#05080f]">
       <Navbar />

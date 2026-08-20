@@ -7,16 +7,19 @@ import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductImage from '@/components/ProductImage';
-import { LAPTOP_PRODUCTS } from '@/lib/constants';
+import { getLaptopProducts, getLaptopById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
-  return LAPTOP_PRODUCTS.map((p) => ({ id: p.id }));
+  const products = await getLaptopProducts();
+  return products.map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = LAPTOP_PRODUCTS.find((p) => p.id === params.id);
+  const product = await getLaptopById(params.id);
   if (!product) return {};
   return {
     title: `${product.name} | Nuevo Wevo`,
@@ -24,15 +27,16 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default function PortatilDetailPage({
+export default async function PortatilDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const product = LAPTOP_PRODUCTS.find((p) => p.id === params.id);
+  const product = await getLaptopById(params.id);
   if (!product) notFound();
 
-  const related = LAPTOP_PRODUCTS.filter((p) => p.id !== product.id).slice(
+  const allLaptops = await getLaptopProducts();
+  const related = allLaptops.filter((p) => p.id !== product.id).slice(
     0,
     3,
   );

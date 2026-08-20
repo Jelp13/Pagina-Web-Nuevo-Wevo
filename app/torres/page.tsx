@@ -2,16 +2,19 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { PRODUCTS } from '@/lib/constants';
+import { getTorres } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+
+export const revalidate = 60;
 
 export const metadata = {
   title: 'Torres | Nuevo Wevo',
   description: 'Catálogo completo de torres gaming minimalistas. Encuentra tu PC ideal.',
 };
 
-export default function TorresPage() {
+export default async function TorresPage() {
+  const PRODUCTS = await getTorres();
   return (
     <main className="min-h-screen bg-[#05080f]">
       <Navbar />

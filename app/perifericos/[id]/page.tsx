@@ -7,18 +7,19 @@ import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductImage from '@/components/ProductImage';
-import { PERIPHERAL_PRODUCTS } from '@/lib/constants';
+import { getPeripheralProducts, getPeripheralById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
-const PRODUCTS = PERIPHERAL_PRODUCTS.filter((p) => p.categorySlug !== 'portatiles');
+export const revalidate = 60;
 
 export async function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ id: p.id }));
+  const products = await getPeripheralProducts();
+  return products.map((p) => ({ id: p.id }));
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = PRODUCTS.find((p) => p.id === params.id);
+  const product = await getPeripheralById(params.id);
   if (!product) return {};
   return {
     title: `${product.name} | Nuevo Wevo`,
@@ -26,15 +27,16 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default function PerifericoDetailPage({
+export default async function PerifericoDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
-  const product = PRODUCTS.find((p) => p.id === params.id);
+  const product = await getPeripheralById(params.id);
   if (!product) notFound();
 
-  const related = PRODUCTS.filter((p) => p.id !== product.id).slice(
+  const allProducts = await getPeripheralProducts();
+  const related = allProducts.filter((p) => p.id !== product.id).slice(
     0,
     3,
   );

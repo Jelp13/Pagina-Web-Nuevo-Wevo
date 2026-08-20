@@ -17,13 +17,16 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TikTokSection from '@/components/TikTokSection';
 import ProductCard from '@/components/ProductCard';
-import { FEATURES, FEATURED_PRODUCTS, PERIPHERALS, BRANDS } from '@/lib/constants';
+import { FEATURES, FEATURED_IDS, PERIPHERALS, BRANDS } from '@/lib/constants';
+import { getFeaturedTorres } from '@/lib/products-db';
 import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
 
-export default function Home() {
-  const products = FEATURED_PRODUCTS;
+export const revalidate = 60;
+
+export default async function Home() {
+  const products = await getFeaturedTorres(FEATURED_IDS);
   const peripherals = PERIPHERALS;
   const brands = BRANDS;
 

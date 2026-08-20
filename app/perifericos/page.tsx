@@ -2,29 +2,30 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { PERIPHERAL_PRODUCTS, PERIPHERALS } from '@/lib/constants';
+import { PERIPHERALS } from '@/lib/constants';
+import { getPeripheralProducts } from '@/lib/products-db';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+
+export const revalidate = 60;
 
 export const metadata = {
   title: 'Periféricos | Nuevo Wevo',
   description: 'Catálogo completo de periféricos gaming: monitores, mouse, teclados, audífonos y más.',
 };
 
-export default function Perifericos({
+export default async function Perifericos({
   searchParams,
 }: {
   searchParams: { categoria?: string };
 }) {
   const categoriaActiva = searchParams.categoria ?? null;
 
-  const productosSinPortatiles = PERIPHERAL_PRODUCTS.filter(
-    (p) => p.categorySlug !== 'portatiles',
-  );
+  const todosLosPerifericos = await getPeripheralProducts();
 
   const productos = categoriaActiva
-    ? productosSinPortatiles.filter((p) => p.categorySlug === categoriaActiva)
-    : productosSinPortatiles;
+    ? todosLosPerifericos.filter((p) => p.categorySlug === categoriaActiva)
+    : todosLosPerifericos;
 
   const categoriaLabel =
     PERIPHERALS.find((p) => p.slug === categoriaActiva)?.name ?? null;
