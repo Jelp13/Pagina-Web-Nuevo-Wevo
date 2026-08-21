@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import type { AdminProductDetail } from '@/lib/admin-products';
+import ListFieldEditor from '@/components/admin/ListFieldEditor';
 
 interface Props {
   producto: AdminProductDetail;
@@ -11,6 +12,18 @@ interface Props {
 
 const inputClass =
   'w-full rounded-2xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30';
+
+const PERFORMANCE_OPTIONS = [
+  'Excepcional',
+  'Excelente',
+  'Fluido',
+  'Muy bueno',
+  'Bueno',
+  'Aceptable',
+  'Básico',
+  'Limitado',
+  'No recomendado',
+];
 
 export default function AdminProductEditForm({ producto }: Props) {
   const router = useRouter();
@@ -28,6 +41,10 @@ export default function AdminProductEditForm({ producto }: Props) {
     producto.originalPrice != null ? String(producto.originalPrice) : '',
   );
   const [inStock, setInStock] = useState(producto.inStock);
+  const [fullSpecs, setFullSpecs] = useState(producto.fullSpecs);
+  const [gamingPerformance, setGamingPerformance] = useState(producto.gamingPerformance);
+  const [creativePerformance, setCreativePerformance] = useState(producto.creativePerformance);
+  const [features, setFeatures] = useState(producto.features);
 
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -57,6 +74,10 @@ export default function AdminProductEditForm({ producto }: Props) {
           numericPrice: Number(numericPrice),
           originalPrice: hasDiscount && originalPrice ? Number(originalPrice) : null,
           inStock,
+          fullSpecs,
+          gamingPerformance,
+          creativePerformance,
+          features,
         }),
       });
 
@@ -276,6 +297,65 @@ export default function AdminProductEditForm({ producto }: Props) {
           </label>
         </div>
       </section>
+
+      {/* Características rápidas */}
+      <ListFieldEditor
+        title="Características rápidas"
+        description="Los íconos y textos cortos que aparecen junto al precio (ej: 🎮 RTX 5060 8GB)."
+        value={features as never}
+        onChange={(rows) => setFeatures(rows as never)}
+        fields={[
+          { key: 'icon', label: 'Ícono (emoji)', placeholder: '🎮' },
+          { key: 'label', label: 'Texto', placeholder: 'RTX 5060 8GB' },
+        ]}
+        emptyRow={{ icon: '', label: '' }}
+        addLabel="+ Agregar característica"
+      />
+
+      {/* Especificaciones */}
+      <ListFieldEditor
+        title="Especificaciones"
+        description="La tabla de ficha técnica completa (pestaña “Especificaciones”)."
+        value={fullSpecs as never}
+        onChange={(rows) => setFullSpecs(rows as never)}
+        fields={[
+          { key: 'label', label: 'Campo', placeholder: 'Procesador' },
+          { key: 'value', label: 'Valor', placeholder: 'AMD Ryzen 5 7600X' },
+        ]}
+        emptyRow={{ label: '', value: '' }}
+        addLabel="+ Agregar especificación"
+      />
+
+      {/* Rendimiento en gaming */}
+      <ListFieldEditor
+        title="Rendimiento en Gaming"
+        description="Tabla de FPS por juego (pestaña “Gaming”)."
+        value={gamingPerformance as never}
+        onChange={(rows) => setGamingPerformance(rows as never)}
+        fields={[
+          { key: 'game', label: 'Juego', placeholder: 'Valorant' },
+          { key: 'fps', label: 'FPS', placeholder: '240–330' },
+          { key: 'resolution', label: 'Resolución', placeholder: '1440p' },
+          { key: 'quality', label: 'Calidad', placeholder: 'Ultra' },
+        ]}
+        emptyRow={{ game: '', fps: '', resolution: '', quality: '' }}
+        addLabel="+ Agregar juego"
+      />
+
+      {/* Rendimiento en diseño y edición */}
+      <ListFieldEditor
+        title="Rendimiento en Diseño y Edición"
+        description="Tabla de software creativo (pestaña “Diseño y Edición”)."
+        value={creativePerformance as never}
+        onChange={(rows) => setCreativePerformance(rows as never)}
+        fields={[
+          { key: 'software', label: 'Software', placeholder: 'Photoshop' },
+          { key: 'performance', label: 'Desempeño', type: 'select', options: PERFORMANCE_OPTIONS },
+          { key: 'detail', label: 'Detalle', placeholder: 'Sin limitaciones, respuesta instantánea' },
+        ]}
+        emptyRow={{ software: '', performance: PERFORMANCE_OPTIONS[0], detail: '' }}
+        addLabel="+ Agregar software"
+      />
 
       {error && <p className="rounded-xl bg-red-500/10 px-4 py-2.5 text-sm text-red-400">{error}</p>}
       {saved && <p className="rounded-xl bg-green-500/10 px-4 py-2.5 text-sm text-green-400">Cambios guardados.</p>}

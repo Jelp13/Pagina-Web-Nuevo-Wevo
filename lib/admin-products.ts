@@ -1,8 +1,11 @@
 import { db } from './db';
 import { formatCOP } from './format';
+import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from './constants';
 
-function parseImages(json: string): string[] {
-  return typeof json === 'string' ? (JSON.parse(json) as string[]) : (json as unknown as string[]);
+function parseJsonArray<T>(json: unknown): T[] {
+  if (Array.isArray(json)) return json as T[];
+  if (typeof json === 'string' && json.trim()) return JSON.parse(json) as T[];
+  return [];
 }
 
 export interface AdminProductSummary {
@@ -25,7 +28,7 @@ export async function getAllProductsForAdmin(): Promise<AdminProductSummary[]> {
     .execute();
 
   return rows.map((r) => {
-    const imgs = parseImages(r.images);
+    const imgs = parseJsonArray<string>(r.images);
     return {
       id: r.id,
       section: r.section,
@@ -52,6 +55,10 @@ export interface AdminProductDetail {
   numericPrice: number;
   originalPrice: number | null;
   inStock: boolean;
+  fullSpecs: ProductSpec[];
+  gamingPerformance: GamingPerf[];
+  creativePerformance: CreativePerf[];
+  features: ProductFeature[];
 }
 
 export async function getAdminProductById(id: string): Promise<AdminProductDetail | undefined> {
@@ -67,10 +74,14 @@ export async function getAdminProductById(id: string): Promise<AdminProductDetai
     specs: row.specs,
     description: row.description,
     shortDescription: row.short_description,
-    images: parseImages(row.images),
+    images: parseJsonArray<string>(row.images),
     numericPrice: row.numeric_price,
     originalPrice: row.original_price,
     inStock: Boolean(row.in_stock),
+    fullSpecs: parseJsonArray<ProductSpec>(row.full_specs),
+    gamingPerformance: parseJsonArray<GamingPerf>(row.gaming_performance),
+    creativePerformance: parseJsonArray<CreativePerf>(row.creative_performance),
+    features: parseJsonArray<ProductFeature>(row.features),
   };
 }
 
@@ -83,6 +94,10 @@ export interface ProductUpdateInput {
   numericPrice: number;
   originalPrice: number | null;
   inStock: boolean;
+  fullSpecs: ProductSpec[];
+  gamingPerformance: GamingPerf[];
+  creativePerformance: CreativePerf[];
+  features: ProductFeature[];
 }
 
 export async function updateProduct(id: string, input: ProductUpdateInput): Promise<void> {
@@ -98,6 +113,10 @@ export async function updateProduct(id: string, input: ProductUpdateInput): Prom
       price_label: formatCOP(input.numericPrice),
       original_price: input.originalPrice,
       in_stock: input.inStock ? 1 : 0,
+      full_specs: JSON.stringify(input.fullSpecs),
+      gaming_performance: JSON.stringify(input.gamingPerformance),
+      creative_performance: JSON.stringify(input.creativePerformance),
+      features: JSON.stringify(input.features),
     })
     .where('id', '=', id)
     .execute();
@@ -116,7 +135,7 @@ export async function addProductImage(productId: string, data: Buffer, mimeType:
     .select('images')
     .where('id', '=', productId)
     .executeTakeFirstOrThrow();
-  const images = parseImages(row.images);
+  const images = parseJsonArray<string>(row.images);
   images.push(url);
 
   await db
@@ -134,7 +153,7 @@ export async function removeProductImage(productId: string, imageUrl: string): P
     .select('images')
     .where('id', '=', productId)
     .executeTakeFirstOrThrow();
-  const images = parseImages(row.images).filter((u) => u !== imageUrl);
+  const images = parseJsonArray<string>(row.images).filter((u) => u !== imageUrl);
 
   await db
     .updateTable('products')
@@ -173,6 +192,10 @@ export interface ProductCreateInput {
   numericPrice: number;
   originalPrice: number | null;
   inStock: boolean;
+  fullSpecs: ProductSpec[];
+  gamingPerformance: GamingPerf[];
+  creativePerformance: CreativePerf[];
+  features: ProductFeature[];
 }
 
 export async function createProduct(input: ProductCreateInput): Promise<string> {
@@ -204,10 +227,10 @@ export async function createProduct(input: ProductCreateInput): Promise<string> 
       specs: input.specs,
       description: input.description,
       short_description: input.shortDescription,
-      full_specs: '[]',
-      gaming_performance: '[]',
-      creative_performance: '[]',
-      features: '[]',
+      full_specs: JSON.stringify(input.fullSpecs),
+      gaming_performance: JSON.stringify(input.gamingPerformance),
+      creative_performance: JSON.stringify(input.creativePerformance),
+      features: JSON.stringify(input.features),
       images: '[]',
       price_label: formatCOP(input.numericPrice),
       numeric_price: input.numericPrice,
@@ -224,7 +247,7 @@ export async function createProduct(input: ProductCreateInput): Promise<string> 
 export async function deleteProduct(id: string): Promise<void> {
   const row = await db.selectFrom('products').select('images').where('id', '=', id).executeTakeFirst();
   if (row) {
-    const images = parseImages(row.images);
+    const images = parseJsonArray<string>(row.images);
     for (const url of images) {
       const match = url.match(/^\/api\/imagenes\/(\d+)$/);
       if (match) {

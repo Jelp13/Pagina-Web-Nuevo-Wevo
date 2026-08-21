@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminProductById, updateProduct, deleteProduct } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
+import { sanitizeRows } from '@/lib/sanitize-list-fields';
+import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -10,7 +12,20 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     const body = await req.json();
-    const { name, specs, description, shortDescription, badge, numericPrice, originalPrice, inStock } = body;
+    const {
+      name,
+      specs,
+      description,
+      shortDescription,
+      badge,
+      numericPrice,
+      originalPrice,
+      inStock,
+      fullSpecs,
+      gamingPerformance,
+      creativePerformance,
+      features,
+    } = body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       return NextResponse.json({ error: 'El nombre es obligatorio' }, { status: 400 });
@@ -40,6 +55,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       numericPrice,
       originalPrice: originalPrice ?? null,
       inStock: Boolean(inStock),
+      fullSpecs: sanitizeRows<ProductSpec>(fullSpecs, ['label', 'value']),
+      gamingPerformance: sanitizeRows<GamingPerf>(gamingPerformance, ['game', 'fps', 'resolution', 'quality']),
+      creativePerformance: sanitizeRows<CreativePerf>(creativePerformance, ['software', 'performance', 'detail']) as CreativePerf[],
+      features: sanitizeRows<ProductFeature>(features, ['icon', 'label']),
     });
 
     // Refresca al instante las páginas públicas que muestran este producto,

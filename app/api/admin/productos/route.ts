@@ -1,14 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createProduct } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
+import { sanitizeRows } from '@/lib/sanitize-list-fields';
+import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
 const VALID_SECTIONS = ['torres', 'perifericos', 'portatiles'];
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { section, category, categorySlug, badge, name, specs, description, shortDescription, numericPrice, originalPrice, inStock } =
-      body;
+    const {
+      section,
+      category,
+      categorySlug,
+      badge,
+      name,
+      specs,
+      description,
+      shortDescription,
+      numericPrice,
+      originalPrice,
+      inStock,
+      fullSpecs,
+      gamingPerformance,
+      creativePerformance,
+      features,
+    } = body;
 
     if (!VALID_SECTIONS.includes(section)) {
       return NextResponse.json({ error: 'Sección inválida' }, { status: 400 });
@@ -47,6 +64,10 @@ export async function POST(req: NextRequest) {
       numericPrice,
       originalPrice: originalPrice ?? null,
       inStock: Boolean(inStock),
+      fullSpecs: sanitizeRows<ProductSpec>(fullSpecs, ['label', 'value']),
+      gamingPerformance: sanitizeRows<GamingPerf>(gamingPerformance, ['game', 'fps', 'resolution', 'quality']),
+      creativePerformance: sanitizeRows<CreativePerf>(creativePerformance, ['software', 'performance', 'detail']) as CreativePerf[],
+      features: sanitizeRows<ProductFeature>(features, ['icon', 'label']),
     });
 
     revalidateProductPaths(section, id);
