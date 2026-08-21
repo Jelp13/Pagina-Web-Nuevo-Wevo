@@ -76,7 +76,12 @@ const dialect = new MysqlDialect({
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    connectionLimit: 3,
+    // El límite de 75 conexiones del plan es por proceso concurrente, no por
+    // esta sola app: en runtime solo hay UN proceso de Node corriendo (a
+    // diferencia del build, que sí abría varios workers en paralelo), así
+    // que un pool más generoso aquí es seguro y evita cuellos de botella
+    // ahora que cada página consulta la base de datos en cada visita.
+    connectionLimit: 10,
   }),
 });
 

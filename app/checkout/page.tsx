@@ -174,8 +174,12 @@ export default function CheckoutPage() {
         body: JSON.stringify({ form, paymentMethod, items, total: subtotal }),
       });
 
-      if (!res.ok) throw new Error('Error al procesar el pedido');
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setPaymentError(data.error ?? 'No se pudo procesar el pedido. Intenta de nuevo.');
+        return;
+      }
 
       if (paymentMethod === 'contra-entrega') {
         clearCart();
