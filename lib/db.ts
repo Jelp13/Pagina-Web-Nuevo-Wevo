@@ -19,6 +19,7 @@ export interface ProductRow {
   price_label: string;
   numeric_price: number;
   original_price: number | null;
+  in_stock: number; // TINYINT(1): 0 o 1
   external_url: string | null;
   sort_order: number;
   created_at: Date;
@@ -33,9 +34,17 @@ export interface AdminRow {
   created_at: Generated<Date>;
 }
 
+export interface ImageRow {
+  id: Generated<number>;
+  data: Buffer;
+  mime_type: string;
+  created_at: Generated<Date>;
+}
+
 interface Database {
   products: ProductRow;
   admins: AdminRow;
+  images: ImageRow;
 }
 
 const dialect = new MysqlDialect({

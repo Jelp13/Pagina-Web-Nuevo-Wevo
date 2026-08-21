@@ -48,17 +48,21 @@ export default async function TorresPage() {
                     {product.badge}
                   </span>
                 )}
-                {discount && (
+                {!product.inStock ? (
+                  <span className="absolute right-7 top-7 rounded-full bg-slate-800/90 px-2.5 py-1 text-[10px] font-bold text-slate-300">
+                    Agotado
+                  </span>
+                ) : discount ? (
                   <span className="absolute right-7 top-7 rounded-full bg-red-500/20 px-2.5 py-1 text-[10px] font-bold text-red-300">
                     -{discount}%
                   </span>
-                )}
+                ) : null}
 
                 {/* Imagen del producto */}
                 <ProductImage
                   src={product.images[0]}
                   alt={product.name}
-                  className="mb-6 h-80 rounded-3xl bg-slate-950/90"
+                  className={`mb-6 h-80 rounded-3xl bg-slate-950/90 ${!product.inStock ? 'opacity-50' : ''}`}
                   iconSize="text-6xl"
                 />
 

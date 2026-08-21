@@ -1,0 +1,267 @@
+'use client';
+
+import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import type { AdminProductDetail } from '@/lib/admin-products';
+
+interface Props {
+  producto: AdminProductDetail;
+}
+
+const inputClass =
+  'w-full rounded-2xl border border-slate-700 bg-slate-900/80 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none focus:border-cyan-400/50 focus:ring-1 focus:ring-cyan-400/30';
+
+export default function AdminProductEditForm({ producto }: Props) {
+  const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [images, setImages] = useState(producto.images);
+  const [name, setName] = useState(producto.name);
+  const [badge, setBadge] = useState(producto.badge ?? '');
+  const [specs, setSpecs] = useState(producto.specs);
+  const [shortDescription, setShortDescription] = useState(producto.shortDescription ?? '');
+  const [description, setDescription] = useState(producto.description);
+  const [numericPrice, setNumericPrice] = useState(String(producto.numericPrice));
+  const [hasDiscount, setHasDiscount] = useState(producto.originalPrice != null);
+  const [originalPrice, setOriginalPrice] = useState(
+    producto.originalPrice != null ? String(producto.originalPrice) : '',
+  );
+  const [inStock, setInStock] = useState(producto.inStock);
+
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
+  const [saved, setSaved] = useState(false);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    setSaved(false);
+    setSaving(true);
+
+    try {
+      const res = await fetch(`/api/admin/productos/${producto.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          badge: badge || null,
+          specs,
+          shortDescription: shortDescription || null,
+          description,
+          numericPrice: Number(numericPrice),
+          originalPrice: hasDiscount && originalPrice ? Number(originalPrice) : null,
+          inStock,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? 'Error al guardar');
+        return;
+      }
+
+      setSaved(true);
+      router.refresh();
+      setTimeout(() => setSaved(false), 2500);
+    } catch {
+      setError('Error de conexión. Intenta de nuevo.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError('');
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(`/api/admin/productos/${producto.id}/imagenes`, {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? 'Error al subir la imagen');
+        return;
+      }
+      setImages((prev) => [...prev, data.url]);
+      router.refresh();
+    } catch {
+      setError('Error de conexión al subir la imagen.');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
+  async function handleRemoveImage(url: string) {
+    if (images.length <= 1) {
+      setError('El producto debe tener al menos una imagen.');
+      return;
+    }
+    if (!confirm('¿Quitar esta imagen del producto?')) return;
+
+    setError('');
+    try {
+      const res = await fetch(`/api/admin/productos/${producto.id}/imagenes`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: url }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? 'Error al quitar la imagen');
+        return;
+      }
+      setImages((prev) => prev.filter((u) => u !== url));
+      router.refresh();
+    } catch {
+      setError('Error de conexión al quitar la imagen.');
+    }
+  }
+
+  return (
+    <form onSubmit={handleSave} className="flex flex-col gap-8">
+      {/* Imágenes */}
+      <section className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-6">
+        <h2 className="mb-4 text-lg font-bold text-white">Imágenes</h2>
+        <div className="flex flex-wrap gap-4">
+          {images.map((url) => (
+            <div key={url} className="group relative h-28 w-28 overflow-hidden rounded-2xl border border-slate-700">
+              <Image src={url} alt={name} fill className="object-cover" sizes="112px" />
+              <button
+                type="button"
+                onClick={() => handleRemoveImage(url)}
+                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-500/90 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100"
+                aria-label="Quitar imagen"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <label className="flex h-28 w-28 cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-slate-600 text-xs text-slate-400 hover:border-cyan-400/50 hover:text-cyan-300">
+            {uploading ? 'Subiendo...' : '+ Agregar'}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleUpload}
+              disabled={uploading}
+            />
+          </label>
+        </div>
+        <p className="mt-3 text-xs text-slate-500">JPG, PNG o WEBP — máximo 8MB por imagen.</p>
+      </section>
+
+      {/* Textos y precio */}
+      <section className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-6">
+        <h2 className="mb-4 text-lg font-bold text-white">Información del producto</h2>
+        <div className="flex flex-col gap-4">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-slate-300">Nombre</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} className={inputClass} required />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-300">Badge (opcional)</label>
+              <input
+                value={badge}
+                onChange={(e) => setBadge(e.target.value)}
+                placeholder="Ej: TOP, Nuevo"
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-300">Specs (línea corta)</label>
+              <input value={specs} onChange={(e) => setSpecs(e.target.value)} className={inputClass} required />
+            </div>
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-slate-300">Descripción corta (opcional)</label>
+            <textarea
+              value={shortDescription}
+              onChange={(e) => setShortDescription(e.target.value)}
+              rows={3}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-slate-300">Descripción completa</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={6}
+              className={inputClass}
+              required
+            />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-slate-300">Precio</label>
+              <input
+                type="number"
+                min={1}
+                value={numericPrice}
+                onChange={(e) => setNumericPrice(e.target.value)}
+                className={inputClass}
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 flex items-center gap-2 text-xs font-medium text-slate-300">
+                <input
+                  type="checkbox"
+                  checked={hasDiscount}
+                  onChange={(e) => setHasDiscount(e.target.checked)}
+                  className="h-4 w-4 rounded border-slate-600 bg-slate-900"
+                />
+                Este producto está en descuento
+              </label>
+              <input
+                type="number"
+                min={1}
+                value={originalPrice}
+                onChange={(e) => setOriginalPrice(e.target.value)}
+                disabled={!hasDiscount}
+                placeholder="Precio original (antes del descuento)"
+                className={`${inputClass} disabled:opacity-40`}
+              />
+            </div>
+          </div>
+
+          <label className="flex items-center gap-2 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              checked={inStock}
+              onChange={(e) => setInStock(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-600 bg-slate-900"
+            />
+            Producto disponible (desmarca si está agotado)
+          </label>
+        </div>
+      </section>
+
+      {error && <p className="rounded-xl bg-red-500/10 px-4 py-2.5 text-sm text-red-400">{error}</p>}
+      {saved && <p className="rounded-xl bg-green-500/10 px-4 py-2.5 text-sm text-green-400">Cambios guardados.</p>}
+
+      <button
+        type="submit"
+        disabled={saving}
+        className="w-full rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 py-3.5 text-sm font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed sm:w-auto sm:self-end sm:px-10"
+      >
+        {saving ? 'Guardando...' : 'Guardar cambios'}
+      </button>
+    </form>
+  );
+}

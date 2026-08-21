@@ -133,7 +133,7 @@ export default async function PortatilDetailPage({
 
             {/* CTAs */}
             <div className="flex flex-col gap-3 sm:flex-row">
-              <AddToCartButton product={product as never} />
+              <AddToCartButton product={product} />
               <a
                 href={`${WHATSAPP_LINK}?text=${whatsappMsg}`}
                 target="_blank"

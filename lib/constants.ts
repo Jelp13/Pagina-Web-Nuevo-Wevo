@@ -47,6 +47,7 @@ export interface Product {
   price: string;
   numericPrice: number;
   originalPrice?: number;
+  inStock: boolean;
   url: string;
 }
 
@@ -74,6 +75,7 @@ export interface PeripheralProduct {
   price: string;
   numericPrice: number;
   originalPrice?: number;
+  inStock: boolean;
 }
 
 // Características principales de Nuevo Wevo

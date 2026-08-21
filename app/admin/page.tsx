@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import AdminLogoutButton from '@/components/AdminLogoutButton';
@@ -20,13 +21,23 @@ export default async function AdminDashboardPage() {
         <AdminLogoutButton />
       </div>
 
-      <div className="mx-auto mt-10 max-w-[1180px] rounded-[28px] border border-cyan-400/10 bg-white/5 p-8">
-        <p className="text-slate-400">
-          Sesión activa correctamente.{' '}
-          {session?.role === 'admin'
-            ? 'La gestión de productos y el listado de ventas se agregan en las próximas fases.'
-            : 'El listado de ventas se agrega en la próxima fase.'}
-        </p>
+      <div className="mx-auto mt-10 grid max-w-[1180px] gap-4 sm:grid-cols-2">
+        {session?.role === 'admin' && (
+          <Link
+            href="/admin/productos"
+            className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"
+          >
+            <h2 className="text-lg font-bold text-white">Productos</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              Edita precios, imágenes, descripciones, descuentos y disponibilidad.
+            </p>
+          </Link>
+        )}
+
+        <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 opacity-60">
+          <h2 className="text-lg font-bold text-white">Ventas</h2>
+          <p className="mt-2 text-sm text-slate-400">Se agrega en la próxima fase.</p>
+        </div>
       </div>
     </main>
   );

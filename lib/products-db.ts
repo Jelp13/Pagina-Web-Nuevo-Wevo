@@ -30,6 +30,7 @@ function rowToProduct(row: ProductRow): Product {
     price: row.price_label,
     numericPrice: row.numeric_price,
     originalPrice: row.original_price ?? undefined,
+    inStock: Boolean(row.in_stock),
     url: row.external_url ?? '',
   };
 }
@@ -52,6 +53,7 @@ function rowToPeripheralProduct(row: ProductRow): PeripheralProduct {
     price: row.price_label,
     numericPrice: row.numeric_price,
     originalPrice: row.original_price ?? undefined,
+    inStock: Boolean(row.in_stock),
   };
 }
 

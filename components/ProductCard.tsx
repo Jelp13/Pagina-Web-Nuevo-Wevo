@@ -15,6 +15,7 @@ export default function ProductCard({ product }: Props) {
   const [added, setAdded] = useState(false);
 
   function handleAddToCart() {
+    if (!product.inStock) return;
     addItem({
       id: product.id,
       name: product.name,
@@ -39,18 +40,22 @@ export default function ProductCard({ product }: Props) {
         </span>
       )}
 
-      {/* Descuento */}
-      {discount && (
+      {/* Descuento / Agotado */}
+      {!product.inStock ? (
+        <span className="absolute right-6 top-6 z-10 rounded-full bg-slate-800/90 px-2.5 py-1 text-[10px] font-bold text-slate-300">
+          Agotado
+        </span>
+      ) : discount ? (
         <span className="absolute right-6 top-6 z-10 rounded-full bg-red-500/20 px-2.5 py-1 text-[10px] font-bold text-red-300">
           -{discount}%
         </span>
-      )}
+      ) : null}
 
       {/* Imagen / Ícono */}
       <ProductImage
         src={product.images[0]}
         alt={product.name}
-        className="mb-6 h-56 rounded-3xl bg-slate-950/90"
+        className={`mb-6 h-56 rounded-3xl bg-slate-950/90 ${!product.inStock ? 'opacity-50' : ''}`}
         iconSize="text-6xl"
       />
 
@@ -73,13 +78,16 @@ export default function ProductCard({ product }: Props) {
         <div className="flex gap-2 pt-1">
           <button
             onClick={handleAddToCart}
+            disabled={!product.inStock}
             className={`flex-1 rounded-full py-2.5 text-sm font-bold transition-all duration-300 ${
-              added
+              !product.inStock
+                ? 'cursor-not-allowed border border-slate-700 bg-slate-900/60 text-slate-500'
+                : added
                 ? 'bg-green-500/20 text-green-300 border border-green-500/30'
                 : 'bg-gradient-to-r from-cyan-300 to-blue-500 text-slate-950 hover:opacity-90 shadow-lg'
             }`}
           >
-            {added ? '✓ Agregado' : 'Agregar al carrito'}
+            {!product.inStock ? 'Agotado' : added ? '✓ Agregado' : 'Agregar al carrito'}
           </button>
           <Link
             href={`/torres/${product.id}`}

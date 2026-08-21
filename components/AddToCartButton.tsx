@@ -2,13 +2,22 @@
 
 import { useState } from 'react';
 import { useCartStore } from '@/lib/cart-store';
-import type { Product } from '@/lib/constants';
 
-export default function AddToCartButton({ product }: { product: Product }) {
+interface CartableProduct {
+  id: string;
+  name: string;
+  category: string;
+  numericPrice: number;
+  originalPrice?: number;
+  inStock: boolean;
+}
+
+export default function AddToCartButton({ product }: { product: CartableProduct }) {
   const addItem = useCartStore((s) => s.addItem);
   const [added, setAdded] = useState(false);
 
   function handleClick() {
+    if (!product.inStock) return;
     addItem({
       id: product.id,
       name: product.name,
@@ -18,6 +27,17 @@ export default function AddToCartButton({ product }: { product: Product }) {
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1800);
+  }
+
+  if (!product.inStock) {
+    return (
+      <button
+        disabled
+        className="flex flex-1 cursor-not-allowed items-center justify-center rounded-full border border-slate-700 bg-slate-900/60 py-3 text-sm font-bold text-slate-500"
+      >
+        Agotado
+      </button>
+    );
   }
 
   return (
