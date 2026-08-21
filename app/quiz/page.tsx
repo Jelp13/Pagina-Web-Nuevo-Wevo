@@ -9,7 +9,7 @@ import QuizPageClient from '@/components/QuizPageClient';
 import { FEATURED_IDS } from '@/lib/constants';
 import { getTorres, getFeaturedTorres } from '@/lib/products-db';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function QuizPage() {
   const [allTorres, featuredTorres] = await Promise.all([

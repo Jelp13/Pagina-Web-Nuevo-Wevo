@@ -11,12 +11,7 @@ import { getLaptopProducts, getLaptopById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const products = await getLaptopProducts();
-  return products.map((p) => ({ id: p.id }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getLaptopById(params.id);

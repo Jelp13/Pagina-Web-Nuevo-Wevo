@@ -8,16 +8,11 @@ import ProductFeatures from '@/components/ProductFeatures';
 import RelatedProducts from '@/components/RelatedProducts';
 import AddToCartButton from '@/components/AddToCartButton';
 import { FEATURED_IDS } from '@/lib/constants';
-import { getTorres, getTorreById, getFeaturedTorres } from '@/lib/products-db';
+import { getTorreById, getFeaturedTorres } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const products = await getTorres();
-  return products.map((p) => ({ id: p.id }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getTorreById(params.id);

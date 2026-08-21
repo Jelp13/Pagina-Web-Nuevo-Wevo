@@ -7,7 +7,7 @@ import { getPeripheralProducts } from '@/lib/products-db';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Periféricos | Nuevo Wevo',

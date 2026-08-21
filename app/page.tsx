@@ -23,7 +23,7 @@ import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const products = await getFeaturedTorres(FEATURED_IDS);
