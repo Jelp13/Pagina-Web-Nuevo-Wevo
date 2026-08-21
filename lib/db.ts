@@ -1,4 +1,4 @@
-import { Kysely, MysqlDialect } from 'kysely';
+import { Kysely, MysqlDialect, type Generated } from 'kysely';
 import { createPool } from 'mysql2';
 
 export interface ProductRow {
@@ -25,8 +25,17 @@ export interface ProductRow {
   updated_at: Date;
 }
 
+export interface AdminRow {
+  id: Generated<number>;
+  username: string;
+  password_hash: string;
+  role: 'admin' | 'ventas';
+  created_at: Generated<Date>;
+}
+
 interface Database {
   products: ProductRow;
+  admins: AdminRow;
 }
 
 const dialect = new MysqlDialect({
