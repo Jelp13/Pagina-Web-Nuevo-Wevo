@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import AdminProductCreateForm from '@/components/AdminProductCreateForm';
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminProductoNuevoPage() {
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">
