@@ -6,7 +6,10 @@ import { getTorres } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
-export const revalidate = 60;
+// Dinámica siempre: los productos nuevos deben verse de inmediato, sin
+// depender de la revalidación por tiempo (ISR) ni de que se dispare bien
+// en el hosting.
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Torres | Nuevo Wevo',
