@@ -1,5 +1,9 @@
-import bcrypt from 'bcryptjs';
-import { SignJWT, jwtVerify } from 'jose';
+// Firma y verificación de la sesión del panel de admin.
+// Solo usa APIs compatibles con el Edge Runtime (donde corre middleware.ts) —
+// las contraseñas (bcryptjs, que necesita APIs de Node) viven en lib/passwords.ts.
+
+import { SignJWT } from 'jose/jwt/sign';
+import { jwtVerify } from 'jose/jwt/verify';
 
 export const SESSION_COOKIE = 'admin_session';
 const SESSION_DURATION = '7d';
@@ -8,14 +12,6 @@ function getSecretKey() {
   const secret = process.env.SESSION_SECRET;
   if (!secret) throw new Error('SESSION_SECRET no está configurado');
   return new TextEncoder().encode(secret);
-}
-
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 12);
-}
-
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash);
 }
 
 export type AdminRole = 'admin' | 'ventas';

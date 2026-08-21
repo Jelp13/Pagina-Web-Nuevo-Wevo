@@ -7,7 +7,7 @@
 //   ADMIN_BOOTSTRAP_ROLE=admin   (o "ventas")
 
 import { db } from '../lib/db.ts';
-import { hashPassword } from '../lib/auth.ts';
+import { hashPassword } from '../lib/passwords.ts';
 
 async function main() {
   const username = process.env.ADMIN_BOOTSTRAP_USER;

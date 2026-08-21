@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { SESSION_COOKIE, verifySessionToken } from '@/lib/auth';
+import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import AdminLogoutButton from '@/components/AdminLogoutButton';
 
 export default async function AdminDashboardPage() {
