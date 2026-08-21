@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
-import { getAdminProductById, updateProduct } from '@/lib/admin-products';
-
-const SECTION_PATH: Record<string, string> = {
-  torres: '/torres',
-  perifericos: '/perifericos',
-  portatiles: '/portatiles',
-};
+import { getAdminProductById, updateProduct, deleteProduct } from '@/lib/admin-products';
+import { revalidateProductPaths } from '@/lib/revalidate-product';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -50,14 +44,28 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     // Refresca al instante las páginas públicas que muestran este producto,
     // sin esperar a la revalidación automática de 60s.
-    revalidatePath(SECTION_PATH[existing.section]);
-    revalidatePath(`${SECTION_PATH[existing.section]}/${params.id}`);
-    revalidatePath('/');
-    if (existing.section === 'torres') revalidatePath('/quiz');
+    revalidateProductPaths(existing.section, params.id);
 
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error('Admin product update error:', err);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const existing = await getAdminProductById(params.id);
+    if (!existing) {
+      return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 });
+    }
+
+    await deleteProduct(params.id);
+    revalidateProductPaths(existing.section, params.id);
+
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error('Admin product delete error:', err);
     return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }

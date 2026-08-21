@@ -22,8 +22,8 @@ export interface ProductRow {
   in_stock: number; // TINYINT(1): 0 o 1
   external_url: string | null;
   sort_order: number;
-  created_at: Date;
-  updated_at: Date;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
 }
 
 export interface AdminRow {

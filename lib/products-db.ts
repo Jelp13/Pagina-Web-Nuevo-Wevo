@@ -1,3 +1,4 @@
+import type { Selectable } from 'kysely';
 import { db } from './db';
 import type { ProductRow } from './db';
 import type {
@@ -9,11 +10,13 @@ import type {
   ProductFeature,
 } from './constants';
 
+type ProductSelect = Selectable<ProductRow>;
+
 function parseJson<T>(value: unknown): T {
   return typeof value === 'string' ? (JSON.parse(value) as T) : (value as T);
 }
 
-function rowToProduct(row: ProductRow): Product {
+function rowToProduct(row: ProductSelect): Product {
   return {
     id: row.id,
     badge: row.badge,
@@ -35,7 +38,7 @@ function rowToProduct(row: ProductRow): Product {
   };
 }
 
-function rowToPeripheralProduct(row: ProductRow): PeripheralProduct {
+function rowToPeripheralProduct(row: ProductSelect): PeripheralProduct {
   return {
     id: row.id,
     badge: row.badge,
@@ -88,7 +91,7 @@ export async function getFeaturedTorres(ids: string[]): Promise<Product[]> {
     .where('id', 'in', ids)
     .execute();
   const byId = new Map(rows.map((r) => [r.id, r]));
-  return ids.map((id) => byId.get(id)).filter((r): r is ProductRow => !!r).map(rowToProduct);
+  return ids.map((id) => byId.get(id)).filter((r): r is ProductSelect => !!r).map(rowToProduct);
 }
 
 // ── Periféricos ─────────────────────────────────────────────────────────

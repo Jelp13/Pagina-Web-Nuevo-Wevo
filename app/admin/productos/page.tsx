@@ -9,6 +9,9 @@ const SECTION_LABEL: Record<string, string> = {
   portatiles: 'Portátiles',
 };
 
+// El panel admin siempre debe mostrar datos en vivo, nunca una versión cacheada.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminProductosPage() {
   const productos = await getAllProductsForAdmin();
 
@@ -23,6 +26,12 @@ export default async function AdminProductosPage() {
             <h1 className="mt-2 text-3xl font-bold text-white">Productos</h1>
             <p className="mt-1 text-sm text-slate-400">{productos.length} productos en total</p>
           </div>
+          <Link
+            href="/admin/productos/nuevo"
+            className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-6 py-3 text-sm font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
+          >
+            + Nuevo producto
+          </Link>
         </div>
 
         <div className="overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5">

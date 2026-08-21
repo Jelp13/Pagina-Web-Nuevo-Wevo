@@ -34,6 +34,10 @@ export default function AdminProductEditForm({ producto }: Props) {
   const [error, setError] = useState('');
   const [saved, setSaved] = useState(false);
 
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setError('');
@@ -123,6 +127,27 @@ export default function AdminProductEditForm({ producto }: Props) {
       router.refresh();
     } catch {
       setError('Error de conexión al quitar la imagen.');
+    }
+  }
+
+  async function handleDelete() {
+    if (deleteConfirmText !== producto.name) return;
+    setDeleteError('');
+    setDeleting(true);
+
+    try {
+      const res = await fetch(`/api/admin/productos/${producto.id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) {
+        setDeleteError(data.error ?? 'Error al eliminar el producto');
+        return;
+      }
+      router.push('/admin/productos');
+      router.refresh();
+    } catch {
+      setDeleteError('Error de conexión al eliminar.');
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -262,6 +287,32 @@ export default function AdminProductEditForm({ producto }: Props) {
       >
         {saving ? 'Guardando...' : 'Guardar cambios'}
       </button>
+
+      {/* Zona de peligro */}
+      <section className="rounded-[28px] border border-red-500/20 bg-red-500/5 p-6">
+        <h2 className="mb-2 text-lg font-bold text-red-300">Eliminar producto</h2>
+        <p className="mb-4 text-sm text-slate-400">
+          Esto quita el producto de la tienda permanentemente y no se puede deshacer. Para confirmar, escribe el
+          nombre exacto del producto: <span className="font-semibold text-slate-300">{producto.name}</span>
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input
+            value={deleteConfirmText}
+            onChange={(e) => setDeleteConfirmText(e.target.value)}
+            placeholder={producto.name}
+            className={inputClass}
+          />
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleteConfirmText !== producto.name || deleting}
+            className="shrink-0 rounded-2xl bg-red-500/90 px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {deleting ? 'Eliminando...' : 'Eliminar definitivamente'}
+          </button>
+        </div>
+        {deleteError && <p className="mt-3 text-sm text-red-400">{deleteError}</p>}
+      </section>
     </form>
   );
 }

@@ -1,23 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
 import { getAdminProductById, addProductImage, removeProductImage } from '@/lib/admin-products';
-
-const SECTION_PATH: Record<string, string> = {
-  torres: '/torres',
-  perifericos: '/perifericos',
-  portatiles: '/portatiles',
-};
+import { revalidateProductPaths } from '@/lib/revalidate-product';
 
 const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-
-function revalidateProductPaths(section: string, id: string) {
-  const base = SECTION_PATH[section];
-  revalidatePath(base);
-  revalidatePath(`${base}/${id}`);
-  revalidatePath('/');
-  if (section === 'torres') revalidatePath('/quiz');
-}
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   try {

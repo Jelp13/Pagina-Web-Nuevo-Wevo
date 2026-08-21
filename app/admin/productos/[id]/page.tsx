@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getAdminProductById } from '@/lib/admin-products';
 import AdminProductEditForm from '@/components/AdminProductEditForm';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminProductoEditPage({ params }: { params: { id: string } }) {
   const producto = await getAdminProductById(params.id);
   if (!producto) notFound();
