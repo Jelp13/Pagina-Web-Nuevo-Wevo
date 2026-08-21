@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac } from 'crypto';
+import { updateOrderStatusByReference } from '@/lib/orders-db';
+
+function mapMpStatus(mpStatus: string): 'pagado' | 'rechazado' | 'cancelado' | 'pendiente' {
+  if (mpStatus === 'approved') return 'pagado';
+  if (mpStatus === 'rejected') return 'rechazado';
+  if (mpStatus === 'cancelled') return 'cancelado';
+  return 'pendiente'; // pending, in_process, authorized, in_mediation, etc.
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,11 +50,11 @@ export async function POST(req: NextRequest) {
             transaction_amount: number;
           };
 
-          const { status, external_reference, transaction_amount } = payment;
+          const { status, external_reference } = payment;
 
-          // En producción: actualizar el pedido en la base de datos
-          // await updateOrder({ reference: external_reference, status, amount: transaction_amount });
-          console.log(`MP Payment ${data.id} | ref: ${external_reference} | status: ${status} | amount: ${transaction_amount}`);
+          if (external_reference) {
+            await updateOrderStatusByReference(external_reference, mapMpStatus(status), String(data.id));
+          }
         }
       }
     }

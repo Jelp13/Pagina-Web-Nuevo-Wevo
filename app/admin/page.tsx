@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import AdminLogoutButton from '@/components/AdminLogoutButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboardPage() {
   const token = cookies().get(SESSION_COOKIE)?.value;
   const session = token ? await verifySessionToken(token) : null;
@@ -34,10 +36,15 @@ export default async function AdminDashboardPage() {
           </Link>
         )}
 
-        <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 opacity-60">
+        <Link
+          href="/admin/ventas"
+          className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"
+        >
           <h2 className="text-lg font-bold text-white">Ventas</h2>
-          <p className="mt-2 text-sm text-slate-400">Se agrega en la próxima fase.</p>
-        </div>
+          <p className="mt-2 text-sm text-slate-400">
+            Consulta los pedidos: cliente, productos, total y estado del pago.
+          </p>
+        </Link>
       </div>
     </main>
   );

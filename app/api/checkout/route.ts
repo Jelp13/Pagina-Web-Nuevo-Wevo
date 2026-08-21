@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { createOrder } from '@/lib/orders-db';
 
 interface CartItem {
   id: string;
@@ -71,6 +72,22 @@ export async function POST(req: NextRequest) {
     const { form, paymentMethod, items, total } = body;
     const reference = `WEVO-${Date.now()}-${randomUUID().split('-')[0].toUpperCase()}`;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+    await createOrder({
+      reference,
+      nombres: form.nombres,
+      apellidos: form.apellidos,
+      email: form.email,
+      tipoDocumento: form.tipoDocumento,
+      documento: form.documento,
+      telefono: form.telefono,
+      direccion: form.direccion,
+      departamento: form.departamento,
+      ciudad: form.ciudad,
+      items,
+      total,
+      paymentMethod,
+    });
 
     // Contra entrega: sin pasarela de pago
     if (paymentMethod === 'contra-entrega') {

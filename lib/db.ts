@@ -41,10 +41,32 @@ export interface ImageRow {
   created_at: Generated<Date>;
 }
 
+export interface OrderRow {
+  id: Generated<number>;
+  reference: string;
+  nombres: string;
+  apellidos: string;
+  email: string;
+  tipo_documento: string;
+  documento: string;
+  telefono: string;
+  direccion: string;
+  departamento: string;
+  ciudad: string;
+  items: string; // JSON
+  total: number;
+  payment_method: string;
+  status: 'pendiente' | 'pagado' | 'rechazado' | 'cancelado';
+  mp_payment_id: string | null;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
 interface Database {
   products: ProductRow;
   admins: AdminRow;
   images: ImageRow;
+  orders: OrderRow;
 }
 
 const dialect = new MysqlDialect({
