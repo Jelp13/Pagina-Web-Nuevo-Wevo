@@ -1,5 +1,7 @@
 import LegalPage from '@/components/LegalPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Eliminación de Datos | Nuevo Wevo',
   description: 'Instrucciones para solicitar la eliminación de tus datos personales en Nuevo Wevo S.A.S., conforme a la Ley 1581 de 2012.',

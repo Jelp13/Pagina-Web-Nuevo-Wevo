@@ -5,6 +5,8 @@ import MantenimientosGrid from '@/components/MantenimientosGrid';
 import MantenimientosEmpresas from '@/components/MantenimientosEmpresas';
 import ContactoMantenimientos from '@/components/ContactoMantenimientos';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Mantenimientos | Nuevo Wevo',
   description: 'Servicio de mantenimiento preventivo para computadores, portátiles, consolas y equipos de alto rendimiento en Colombia.',

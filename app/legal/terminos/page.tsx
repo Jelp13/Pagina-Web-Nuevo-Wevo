@@ -1,5 +1,7 @@
 import LegalPage from '@/components/LegalPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Términos y Condiciones | Nuevo Wevo',
   description: 'Términos, condiciones e información legal vigentes de Nuevo Wevo S.A.S. Conoce las reglas que regulan el uso de nuestra tienda online.',

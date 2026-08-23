@@ -7,13 +7,16 @@ const nextConfig = {
     cpus: 2,
     workerThreads: false,
   },
-  // El CDN de Hostinger cachea respuestas por su cuenta, aparte de Next.js.
-  // Estas rutas dependen de la base de datos y deben verse siempre en vivo
-  // (catálogo público que cambia desde el panel admin, y el panel/API mismos).
+  // El CDN de Hostinger cachea respuestas por su cuenta, aparte de Next.js,
+  // y NO se purga solo cuando se redespliega. Un HTML viejo cacheado puede
+  // quedar apuntando a archivos JS/CSS con hash que el build nuevo ya borró
+  // (los hashes cambian en cada build aunque la página en sí no cambie),
+  // dejando la página sin estilos o rota. Por eso TODAS las rutas de
+  // páginas (estáticas o no) van sin caché de CDN; solo los assets con hash
+  // en la URL (/_next/static/*, /api/imagenes/*) son seguros de cachear
+  // para siempre, porque su URL cambia si su contenido cambia.
   async headers() {
     const noStore = { key: 'Cache-Control', value: 'no-store, must-revalidate' };
-    // OJO: /api/imagenes/* queda fuera a propósito — esas sí deben cachearse
-    // (una imagen subida nunca cambia de contenido una vez creada).
     const rutasDinamicas = [
       '/',
       '/torres',
@@ -27,6 +30,12 @@ const nextConfig = {
       '/api/admin/:path*',
       '/api/checkout',
       '/api/mercadopago/:path*',
+      '/carrito',
+      '/checkout',
+      '/checkout/confirmacion',
+      '/contacto',
+      '/mantenimientos',
+      '/legal/:path*',
     ];
     return rutasDinamicas.map((source) => ({ source, headers: [noStore] }));
   },

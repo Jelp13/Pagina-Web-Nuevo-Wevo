@@ -1,5 +1,7 @@
 import LegalPage from '@/components/LegalPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Tratamiento de Datos Personales | Nuevo Wevo',
   description: 'Políticas de tratamiento para la protección de datos personales de Nuevo Wevo S.A.S., conforme a la Ley 1581 de 2012 y la Ley 2439 de 2024.',

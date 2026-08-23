@@ -1,5 +1,7 @@
 import LegalPage from '@/components/LegalPage';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Política de Privacidad | Nuevo Wevo',
   description: 'Política de privacidad de Nuevo Wevo S.A.S. Conoce cómo recopilamos, usamos y protegemos tu información personal.',
