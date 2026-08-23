@@ -22,8 +22,12 @@ export async function middleware(req: NextRequest) {
   }
 
   // El rol "ventas" solo puede ver /admin y /admin/ventas — todo lo demás
-  // (gestión de productos, precios, imágenes, stock, descuentos) es solo admin.
-  const esRutaSoloAdmin = pathname.startsWith('/admin/productos') || pathname.startsWith('/api/admin/productos');
+  // (gestión de productos, precios, imágenes, stock, descuentos, videos) es solo admin.
+  const esRutaSoloAdmin =
+    pathname.startsWith('/admin/productos') ||
+    pathname.startsWith('/api/admin/productos') ||
+    pathname.startsWith('/admin/videos') ||
+    pathname.startsWith('/api/admin/videos');
   if (esRutaSoloAdmin && session.role !== 'admin') {
     if (isApiRoute) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
@@ -35,5 +39,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/productos', '/api/admin/productos/:path*'],
+  matcher: [
+    '/admin/:path*',
+    '/api/admin/productos',
+    '/api/admin/productos/:path*',
+    '/api/admin/videos',
+    '/api/admin/videos/:path*',
+  ],
 };

@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import MantenimientosGrid from '@/components/MantenimientosGrid';
 import MantenimientosEmpresas from '@/components/MantenimientosEmpresas';
 import ContactoMantenimientos from '@/components/ContactoMantenimientos';
+import { getMantenimientosEmpresasVideo } from '@/lib/videos-db';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,7 +13,9 @@ export const metadata = {
   description: 'Servicio de mantenimiento preventivo para computadores, portátiles, consolas y equipos de alto rendimiento en Colombia.',
 };
 
-export default function MantenimientosPage() {
+export default async function MantenimientosPage() {
+  const empresasVideo = await getMantenimientosEmpresasVideo();
+
   return (
     <main className="min-h-screen bg-[#05080f] text-white">
       <Navbar />
@@ -59,7 +62,7 @@ export default function MantenimientosPage() {
         <MantenimientosGrid />
       </section>
 
-      <MantenimientosEmpresas />
+      <MantenimientosEmpresas videoSrc={empresasVideo?.src} />
 
       <ContactoMantenimientos />
       <Footer />

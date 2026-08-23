@@ -1,6 +1,6 @@
 import { WHATSAPP_LINK } from '@/lib/config';
 
-export default function MantenimientosEmpresas() {
+export default function MantenimientosEmpresas({ videoSrc }: { videoSrc?: string | null }) {
   const waEmpresas = `${WHATSAPP_LINK}?text=${encodeURIComponent(
     'Hola, quiero información sobre el servicio de mantenimiento para empresas.',
   )}`;
@@ -34,15 +34,21 @@ export default function MantenimientosEmpresas() {
           </div>
         </div>
 
-        {/* Espacio para video */}
-        <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5">
-          <div className="flex flex-col items-center gap-3 text-center">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-300/10 text-2xl">
-              ▶️
-            </span>
-            <p className="text-sm text-slate-500">Video próximamente</p>
+        {/* Video */}
+        {videoSrc ? (
+          <div className="relative aspect-video w-full overflow-hidden rounded-[28px] border border-cyan-400/10 bg-black">
+            <video src={videoSrc} controls playsInline className="h-full w-full object-cover" />
           </div>
-        </div>
+        ) : (
+          <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-300/10 text-2xl">
+                ▶️
+              </span>
+              <p className="text-sm text-slate-500">Video próximamente</p>
+            </div>
+          </div>
+        )}
 
       </div>
     </section>

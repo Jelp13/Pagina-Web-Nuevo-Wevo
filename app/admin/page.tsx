@@ -36,6 +36,18 @@ export default async function AdminDashboardPage() {
           </Link>
         )}
 
+        {session?.role === 'admin' && (
+          <Link
+            href="/admin/videos"
+            className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"
+          >
+            <h2 className="text-lg font-bold text-white">Editor de videos</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              Reemplaza los videos de TikTok de la página de inicio y el video de mantenimientos para empresas.
+            </p>
+          </Link>
+        )}
+
         <Link
           href="/admin/ventas"
           className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"

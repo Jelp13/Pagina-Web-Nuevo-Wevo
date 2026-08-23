@@ -41,6 +41,19 @@ export interface ImageRow {
   created_at: Generated<Date>;
 }
 
+export interface SiteVideoRow {
+  id: Generated<number>;
+  placement: 'home' | 'mantenimientos_empresas';
+  sort_order: number;
+  tiktok_user: string | null;
+  tiktok_url: string | null;
+  profile_url: string | null;
+  data: Buffer;
+  mime_type: string;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
 export interface OrderRow {
   id: Generated<number>;
   reference: string;
@@ -67,6 +80,7 @@ interface Database {
   admins: AdminRow;
   images: ImageRow;
   orders: OrderRow;
+  site_videos: SiteVideoRow;
 }
 
 const dialect = new MysqlDialect({

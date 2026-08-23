@@ -19,6 +19,7 @@ import TikTokSection from '@/components/TikTokSection';
 import ProductCard from '@/components/ProductCard';
 import { FEATURES, FEATURED_IDS, PERIPHERALS, BRANDS } from '@/lib/constants';
 import { getFeaturedTorres } from '@/lib/products-db';
+import { getHomeVideos } from '@/lib/videos-db';
 import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
@@ -29,6 +30,7 @@ export default async function Home() {
   const products = await getFeaturedTorres(FEATURED_IDS);
   const peripherals = PERIPHERALS;
   const brands = BRANDS;
+  const homeVideos = await getHomeVideos();
 
   return (
     <main className="min-h-screen bg-[#05080f]">
@@ -115,7 +117,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <TikTokSection />
+      <TikTokSection videos={homeVideos} />
 
       {/* PRODUCTS SECTION - Catálogo de torres */}
       <section id="products-anchor" className="mx-auto max-w-[1180px] px-6 py-16">

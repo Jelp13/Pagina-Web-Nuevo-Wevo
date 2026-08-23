@@ -1,29 +1,9 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import type { HomeVideo } from '@/lib/videos-db';
 
-const videos = [
-  {
-    src: '/Video/Cocheros.mp4',
-    user: '@nuevowevo',
-    tiktokUrl: 'https://www.tiktok.com/@nuevowevo/video/7646864525857279250',
-    profileUrl: 'https://www.tiktok.com/@nuevowevo ',
-  },
-  {
-    src: '/Video/Colabroacion empresa.mp4',
-    user: '@menkian',
-    tiktokUrl: 'https://www.tiktok.com/@menkian/video/7613862613923024148',
-    profileUrl: 'https://www.tiktok.com/@menkian',
-  },
-  {
-    src: '/Video/WhatsApp Video 2026-06-06 at 11.45.53 PM.mp4',
-    user: '@nuevowevo',
-    tiktokUrl: 'https://www.tiktok.com/@nuevowevo/video/7622375858975624468',
-    profileUrl: 'https://www.tiktok.com/@nuevowevo',
-  },
-];
-
-function VideoCard({ src, user, tiktokUrl, profileUrl }: typeof videos[0]) {
+function VideoCard({ src, user, tiktokUrl, profileUrl }: HomeVideo) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -117,12 +97,14 @@ function VideoCard({ src, user, tiktokUrl, profileUrl }: typeof videos[0]) {
   );
 }
 
-export default function TikTokSection() {
+export default function TikTokSection({ videos }: { videos: HomeVideo[] }) {
+  if (videos.length === 0) return null;
+
   return (
     <section className="mx-auto max-w-[1180px] px-6 py-8">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
         {videos.map((v) => (
-          <VideoCard key={v.src} {...v} />
+          <VideoCard key={v.id} {...v} />
         ))}
       </div>
     </section>
