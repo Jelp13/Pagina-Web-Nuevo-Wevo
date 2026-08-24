@@ -24,17 +24,17 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="mx-auto mt-10 grid max-w-[1180px] gap-4 sm:grid-cols-2">
-        {session?.role === 'admin' && (
-          <Link
-            href="/admin/productos"
-            className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"
-          >
-            <h2 className="text-lg font-bold text-white">Productos</h2>
-            <p className="mt-2 text-sm text-slate-400">
-              Edita precios, imágenes, descripciones, descuentos y disponibilidad.
-            </p>
-          </Link>
-        )}
+        <Link
+          href="/admin/productos"
+          className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"
+        >
+          <h2 className="text-lg font-bold text-white">Productos</h2>
+          <p className="mt-2 text-sm text-slate-400">
+            {session?.role === 'admin'
+              ? 'Edita precios, imágenes, descripciones, descuentos y disponibilidad.'
+              : 'Edita precios, imágenes, descripciones y descuentos.'}
+          </p>
+        </Link>
 
         {session?.role === 'admin' && (
           <Link

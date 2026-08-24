@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 import { getAllProductsForAdmin } from '@/lib/admin-products';
 import { formatCOP } from '@/lib/format';
 import ProductImage from '@/components/ProductImage';
+import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 
 const SECTION_LABEL: Record<string, string> = {
   torres: 'Torres',
@@ -14,6 +16,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminProductosPage() {
   const productos = await getAllProductsForAdmin();
+  const token = cookies().get(SESSION_COOKIE)?.value;
+  const session = token ? await verifySessionToken(token) : null;
+  const esAdmin = session?.role === 'admin';
 
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">
@@ -26,12 +31,14 @@ export default async function AdminProductosPage() {
             <h1 className="mt-2 text-3xl font-bold text-white">Productos</h1>
             <p className="mt-1 text-sm text-slate-400">{productos.length} productos en total</p>
           </div>
-          <Link
-            href="/admin/productos/nuevo"
-            className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-6 py-3 text-sm font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
-          >
-            + Nuevo producto
-          </Link>
+          {esAdmin && (
+            <Link
+              href="/admin/productos/nuevo"
+              className="rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-6 py-3 text-sm font-bold text-slate-950 shadow-lg hover:opacity-90 transition-opacity"
+            >
+              + Nuevo producto
+            </Link>
+          )}
         </div>
 
         <div className="overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5">

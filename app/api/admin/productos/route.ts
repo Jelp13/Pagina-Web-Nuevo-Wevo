@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { createProduct } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
 import { sanitizeRows } from '@/lib/sanitize-list-fields';
+import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
 const VALID_SECTIONS = ['torres', 'perifericos', 'portatiles'];
 
 export async function POST(req: NextRequest) {
   try {
+    const token = cookies().get(SESSION_COOKIE)?.value;
+    const session = token ? await verifySessionToken(token) : null;
+    if (session?.role !== 'admin') {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
+    }
+
     const body = await req.json();
     const {
       section,
