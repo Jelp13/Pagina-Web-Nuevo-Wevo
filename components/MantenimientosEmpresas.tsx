@@ -36,11 +36,11 @@ export default function MantenimientosEmpresas({ videoSrc }: { videoSrc?: string
 
         {/* Video */}
         {videoSrc ? (
-          <div className="relative aspect-video w-full overflow-hidden rounded-[28px] border border-cyan-400/10 bg-black">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[28px] border border-cyan-400/10 bg-black">
             <video src={videoSrc} controls playsInline className="h-full w-full object-cover" />
           </div>
         ) : (
-          <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5">
+          <div className="relative flex aspect-[3/4] w-full items-center justify-center overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5">
             <div className="flex flex-col items-center gap-3 text-center">
               <span className="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-300/10 text-2xl">
                 ▶️
