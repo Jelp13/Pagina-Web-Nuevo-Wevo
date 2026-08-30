@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { getAdminProductById, updateProduct, deleteProduct } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
 import { sanitizeRows } from '@/lib/sanitize-list-fields';
-import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
@@ -12,13 +10,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (!existing) {
       return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 });
     }
-
-    // Ventas puede editar el resto del producto, pero no cambiar su
-    // disponibilidad — se preserva el valor actual sin importar lo que
-    // mande el cliente.
-    const token = cookies().get(SESSION_COOKIE)?.value;
-    const session = token ? await verifySessionToken(token) : null;
-    const puedeCambiarStock = session?.role === 'admin';
 
     const body = await req.json();
     const {
@@ -63,7 +54,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       shortDescription: shortDescription?.trim() || null,
       numericPrice,
       originalPrice: originalPrice ?? null,
-      inStock: puedeCambiarStock ? Boolean(inStock) : existing.inStock,
+      inStock: Boolean(inStock),
       fullSpecs: sanitizeRows<ProductSpec>(fullSpecs, ['label', 'value']),
       gamingPerformance: sanitizeRows<GamingPerf>(gamingPerformance, ['game', 'fps', 'resolution', 'quality']),
       creativePerformance: sanitizeRows<CreativePerf>(creativePerformance, ['software', 'performance', 'detail']) as CreativePerf[],
@@ -83,12 +74,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
 export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const token = cookies().get(SESSION_COOKIE)?.value;
-    const session = token ? await verifySessionToken(token) : null;
-    if (session?.role !== 'admin') {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
-    }
-
     const existing = await getAdminProductById(params.id);
     if (!existing) {
       return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 });

@@ -30,9 +30,7 @@ export default async function AdminDashboardPage() {
         >
           <h2 className="text-lg font-bold text-white">Productos</h2>
           <p className="mt-2 text-sm text-slate-400">
-            {session?.role === 'admin'
-              ? 'Edita precios, imágenes, descripciones, descuentos y disponibilidad.'
-              : 'Edita precios, imágenes, descripciones y descuentos.'}
+            Crea, edita y elimina productos: precios, imágenes, descripciones, descuentos y disponibilidad.
           </p>
         </Link>
 

@@ -8,7 +8,6 @@ import ListFieldEditor from '@/components/admin/ListFieldEditor';
 
 interface Props {
   producto: AdminProductDetail;
-  esAdmin: boolean;
 }
 
 const inputClass =
@@ -26,7 +25,7 @@ const PERFORMANCE_OPTIONS = [
   'No recomendado',
 ];
 
-export default function AdminProductEditForm({ producto, esAdmin }: Props) {
+export default function AdminProductEditForm({ producto }: Props) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -287,21 +286,15 @@ export default function AdminProductEditForm({ producto, esAdmin }: Props) {
             </div>
           </div>
 
-          <div>
-            <label className="flex items-center gap-2 text-sm text-slate-300">
-              <input
-                type="checkbox"
-                checked={inStock}
-                onChange={(e) => setInStock(e.target.checked)}
-                disabled={!esAdmin}
-                className="h-4 w-4 rounded border-slate-600 bg-slate-900 disabled:opacity-40"
-              />
-              Producto disponible (desmarca si está agotado)
-            </label>
-            {!esAdmin && (
-              <p className="mt-1.5 text-xs text-slate-500">Solo un administrador puede cambiar la disponibilidad.</p>
-            )}
-          </div>
+          <label className="flex items-center gap-2 text-sm text-slate-300">
+            <input
+              type="checkbox"
+              checked={inStock}
+              onChange={(e) => setInStock(e.target.checked)}
+              className="h-4 w-4 rounded border-slate-600 bg-slate-900"
+            />
+            Producto disponible (desmarca si está agotado)
+          </label>
         </div>
       </section>
 
@@ -376,32 +369,30 @@ export default function AdminProductEditForm({ producto, esAdmin }: Props) {
       </button>
 
       {/* Zona de peligro */}
-      {esAdmin && (
-        <section className="rounded-[28px] border border-red-500/20 bg-red-500/5 p-6">
-          <h2 className="mb-2 text-lg font-bold text-red-300">Eliminar producto</h2>
-          <p className="mb-4 text-sm text-slate-400">
-            Esto quita el producto de la tienda permanentemente y no se puede deshacer. Para confirmar, escribe el
-            nombre exacto del producto: <span className="font-semibold text-slate-300">{producto.name}</span>
-          </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <input
-              value={deleteConfirmText}
-              onChange={(e) => setDeleteConfirmText(e.target.value)}
-              placeholder={producto.name}
-              className={inputClass}
-            />
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={deleteConfirmText !== producto.name || deleting}
-              className="shrink-0 rounded-2xl bg-red-500/90 px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {deleting ? 'Eliminando...' : 'Eliminar definitivamente'}
-            </button>
-          </div>
-          {deleteError && <p className="mt-3 text-sm text-red-400">{deleteError}</p>}
-        </section>
-      )}
+      <section className="rounded-[28px] border border-red-500/20 bg-red-500/5 p-6">
+        <h2 className="mb-2 text-lg font-bold text-red-300">Eliminar producto</h2>
+        <p className="mb-4 text-sm text-slate-400">
+          Esto quita el producto de la tienda permanentemente y no se puede deshacer. Para confirmar, escribe el
+          nombre exacto del producto: <span className="font-semibold text-slate-300">{producto.name}</span>
+        </p>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input
+            value={deleteConfirmText}
+            onChange={(e) => setDeleteConfirmText(e.target.value)}
+            placeholder={producto.name}
+            className={inputClass}
+          />
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleteConfirmText !== producto.name || deleting}
+            className="shrink-0 rounded-2xl bg-red-500/90 px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {deleting ? 'Eliminando...' : 'Eliminar definitivamente'}
+          </button>
+        </div>
+        {deleteError && <p className="mt-3 text-sm text-red-400">{deleteError}</p>}
+      </section>
     </form>
   );
 }
