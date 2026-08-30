@@ -73,7 +73,7 @@ export default async function AdminVentasPage({
 
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">
-      <div className="mx-auto max-w-[1180px]">
+      <div className="mx-auto max-w-[1680px]">
         <div className="mb-8">
           <Link href="/admin" className="text-sm text-slate-500 hover:text-cyan-300">
             ← Volver al panel
