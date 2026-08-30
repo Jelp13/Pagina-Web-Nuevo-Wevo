@@ -41,5 +41,7 @@ export const config = {
     '/api/admin/productos/:path*',
     '/api/admin/videos',
     '/api/admin/videos/:path*',
+    '/api/admin/ventas',
+    '/api/admin/ventas/:path*',
   ],
 };

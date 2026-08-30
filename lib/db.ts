@@ -70,6 +70,8 @@ export interface OrderRow {
   total: number;
   payment_method: string;
   status: 'pendiente' | 'pagado' | 'rechazado' | 'cancelado';
+  status_reason: string | null;
+  status_updated_by: string | null;
   mp_payment_id: string | null;
   created_at: Generated<Date>;
   updated_at: Generated<Date>;

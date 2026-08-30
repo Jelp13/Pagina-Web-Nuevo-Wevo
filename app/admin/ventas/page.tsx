@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getAllOrdersForAdmin } from '@/lib/orders-db';
 import { formatCOP } from '@/lib/format';
+import OrderStatusAction from '@/components/admin/OrderStatusAction';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,15 @@ const PAYMENT_LABEL: Record<string, string> = {
   breb: 'BRE-B',
 };
 
+type Filtro = 'todos' | 'pendiente' | 'exitoso' | 'cancelado';
+
+const FILTROS: { key: Filtro; label: string }[] = [
+  { key: 'todos', label: 'Todos' },
+  { key: 'pendiente', label: 'Pendientes' },
+  { key: 'exitoso', label: 'Exitosos' },
+  { key: 'cancelado', label: 'Cancelados' },
+];
+
 function formatFecha(date: Date): string {
   return new Intl.DateTimeFormat('es-CO', {
     dateStyle: 'medium',
@@ -35,8 +45,31 @@ function formatFecha(date: Date): string {
   }).format(new Date(date));
 }
 
-export default async function AdminVentasPage() {
+export default async function AdminVentasPage({
+  searchParams,
+}: {
+  searchParams: { estado?: string };
+}) {
   const pedidos = await getAllOrdersForAdmin();
+  const filtro: Filtro = (['pendiente', 'exitoso', 'cancelado'] as const).includes(
+    searchParams.estado as 'pendiente' | 'exitoso' | 'cancelado',
+  )
+    ? (searchParams.estado as Filtro)
+    : 'todos';
+
+  const conteo: Record<Filtro, number> = {
+    todos: pedidos.length,
+    pendiente: pedidos.filter((p) => p.status === 'pendiente').length,
+    exitoso: pedidos.filter((p) => p.status === 'pagado').length,
+    cancelado: pedidos.filter((p) => p.status === 'cancelado' || p.status === 'rechazado').length,
+  };
+
+  const pedidosFiltrados = pedidos.filter((p) => {
+    if (filtro === 'todos') return true;
+    if (filtro === 'pendiente') return p.status === 'pendiente';
+    if (filtro === 'exitoso') return p.status === 'pagado';
+    return p.status === 'cancelado' || p.status === 'rechazado';
+  });
 
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">
@@ -49,13 +82,29 @@ export default async function AdminVentasPage() {
           <p className="mt-1 text-sm text-slate-400">{pedidos.length} pedidos en total</p>
         </div>
 
-        {pedidos.length === 0 ? (
+        <div className="mb-6 flex flex-wrap gap-2">
+          {FILTROS.map((f) => (
+            <Link
+              key={f.key}
+              href={f.key === 'todos' ? '/admin/ventas' : `/admin/ventas?estado=${f.key}`}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                filtro === f.key
+                  ? 'bg-gradient-to-r from-cyan-300 to-blue-500 text-slate-950'
+                  : 'border border-cyan-400/10 bg-white/5 text-slate-300 hover:border-cyan-300/30'
+              }`}
+            >
+              {f.label} <span className={filtro === f.key ? 'opacity-70' : 'text-slate-500'}>{conteo[f.key]}</span>
+            </Link>
+          ))}
+        </div>
+
+        {pedidosFiltrados.length === 0 ? (
           <div className="rounded-[28px] border border-cyan-400/10 bg-white/5 py-20 text-center text-slate-500">
-            Todavía no hay pedidos registrados.
+            {pedidos.length === 0 ? 'Todavía no hay pedidos registrados.' : 'No hay pedidos con este estado.'}
           </div>
         ) : (
           <div className="overflow-x-auto rounded-[28px] border border-cyan-400/10 bg-white/5">
-            <table className="w-full min-w-[900px] text-left text-sm">
+            <table className="w-full min-w-[1050px] text-left text-sm">
               <thead>
                 <tr className="border-b border-cyan-400/10 text-xs uppercase tracking-wider text-slate-500">
                   <th className="px-5 py-3 font-medium">Fecha</th>
@@ -64,10 +113,11 @@ export default async function AdminVentasPage() {
                   <th className="px-5 py-3 font-medium">Total</th>
                   <th className="px-5 py-3 font-medium">Método</th>
                   <th className="px-5 py-3 font-medium">Estado</th>
+                  <th className="px-5 py-3 font-medium">Acción</th>
                 </tr>
               </thead>
               <tbody>
-                {pedidos.map((p) => (
+                {pedidosFiltrados.map((p) => (
                   <tr key={p.id} className="border-b border-cyan-400/10 last:border-0 hover:bg-white/5">
                     <td className="whitespace-nowrap px-5 py-4 text-slate-400">{formatFecha(p.createdAt)}</td>
                     <td className="px-5 py-4">
@@ -88,10 +138,18 @@ export default async function AdminVentasPage() {
                     <td className="whitespace-nowrap px-5 py-4 text-slate-400">
                       {PAYMENT_LABEL[p.paymentMethod] ?? p.paymentMethod}
                     </td>
-                    <td className="whitespace-nowrap px-5 py-4">
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[p.status]}`}>
+                    <td className="px-5 py-4">
+                      <span className={`whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[p.status]}`}>
                         {STATUS_LABEL[p.status]}
                       </span>
+                      {p.statusReason && (
+                        <p className="mt-1.5 max-w-[220px] text-xs italic text-slate-500">
+                          "{p.statusReason}"{p.statusUpdatedBy ? ` — ${p.statusUpdatedBy}` : ''}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-5 py-4">
+                      {p.status === 'pendiente' && <OrderStatusAction orderId={p.id} />}
                     </td>
                   </tr>
                 ))}
