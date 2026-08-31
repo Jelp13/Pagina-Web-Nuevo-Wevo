@@ -7,8 +7,8 @@ import ProductTabs from '@/components/ProductTabs';
 import ProductFeatures from '@/components/ProductFeatures';
 import RelatedProducts from '@/components/RelatedProducts';
 import AddToCartButton from '@/components/AddToCartButton';
-import { FEATURED_IDS } from '@/lib/constants';
 import { getTorreById, getFeaturedTorres } from '@/lib/products-db';
+import { getFeaturedTorresIds } from '@/lib/site-settings';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
@@ -27,7 +27,8 @@ export default async function TowerDetailPage({ params }: { params: { id: string
   const product = await getTorreById(params.id);
   if (!product) notFound();
 
-  const featured = await getFeaturedTorres(FEATURED_IDS);
+  const featuredIds = await getFeaturedTorresIds();
+  const featured = await getFeaturedTorres(featuredIds);
   const related = featured.filter((p) => p.id !== product.id).slice(0, 4);
 
   const discount = product.originalPrice

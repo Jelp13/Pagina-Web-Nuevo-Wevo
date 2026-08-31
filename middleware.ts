@@ -21,9 +21,14 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // El editor de videos sigue siendo exclusivo de admin. Ventas tiene
-  // acceso completo a productos (crear, editar, eliminar, stock).
-  const esRutaSoloAdmin = pathname.startsWith('/admin/videos') || pathname.startsWith('/api/admin/videos');
+  // El editor de videos y el contenido del sitio (torres destacadas, imagen
+  // del inicio, etc.) siguen siendo exclusivos de admin. Ventas tiene acceso
+  // completo a productos (crear, editar, eliminar, stock).
+  const esRutaSoloAdmin =
+    pathname.startsWith('/admin/videos') ||
+    pathname.startsWith('/api/admin/videos') ||
+    pathname.startsWith('/admin/contenido') ||
+    pathname.startsWith('/api/admin/settings');
   if (esRutaSoloAdmin && session.role !== 'admin') {
     if (isApiRoute) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
@@ -43,5 +48,7 @@ export const config = {
     '/api/admin/videos/:path*',
     '/api/admin/ventas',
     '/api/admin/ventas/:path*',
+    '/api/admin/settings',
+    '/api/admin/settings/:path*',
   ],
 };

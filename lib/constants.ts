@@ -86,22 +86,6 @@ export const FEATURES: Feature[] = [
   { icon: '🛠️', text: 'Montaje y soporte incluidos' },
 ];
 
-/**
- * ─── TORRES DESTACADAS ────────────────────────────────────────────────────────
- * Cambia los 4 IDs de abajo para actualizar qué torres aparecen en:
- *   · "Torres recomendadas" (sección Tu PC / Quiz)
- *   · "También te puede interesar" (página de detalle de cada torre)
- *
- * Los IDs disponibles son los `id` de cada torre en la base de datos (sección "torres").
- * ─────────────────────────────────────────────────────────────────────────────
- */
-export const FEATURED_IDS: string[] = [
-  'torre-wevo-pochado',
-  'torre-clara-de-wevo',
-  'torre-wevo-revuelto',
-  'torre-wevo-tortilla',
-];
-
 // Periféricos recomendados
 export const PERIPHERALS: Peripheral[] = [
   { icon: '🖱️', name: 'Mouse gaming',      desc: 'Precisión avanzada y máximo control.',           slug: 'mouse'      },

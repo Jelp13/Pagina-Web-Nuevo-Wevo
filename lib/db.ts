@@ -77,12 +77,19 @@ export interface OrderRow {
   updated_at: Generated<Date>;
 }
 
+export interface SiteSettingRow {
+  key: string;
+  value: string; // JSON
+  updated_at: Generated<Date>;
+}
+
 interface Database {
   products: ProductRow;
   admins: AdminRow;
   images: ImageRow;
   orders: OrderRow;
   site_videos: SiteVideoRow;
+  site_settings: SiteSettingRow;
 }
 
 const dialect = new MysqlDialect({

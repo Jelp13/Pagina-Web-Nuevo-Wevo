@@ -17,9 +17,10 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TikTokSection from '@/components/TikTokSection';
 import ProductCard from '@/components/ProductCard';
-import { FEATURES, FEATURED_IDS, PERIPHERALS, BRANDS } from '@/lib/constants';
+import { FEATURES, PERIPHERALS, BRANDS } from '@/lib/constants';
 import { getFeaturedTorres } from '@/lib/products-db';
 import { getHomeVideos } from '@/lib/videos-db';
+import { getFeaturedTorresIds, getHomeHeroImageUrl } from '@/lib/site-settings';
 import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
@@ -27,10 +28,12 @@ const features = FEATURES;
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const products = await getFeaturedTorres(FEATURED_IDS);
+  const featuredIds = await getFeaturedTorresIds();
+  const products = await getFeaturedTorres(featuredIds);
   const peripherals = PERIPHERALS;
   const brands = BRANDS;
   const homeVideos = await getHomeVideos();
+  const heroImageUrl = await getHomeHeroImageUrl();
 
   return (
     <main className="min-h-screen bg-[#05080f]">
@@ -56,7 +59,7 @@ export default async function Home() {
          */}
         <div aria-hidden="true" className="absolute inset-0 z-0">
           <Image
-            src="/Imagenes/hero-bg2.jpg"
+            src={heroImageUrl ?? '/Imagenes/hero-bg2.jpg'}
             alt=""
             fill
             priority
