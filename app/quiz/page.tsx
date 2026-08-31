@@ -8,15 +8,17 @@
 import QuizPageClient from '@/components/QuizPageClient';
 import { getTorres, getFeaturedTorres } from '@/lib/products-db';
 import { getFeaturedTorresIds } from '@/lib/site-settings';
+import { getBrandsForPublic } from '@/lib/brands-db';
 
 export const dynamic = 'force-dynamic';
 
 export default async function QuizPage() {
   const featuredIds = await getFeaturedTorresIds();
-  const [allTorres, featuredTorres] = await Promise.all([
+  const [allTorres, featuredTorres, brands] = await Promise.all([
     getTorres(),
     getFeaturedTorres(featuredIds),
+    getBrandsForPublic(),
   ]);
 
-  return <QuizPageClient allTorres={allTorres} featuredTorres={featuredTorres} />;
+  return <QuizPageClient allTorres={allTorres} featuredTorres={featuredTorres} brands={brands} />;
 }

@@ -83,6 +83,29 @@ export interface SiteSettingRow {
   updated_at: Generated<Date>;
 }
 
+export interface BrandRow {
+  id: Generated<number>;
+  name: string;
+  image_id: number;
+  sort_order: number;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
+export interface MaintenanceCardRow {
+  id: Generated<number>;
+  category: 'torres' | 'portatiles' | 'otros';
+  gama: string;
+  title: string;
+  description: string;
+  icon: string;
+  accent_color: string;
+  services: string | null; // JSON string[]
+  sort_order: number;
+  created_at: Generated<Date>;
+  updated_at: Generated<Date>;
+}
+
 interface Database {
   products: ProductRow;
   admins: AdminRow;
@@ -90,6 +113,8 @@ interface Database {
   orders: OrderRow;
   site_videos: SiteVideoRow;
   site_settings: SiteSettingRow;
+  brands: BrandRow;
+  maintenance_cards: MaintenanceCardRow;
 }
 
 const dialect = new MysqlDialect({

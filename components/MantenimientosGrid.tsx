@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import MantenimientosCarousel, { TORRES_CARDS, PORTATILES_CARDS, OTROS_CARDS } from './MantenimientosCarousel';
+import MantenimientosCarousel, { type Card } from './MantenimientosCarousel';
 
 function ColumnHeader({ icon, label }: { icon: string; label: string }) {
   return (
@@ -14,7 +14,13 @@ function ColumnHeader({ icon, label }: { icon: string; label: string }) {
   );
 }
 
-export default function MantenimientosGrid() {
+interface Props {
+  torresCards: Card[];
+  portatilesCards: Card[];
+  otrosCards: Card[];
+}
+
+export default function MantenimientosGrid({ torresCards, portatilesCards, otrosCards }: Props) {
   const middleRef = useRef<HTMLDivElement>(null);
   const [syncedHeight, setSyncedHeight] = useState<number | undefined>(undefined);
 
@@ -36,20 +42,32 @@ export default function MantenimientosGrid() {
       {/* Carrusel 1 — Torres */}
       <div>
         <ColumnHeader icon="🖥️" label="Torres" />
-        <MantenimientosCarousel cards={TORRES_CARDS} height={syncedHeight} />
+        {torresCards.length > 0 ? (
+          <MantenimientosCarousel cards={torresCards} height={syncedHeight} />
+        ) : (
+          <p className="text-sm italic text-slate-600">Sin tarjetas todavía.</p>
+        )}
       </div>
 
       {/* Carrusel 2 — Portátiles (referencia de altura) */}
       <div ref={middleRef}>
         <ColumnHeader icon="💻" label="Portátiles" />
-        <MantenimientosCarousel cards={PORTATILES_CARDS} />
+        {portatilesCards.length > 0 ? (
+          <MantenimientosCarousel cards={portatilesCards} />
+        ) : (
+          <p className="text-sm italic text-slate-600">Sin tarjetas todavía.</p>
+        )}
       </div>
 
       {/* Carrusel 3 — Otros Equipos */}
       <div className="md:col-span-2 lg:col-span-1">
         <div className="md:mx-auto md:max-w-[calc(50%-20px)] lg:max-w-full">
           <ColumnHeader icon="🎮" label="Otros Equipos" />
-          <MantenimientosCarousel cards={OTROS_CARDS} height={syncedHeight} />
+          {otrosCards.length > 0 ? (
+            <MantenimientosCarousel cards={otrosCards} height={syncedHeight} />
+          ) : (
+            <p className="text-sm italic text-slate-600">Sin tarjetas todavía.</p>
+          )}
         </div>
       </div>
     </div>

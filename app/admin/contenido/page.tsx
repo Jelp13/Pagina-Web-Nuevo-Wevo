@@ -1,15 +1,23 @@
 import Link from 'next/link';
 import { getTorres } from '@/lib/products-db';
-import { getFeaturedTorresIds, getHomeHeroImageUrl } from '@/lib/site-settings';
+import { getFeaturedTorresIds, getHomeHeroImageUrl, getContactInfo } from '@/lib/site-settings';
+import { getAllBrandsForAdmin } from '@/lib/brands-db';
+import { getAllMaintenanceCards } from '@/lib/maintenance-cards-db';
 import AdminContenidoClient from '@/components/admin/AdminContenidoClient';
+import AdminBrandsSection from '@/components/admin/AdminBrandsSection';
+import AdminMaintenanceCardsSection from '@/components/admin/AdminMaintenanceCardsSection';
+import AdminContactInfoSection from '@/components/admin/AdminContactInfoSection';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminContenidoPage() {
-  const [torres, featuredIds, heroImageUrl] = await Promise.all([
+  const [torres, featuredIds, heroImageUrl, brands, maintenanceCards, contactInfo] = await Promise.all([
     getTorres(),
     getFeaturedTorresIds(),
     getHomeHeroImageUrl(),
+    getAllBrandsForAdmin(),
+    getAllMaintenanceCards(),
+    getContactInfo(),
   ]);
 
   return (
@@ -23,11 +31,16 @@ export default async function AdminContenidoPage() {
           Elementos de la página de inicio y otras secciones públicas que no son productos.
         </p>
 
-        <AdminContenidoClient
-          torres={torres.map((t) => ({ id: t.id, name: t.name, category: t.category }))}
-          featuredIds={featuredIds}
-          heroImageUrl={heroImageUrl}
-        />
+        <div className="flex flex-col gap-10">
+          <AdminContenidoClient
+            torres={torres.map((t) => ({ id: t.id, name: t.name, category: t.category }))}
+            featuredIds={featuredIds}
+            heroImageUrl={heroImageUrl}
+          />
+          <AdminBrandsSection brands={brands} />
+          <AdminMaintenanceCardsSection cards={maintenanceCards} />
+          <AdminContactInfoSection contactInfo={contactInfo} />
+        </div>
       </div>
     </main>
   );

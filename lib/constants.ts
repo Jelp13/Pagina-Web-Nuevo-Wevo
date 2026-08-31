@@ -97,19 +97,6 @@ export const PERIPHERALS: Peripheral[] = [
   { icon: '📦', name: 'Otros',              desc: 'Accesorios y complementos adicionales.',          slug: 'otros'      },
 ];
 
-// Marcas aliadas
-export interface Brand {
-  name: string;
-  logo: string;
-}
-
-export const BRANDS: Brand[] = [
-  { name: 'COUGAR', logo: '/Imagenes/logo-cougar.jpg' },
-  { name: 'KINGSTON', logo: '/Imagenes/logo-kingston.png' },
-  { name: 'MSI', logo: '/Imagenes/logo-msi.png' },
-  { name: 'LOGITECH', logo: '/Imagenes/logo-logitech.png' },
-];
-
 // Preguntas del quiz (Encuentre tu PC)
 export interface QuizQuestion {
   q: string;

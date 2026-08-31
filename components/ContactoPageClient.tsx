@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { WHATSAPP_LINK } from '@/lib/config';
+import { formatPhoneCO } from '@/lib/format';
+import type { ContactInfo } from '@/lib/site-settings';
 
-export default function ContactoPageClient() {
+export default function ContactoPageClient({ contactInfo }: { contactInfo: ContactInfo }) {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ nombre: '', email: '', mensaje: '' });
+  const whatsappLink = `https://wa.me/57${contactInfo.phone}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -17,7 +19,7 @@ export default function ContactoPageClient() {
     e.preventDefault();
     const subject = encodeURIComponent(`Consulta de ${form.nombre}`);
     const body = encodeURIComponent(`Nombre: ${form.nombre}\nCorreo: ${form.email}\n\n${form.mensaje}`);
-    window.location.href = `mailto:ventas@nuevowevo.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${contactInfo.email}?subject=${subject}&body=${body}`;
     setSent(true);
   };
 
@@ -45,7 +47,7 @@ export default function ContactoPageClient() {
       <section className="mx-auto max-w-[1180px] px-6 pb-12">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <a
-            href={WHATSAPP_LINK}
+            href={whatsappLink}
             target="_blank"
             rel="noreferrer"
             className="flex flex-col gap-3 rounded-[24px] border border-green-400/20 bg-green-500/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-green-400/40 hover:bg-green-500/10"
@@ -53,33 +55,33 @@ export default function ContactoPageClient() {
             <span className="text-3xl">💬</span>
             <p className="font-bold text-white">WhatsApp</p>
             <p className="text-sm text-slate-400">Respuesta inmediata en horario de atención. La forma más rápida de cotizar tu PC.</p>
-            <span className="mt-auto text-sm font-semibold text-green-300">316 3713928 →</span>
+            <span className="mt-auto text-sm font-semibold text-green-300">{formatPhoneCO(contactInfo.phone)} →</span>
           </a>
 
           <a
-            href="tel:+573163713928"
+            href={`tel:+57${contactInfo.phone}`}
             className="flex flex-col gap-3 rounded-[24px] border border-cyan-400/20 bg-cyan-300/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-cyan-300/10"
           >
             <span className="text-3xl">📞</span>
             <p className="font-bold text-white">Llamadas</p>
             <p className="text-sm text-slate-400">¿Prefieres hablar directamente? Llámanos en nuestro horario de atención.</p>
-            <span className="mt-auto text-sm font-semibold text-cyan-300">316 3713928 →</span>
+            <span className="mt-auto text-sm font-semibold text-cyan-300">{formatPhoneCO(contactInfo.phone)} →</span>
           </a>
 
           <a
-            href="mailto:ventas@nuevowevo.com"
+            href={`mailto:${contactInfo.email}`}
             className="flex flex-col gap-3 rounded-[24px] border border-cyan-400/20 bg-cyan-300/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-cyan-300/10"
           >
             <span className="text-3xl">📧</span>
             <p className="font-bold text-white">Correo electrónico</p>
             <p className="text-sm text-slate-400">Para solicitudes formales, garantías, facturas o consultas que requieran documentos adjuntos.</p>
-            <span className="mt-auto text-sm font-semibold text-cyan-300">ventas@nuevowevo.com →</span>
+            <span className="mt-auto text-sm font-semibold text-cyan-300">{contactInfo.email} →</span>
           </a>
 
           <div className="flex flex-col gap-3 rounded-[24px] border border-cyan-400/10 bg-white/5 p-6">
             <span className="text-3xl">📍</span>
             <p className="font-bold text-white">Ubicación</p>
-            <p className="text-sm text-slate-400">Cra. 67 #43-35<br />Bogotá, Cundinamarca<br />Colombia</p>
+            <p className="text-sm text-slate-400">{contactInfo.address}</p>
             <span className="mt-auto text-sm text-slate-500">Atención con cita previa</span>
           </div>
         </div>

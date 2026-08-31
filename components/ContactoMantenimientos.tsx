@@ -1,7 +1,11 @@
-import { WHATSAPP_LINK, SOCIAL_MEDIA } from '@/lib/config';
+import { SOCIAL_MEDIA } from '@/lib/config';
+import { formatPhoneCO } from '@/lib/format';
+import type { ContactInfo } from '@/lib/site-settings';
 
-export default function ContactoMantenimientos() {
-  const waAgenda = `${WHATSAPP_LINK}?text=${encodeURIComponent('Hola, quiero agendar una cita para mantenimiento de mi equipo.')}`;
+export default function ContactoMantenimientos({ contactInfo }: { contactInfo: ContactInfo }) {
+  const whatsappLink = `https://wa.me/57${contactInfo.phone}`;
+  const waAgenda = `${whatsappLink}?text=${encodeURIComponent('Hola, quiero agendar una cita para mantenimiento de mi equipo.')}`;
+  const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&z=15&output=embed`;
 
   return (
     <section className="mx-auto max-w-[1180px] px-6 pb-24">
@@ -23,16 +27,10 @@ export default function ContactoMantenimientos() {
             <h3 className="text-lg font-bold text-white">Horarios de atención</h3>
           </div>
 
-          <div className="flex flex-col gap-3 text-sm">
-            <div>
-              <p className="font-semibold text-slate-200">Lunes a viernes:</p>
-              <p className="text-slate-400">8:00 am a 12:30 pm</p>
-              <p className="text-slate-400">1:30 pm a 4:30 pm</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200">Sábados:</p>
-              <p className="text-slate-400">9:00 am a 12:00 pm</p>
-            </div>
+          <div className="flex flex-col gap-1 text-sm">
+            {contactInfo.hours.split('\n').map((line, i) => (
+              <p key={i} className="text-slate-400">{line}</p>
+            ))}
           </div>
 
           <div className="mt-auto flex flex-col gap-3">
@@ -56,12 +54,12 @@ export default function ContactoMantenimientos() {
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-300/10 text-xl">📍</span>
             <div>
               <h3 className="text-lg font-bold text-white">Dirección</h3>
-              <p className="text-sm text-slate-400">Cra. 67 #43-35, Bogotá, Cundinamarca</p>
+              <p className="text-sm text-slate-400">{contactInfo.address}</p>
             </div>
           </div>
           <iframe
             title="Ubicación Nuevo Wevo"
-            src="https://maps.google.com/maps?q=Carrera+67+%2343-35,+Bogota,+Colombia&z=15&output=embed"
+            src={mapsUrl}
             className="h-64 w-full border-0 lg:h-72"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -78,10 +76,10 @@ export default function ContactoMantenimientos() {
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-cyan-300/10 text-xl">📱</span>
             <h3 className="text-lg font-bold text-white">WhatsApp y llamadas</h3>
           </div>
-          <p className="text-2xl font-bold text-white">+57 316 3713928</p>
+          <p className="text-2xl font-bold text-white">+57 {formatPhoneCO(contactInfo.phone)}</p>
           <div className="flex flex-col gap-3">
             <a
-              href={`${WHATSAPP_LINK}?text=${encodeURIComponent('Hola, quiero información sobre los servicios de mantenimiento.')}`}
+              href={`${whatsappLink}?text=${encodeURIComponent('Hola, quiero información sobre los servicios de mantenimiento.')}`}
               target="_blank"
               rel="noreferrer"
               className="flex items-center justify-center gap-2.5 rounded-full border border-green-400/40 bg-green-500/20 px-6 py-3.5 text-sm font-semibold text-green-300 transition-colors hover:bg-green-500/30 hover:border-green-400/60"
@@ -93,7 +91,7 @@ export default function ContactoMantenimientos() {
               Escríbenos ahora
             </a>
             <a
-              href="tel:+573163713928"
+              href={`tel:+57${contactInfo.phone}`}
               className="flex items-center justify-center gap-2.5 rounded-full border border-cyan-400/20 bg-white/5 px-6 py-3.5 text-sm font-semibold text-slate-200 transition-colors hover:bg-white/10 hover:border-cyan-400/40"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

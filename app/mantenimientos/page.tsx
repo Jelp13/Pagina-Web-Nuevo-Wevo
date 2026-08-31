@@ -5,6 +5,8 @@ import MantenimientosGrid from '@/components/MantenimientosGrid';
 import MantenimientosEmpresas from '@/components/MantenimientosEmpresas';
 import ContactoMantenimientos from '@/components/ContactoMantenimientos';
 import { getMantenimientosEmpresasVideo } from '@/lib/videos-db';
+import { getAllMaintenanceCards } from '@/lib/maintenance-cards-db';
+import { getContactInfo } from '@/lib/site-settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +16,24 @@ export const metadata = {
 };
 
 export default async function MantenimientosPage() {
-  const empresasVideo = await getMantenimientosEmpresasVideo();
+  const [empresasVideo, maintenanceCards, contactInfo] = await Promise.all([
+    getMantenimientosEmpresasVideo(),
+    getAllMaintenanceCards(),
+    getContactInfo(),
+  ]);
+
+  const toCarouselCard = (c: (typeof maintenanceCards)[number]) => ({
+    id: c.id,
+    gama: c.gama,
+    title: c.title,
+    description: c.description,
+    icon: c.icon,
+    accentColor: c.accentColor,
+    services: c.services,
+  });
+  const torresCards = maintenanceCards.filter((c) => c.category === 'torres').map(toCarouselCard);
+  const portatilesCards = maintenanceCards.filter((c) => c.category === 'portatiles').map(toCarouselCard);
+  const otrosCards = maintenanceCards.filter((c) => c.category === 'otros').map(toCarouselCard);
 
   return (
     <main className="min-h-screen bg-[#05080f] text-white">
@@ -59,12 +78,12 @@ export default async function MantenimientosPage() {
           </p>
         </div>
 
-        <MantenimientosGrid />
+        <MantenimientosGrid torresCards={torresCards} portatilesCards={portatilesCards} otrosCards={otrosCards} />
       </section>
 
       <MantenimientosEmpresas videoSrc={empresasVideo?.src} />
 
-      <ContactoMantenimientos />
+      <ContactoMantenimientos contactInfo={contactInfo} />
       <Footer />
     </main>
   );

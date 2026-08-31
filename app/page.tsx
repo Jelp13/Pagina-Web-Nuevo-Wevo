@@ -17,9 +17,10 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TikTokSection from '@/components/TikTokSection';
 import ProductCard from '@/components/ProductCard';
-import { FEATURES, PERIPHERALS, BRANDS } from '@/lib/constants';
+import { FEATURES, PERIPHERALS } from '@/lib/constants';
 import { getFeaturedTorres } from '@/lib/products-db';
 import { getHomeVideos } from '@/lib/videos-db';
+import { getBrandsForPublic } from '@/lib/brands-db';
 import { getFeaturedTorresIds, getHomeHeroImageUrl } from '@/lib/site-settings';
 import { ROUTES } from '@/lib/config';
 
@@ -31,7 +32,7 @@ export default async function Home() {
   const featuredIds = await getFeaturedTorresIds();
   const products = await getFeaturedTorres(featuredIds);
   const peripherals = PERIPHERALS;
-  const brands = BRANDS;
+  const brands = await getBrandsForPublic();
   const homeVideos = await getHomeVideos();
   const heroImageUrl = await getHomeHeroImageUrl();
 

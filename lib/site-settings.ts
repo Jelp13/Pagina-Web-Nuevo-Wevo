@@ -56,3 +56,27 @@ export async function clearHomeHeroImage(): Promise<void> {
     await db.deleteFrom('images').where('id', '=', oldId).execute();
   }
 }
+
+const CONTACT_INFO_KEY = 'contact_info';
+
+export interface ContactInfo {
+  phone: string; // dígitos, ej: "3163713928"
+  email: string;
+  address: string;
+  hours: string; // texto libre, una línea por renglón
+}
+
+const DEFAULT_CONTACT_INFO: ContactInfo = {
+  phone: '3163713928',
+  email: 'ventas@nuevowevo.com',
+  address: 'Cra. 67 #43-35, Bogotá, Cundinamarca',
+  hours: 'Lunes a viernes: 8:00 am a 12:30 pm y 1:30 pm a 4:30 pm\nSábados: 9:00 am a 12:00 pm',
+};
+
+export async function getContactInfo(): Promise<ContactInfo> {
+  return (await getSetting<ContactInfo>(CONTACT_INFO_KEY)) ?? DEFAULT_CONTACT_INFO;
+}
+
+export async function setContactInfo(info: ContactInfo): Promise<void> {
+  await setSetting(CONTACT_INFO_KEY, info);
+}

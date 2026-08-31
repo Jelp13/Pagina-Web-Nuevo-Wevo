@@ -19,19 +19,20 @@ import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { PERIPHERALS, BRANDS, QUIZ_QUESTIONS } from '@/lib/constants';
+import { PERIPHERALS, QUIZ_QUESTIONS } from '@/lib/constants';
 import type { Product } from '@/lib/constants';
+import type { PublicBrand } from '@/lib/brands-db';
 
 const quizQuestions = QUIZ_QUESTIONS;
 const peripherals = PERIPHERALS;
-const brands = BRANDS;
 
 interface Props {
   allTorres: Product[];
   featuredTorres: Product[];
+  brands: PublicBrand[];
 }
 
-export default function QuizPageClient({ allTorres, featuredTorres }: Props) {
+export default function QuizPageClient({ allTorres, featuredTorres, brands }: Props) {
   const products = featuredTorres;
 
   // Devuelve el resultado apuntando a la página interna de la torre
