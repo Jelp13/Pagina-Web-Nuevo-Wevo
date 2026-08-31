@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
 import { getTorres } from '@/lib/products-db';
+import { getPageTitles } from '@/lib/site-settings';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
@@ -17,17 +18,18 @@ export const metadata = {
 };
 
 export default async function TorresPage() {
-  const PRODUCTS = await getTorres();
+  const [PRODUCTS, titles] = await Promise.all([getTorres(), getPageTitles()]);
+  const hero = titles.torresHero;
   return (
     <main className="min-h-screen bg-[#05080f]">
       <Navbar />
 
       {/* Header */}
       <section className="mx-auto max-w-[1180px] px-6 py-16">
-        <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Catálogo completo</p>
-        <h1 className="mt-3 text-4xl font-black text-white sm:text-5xl">Torres disponibles.</h1>
+        <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">{hero.eyebrow}</p>
+        <h1 className="mt-3 text-4xl font-black text-white sm:text-5xl">{hero.title}</h1>
         <p className="mt-4 max-w-xl text-slate-400">
-          Selección de equipos ensamblados con componentes premium, listos para gaming, diseño y productividad.
+          {hero.subtitle}
         </p>
       </section>
 

@@ -1,24 +1,29 @@
 import Link from 'next/link';
 import { getTorres } from '@/lib/products-db';
-import { getFeaturedTorresIds, getHomeHeroImageUrl, getContactInfo } from '@/lib/site-settings';
+import { getFeaturedTorresIds, getHomeHeroImageUrl, getContactInfo, getPageTitles, getQuizQuestionTexts } from '@/lib/site-settings';
 import { getAllBrandsForAdmin } from '@/lib/brands-db';
 import { getAllMaintenanceCards } from '@/lib/maintenance-cards-db';
 import AdminContenidoClient from '@/components/admin/AdminContenidoClient';
 import AdminBrandsSection from '@/components/admin/AdminBrandsSection';
 import AdminMaintenanceCardsSection from '@/components/admin/AdminMaintenanceCardsSection';
 import AdminContactInfoSection from '@/components/admin/AdminContactInfoSection';
+import AdminPageTitlesSection from '@/components/admin/AdminPageTitlesSection';
+import AdminQuizQuestionsSection from '@/components/admin/AdminQuizQuestionsSection';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminContenidoPage() {
-  const [torres, featuredIds, heroImageUrl, brands, maintenanceCards, contactInfo] = await Promise.all([
-    getTorres(),
-    getFeaturedTorresIds(),
-    getHomeHeroImageUrl(),
-    getAllBrandsForAdmin(),
-    getAllMaintenanceCards(),
-    getContactInfo(),
-  ]);
+  const [torres, featuredIds, heroImageUrl, brands, maintenanceCards, contactInfo, pageTitles, quizQuestions] =
+    await Promise.all([
+      getTorres(),
+      getFeaturedTorresIds(),
+      getHomeHeroImageUrl(),
+      getAllBrandsForAdmin(),
+      getAllMaintenanceCards(),
+      getContactInfo(),
+      getPageTitles(),
+      getQuizQuestionTexts(),
+    ]);
 
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">
@@ -40,6 +45,8 @@ export default async function AdminContenidoPage() {
           <AdminBrandsSection brands={brands} />
           <AdminMaintenanceCardsSection cards={maintenanceCards} />
           <AdminContactInfoSection contactInfo={contactInfo} />
+          <AdminPageTitlesSection titles={pageTitles} />
+          <AdminQuizQuestionsSection questions={quizQuestions} />
         </div>
       </div>
     </main>

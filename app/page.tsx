@@ -21,7 +21,7 @@ import { FEATURES, PERIPHERALS } from '@/lib/constants';
 import { getFeaturedTorres } from '@/lib/products-db';
 import { getHomeVideos } from '@/lib/videos-db';
 import { getBrandsForPublic } from '@/lib/brands-db';
-import { getFeaturedTorresIds, getHomeHeroImageUrl } from '@/lib/site-settings';
+import { getFeaturedTorresIds, getHomeHeroImageUrl, getPageTitles } from '@/lib/site-settings';
 import { ROUTES } from '@/lib/config';
 
 const features = FEATURES;
@@ -35,6 +35,7 @@ export default async function Home() {
   const brands = await getBrandsForPublic();
   const homeVideos = await getHomeVideos();
   const heroImageUrl = await getHomeHeroImageUrl();
+  const titles = await getPageTitles();
 
   return (
     <main className="min-h-screen bg-[#05080f]">
@@ -83,16 +84,16 @@ export default async function Home() {
         <div className="relative z-20 mx-auto flex w-full max-w-[1180px] flex-col items-center gap-8 px-6 py-14 text-center sm:py-16">
 
           <span className="rounded-full border border-cyan-400/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-100 backdrop-blur-sm">
-            Tecnología minimalista, rendimiento potente
+            {titles.homeHero.eyebrow}
           </span>
 
           <h1 className="max-w-4xl text-6xl font-black leading-[1.0] tracking-[-0.04em] text-white sm:text-7xl lg:text-8xl">
-            Tu setup,{' '}
-            <span className="text-cyan-300">tus reglas.</span>
+            {titles.homeHero.title}{' '}
+            <span className="text-cyan-300">{titles.homeHero.titleAccent}</span>
           </h1>
 
           <p className="max-w-2xl text-base text-slate-300 sm:text-lg">
-            ¿No sabes qué PC comprar? Encuentra la tuya en 2 minutos. Responde 7 preguntas y te recomendamos el equipo exacto para tu uso y presupuesto.
+            {titles.homeHero.subtitle}
           </p>
 
           <div className="inline-flex flex-wrap items-center justify-center gap-4">
@@ -148,10 +149,10 @@ export default async function Home() {
       {/* QUIZ PROMO SECTION - Promoción del recomendador */}
       <section className="mx-auto max-w-[1180px] px-6 py-10">
         <div className="rounded-[32px] border border-cyan-400/10 bg-white/5 p-10 text-center shadow-lg">
-          <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">Recomendador inteligente</p>
-          <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">¿Listo para encontrar tu PC ideal?</h2>
+          <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">{titles.homeQuizPromo.eyebrow}</p>
+          <h2 className="mt-4 text-3xl font-bold text-white sm:text-4xl">{titles.homeQuizPromo.title}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-slate-400">
-            Responde las preguntas en una página dedicada y recibe una recomendación personalizada según tu uso y presupuesto.
+            {titles.homeQuizPromo.subtitle}
           </p>
           <a
             href={ROUTES.quiz}

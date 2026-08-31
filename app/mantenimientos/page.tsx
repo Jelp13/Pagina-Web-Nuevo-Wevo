@@ -6,7 +6,7 @@ import MantenimientosEmpresas from '@/components/MantenimientosEmpresas';
 import ContactoMantenimientos from '@/components/ContactoMantenimientos';
 import { getMantenimientosEmpresasVideo } from '@/lib/videos-db';
 import { getAllMaintenanceCards } from '@/lib/maintenance-cards-db';
-import { getContactInfo } from '@/lib/site-settings';
+import { getContactInfo, getPageTitles } from '@/lib/site-settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,11 +16,13 @@ export const metadata = {
 };
 
 export default async function MantenimientosPage() {
-  const [empresasVideo, maintenanceCards, contactInfo] = await Promise.all([
+  const [empresasVideo, maintenanceCards, contactInfo, titles] = await Promise.all([
     getMantenimientosEmpresasVideo(),
     getAllMaintenanceCards(),
     getContactInfo(),
+    getPageTitles(),
   ]);
+  const hero = titles.mantenimientosHero;
 
   const toCarouselCard = (c: (typeof maintenanceCards)[number]) => ({
     id: c.id,
@@ -52,15 +54,15 @@ export default async function MantenimientosPage() {
         />
         <div className="relative mx-auto max-w-2xl">
           <h1 className="text-5xl font-black tracking-[-0.03em] text-white sm:text-6xl">
-            Mantenimientos
+            {hero.title}
           </h1>
           <p className="mt-4 text-base text-slate-400 sm:text-lg">
-            Nos especializamos en mantenimiento preventivo para equipos tecnológicos de toda gama y categoría.
+            {hero.subtitle}
           </p>
 
           <div className="mx-auto mt-8 max-w-xl rounded-2xl border border-cyan-400/20 bg-cyan-300/5 px-6 py-4">
             <p className="text-sm text-cyan-200/80">
-              Realizamos mantenimiento preventivo para computadores, portátiles, consolas y equipos de alto rendimiento. Agenda tu servicio directamente por WhatsApp.
+              {hero.note}
             </p>
           </div>
         </div>

@@ -4,9 +4,9 @@ import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { formatPhoneCO } from '@/lib/format';
-import type { ContactInfo } from '@/lib/site-settings';
+import type { ContactInfo, HeroBlock } from '@/lib/site-settings';
 
-export default function ContactoPageClient({ contactInfo }: { contactInfo: ContactInfo }) {
+export default function ContactoPageClient({ contactInfo, hero }: { contactInfo: ContactInfo; hero: HeroBlock }) {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ nombre: '', email: '', mensaje: '' });
   const whatsappLink = `https://wa.me/57${contactInfo.phone}`;
@@ -32,13 +32,13 @@ export default function ContactoPageClient({ contactInfo }: { contactInfo: Conta
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(93,213,255,0.14),transparent_24%),radial-gradient(circle_at_80%_70%,rgba(93,213,255,0.08),transparent_20%)]" />
         <div className="relative mx-auto max-w-3xl text-center">
           <span className="rounded-full border border-cyan-400/20 bg-cyan-300/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-100">
-            Contáctanos
+            {hero.eyebrow}
           </span>
           <h1 className="mt-6 text-5xl font-black leading-[1.05] tracking-[-0.04em] text-white sm:text-6xl">
-            Estamos aquí para ayudarte.
+            {hero.title}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base text-slate-400 sm:text-lg">
-            Escríbenos por WhatsApp, correo o completa el formulario y te respondemos en menos de 2 horas.
+            {hero.subtitle}
           </p>
         </div>
       </section>

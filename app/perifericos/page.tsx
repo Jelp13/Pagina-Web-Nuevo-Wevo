@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
 import { PERIPHERALS } from '@/lib/constants';
 import { getPeripheralProducts } from '@/lib/products-db';
+import { getPageTitles } from '@/lib/site-settings';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
 
@@ -21,7 +22,8 @@ export default async function Perifericos({
 }) {
   const categoriaActiva = searchParams.categoria ?? null;
 
-  const todosLosPerifericos = await getPeripheralProducts();
+  const [todosLosPerifericos, titles] = await Promise.all([getPeripheralProducts(), getPageTitles()]);
+  const hero = titles.perifericosHero;
 
   const productos = categoriaActiva
     ? todosLosPerifericos.filter((p) => p.categorySlug === categoriaActiva)
@@ -37,15 +39,15 @@ export default async function Perifericos({
       {/* Header */}
       <section className="mx-auto max-w-[1180px] px-6 py-16">
         <p className="text-sm uppercase tracking-[0.24em] text-cyan-300">
-          {categoriaLabel ? categoriaLabel : 'Catálogo completo'}
+          {categoriaLabel ? categoriaLabel : hero.eyebrow}
         </p>
         <h1 className="mt-3 text-4xl font-black text-white sm:text-5xl">
-          {categoriaLabel ? categoriaLabel : 'Periféricos.'}
+          {categoriaLabel ? categoriaLabel : hero.title}
         </h1>
         <p className="mt-4 max-w-xl text-slate-400">
           {categoriaLabel
             ? `Todos los productos disponibles en la categoría ${categoriaLabel.toLowerCase()}.`
-            : 'Todo lo que necesitas para completar tu setup: monitores, periféricos y accesorios gaming.'}
+            : hero.subtitle}
         </p>
       </section>
 

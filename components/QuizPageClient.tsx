@@ -19,20 +19,28 @@ import Navbar from '@/components/Navbar';
 import Quiz from '@/components/Quiz';
 import Footer from '@/components/Footer';
 import ProductImage from '@/components/ProductImage';
-import { PERIPHERALS, QUIZ_QUESTIONS } from '@/lib/constants';
+import { PERIPHERALS } from '@/lib/constants';
 import type { Product } from '@/lib/constants';
 import type { PublicBrand } from '@/lib/brands-db';
+import type { HeroBlock } from '@/lib/site-settings';
 
-const quizQuestions = QUIZ_QUESTIONS;
 const peripherals = PERIPHERALS;
+
+interface QuizQuestion {
+  q: string;
+  opts: string[];
+  multiple?: boolean;
+}
 
 interface Props {
   allTorres: Product[];
   featuredTorres: Product[];
   brands: PublicBrand[];
+  quizQuestions: QuizQuestion[];
+  hero: HeroBlock;
 }
 
-export default function QuizPageClient({ allTorres, featuredTorres, brands }: Props) {
+export default function QuizPageClient({ allTorres, featuredTorres, brands, quizQuestions, hero }: Props) {
   const products = featuredTorres;
 
   // Devuelve el resultado apuntando a la página interna de la torre
@@ -130,11 +138,10 @@ export default function QuizPageClient({ allTorres, featuredTorres, brands }: Pr
         />
         <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-8 text-center">
           <h1 className="max-w-3xl text-5xl font-black leading-[1.02] tracking-[-0.04em] text-white sm:text-6xl">
-            Encuentra tu PC ideal con unas pocas preguntas.
+            {hero.title}
           </h1>
           <p className="max-w-2xl text-base text-slate-400 sm:text-lg">
-            Completa el cuestionario pensado para recomendarte la torre y el setup que mejor se adaptan a tu
-            experiencia y presupuesto.
+            {hero.subtitle}
           </p>
           <div className="inline-flex flex-wrap items-center justify-center gap-4">
             <a

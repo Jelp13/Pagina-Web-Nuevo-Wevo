@@ -1,4 +1,8 @@
 import { db } from './db';
+import { QUIZ_QUESTIONS } from './constants';
+import type { HeroBlockKey, PageTitles } from './hero-blocks-meta';
+
+export type { HeroBlock, HeroBlockKey, PageTitles } from './hero-blocks-meta';
 
 function parseJson<T>(value: unknown): T {
   return typeof value === 'string' ? (JSON.parse(value) as T) : (value as T);
@@ -79,4 +83,101 @@ export async function getContactInfo(): Promise<ContactInfo> {
 
 export async function setContactInfo(info: ContactInfo): Promise<void> {
   await setSetting(CONTACT_INFO_KEY, info);
+}
+
+const PAGE_TITLES_KEY = 'page_titles';
+
+const DEFAULT_PAGE_TITLES: PageTitles = {
+  homeHero: {
+    eyebrow: 'Tecnología minimalista, rendimiento potente',
+    title: 'Tu setup,',
+    titleAccent: 'tus reglas.',
+    subtitle:
+      '¿No sabes qué PC comprar? Encuentra la tuya en 2 minutos. Responde 7 preguntas y te recomendamos el equipo exacto para tu uso y presupuesto.',
+    note: '',
+  },
+  homeQuizPromo: {
+    eyebrow: 'Recomendador inteligente',
+    title: '¿Listo para encontrar tu PC ideal?',
+    titleAccent: '',
+    subtitle:
+      'Responde las preguntas en una página dedicada y recibe una recomendación personalizada según tu uso y presupuesto.',
+    note: '',
+  },
+  torresHero: {
+    eyebrow: 'Catálogo completo',
+    title: 'Torres disponibles.',
+    titleAccent: '',
+    subtitle: 'Selección de equipos ensamblados con componentes premium, listos para gaming, diseño y productividad.',
+    note: '',
+  },
+  portatilesHero: {
+    eyebrow: 'Catálogo completo',
+    title: 'Portátiles.',
+    titleAccent: '',
+    subtitle: 'Equipos móviles para gaming, estudio y trabajo diario, con configuraciones para cada presupuesto.',
+    note: '',
+  },
+  perifericosHero: {
+    eyebrow: 'Catálogo completo',
+    title: 'Periféricos.',
+    titleAccent: '',
+    subtitle: 'Todo lo que necesitas para completar tu setup: monitores, periféricos y accesorios gaming.',
+    note: '',
+  },
+  contactoHero: {
+    eyebrow: 'Contáctanos',
+    title: 'Estamos aquí para ayudarte.',
+    titleAccent: '',
+    subtitle: 'Escríbenos por WhatsApp, correo o completa el formulario y te respondemos en menos de 2 horas.',
+    note: '',
+  },
+  quizHero: {
+    eyebrow: '',
+    title: 'Encuentra tu PC ideal con unas pocas preguntas.',
+    titleAccent: '',
+    subtitle:
+      'Completa el cuestionario pensado para recomendarte la torre y el setup que mejor se adaptan a tu experiencia y presupuesto.',
+    note: '',
+  },
+  mantenimientosHero: {
+    eyebrow: '',
+    title: 'Mantenimientos',
+    titleAccent: '',
+    subtitle: 'Nos especializamos en mantenimiento preventivo para equipos tecnológicos de toda gama y categoría.',
+    note: 'Realizamos mantenimiento preventivo para computadores, portátiles, consolas y equipos de alto rendimiento. Agenda tu servicio directamente por WhatsApp.',
+  },
+};
+
+export async function getPageTitles(): Promise<PageTitles> {
+  const saved = await getSetting<Partial<PageTitles>>(PAGE_TITLES_KEY);
+  if (!saved) return DEFAULT_PAGE_TITLES;
+  // Merge por bloque para que un bloque nuevo agregado en el código (sin
+  // migrar) siempre tenga un valor por defecto en vez de romper la página.
+  const merged = { ...DEFAULT_PAGE_TITLES };
+  for (const key of Object.keys(DEFAULT_PAGE_TITLES) as HeroBlockKey[]) {
+    if (saved[key]) merged[key] = { ...DEFAULT_PAGE_TITLES[key], ...saved[key] };
+  }
+  return merged;
+}
+
+export async function setPageTitles(titles: PageTitles): Promise<void> {
+  await setSetting(PAGE_TITLES_KEY, titles);
+}
+
+const QUIZ_QUESTION_TEXTS_KEY = 'quiz_question_texts';
+
+export interface QuizQuestionText {
+  q: string;
+  opts: string[];
+}
+
+export async function getQuizQuestionTexts(): Promise<QuizQuestionText[]> {
+  const saved = await getSetting<QuizQuestionText[]>(QUIZ_QUESTION_TEXTS_KEY);
+  if (saved && saved.length === QUIZ_QUESTIONS.length) return saved;
+  return QUIZ_QUESTIONS.map((q) => ({ q: q.q, opts: [...q.opts] }));
+}
+
+export async function setQuizQuestionTexts(texts: QuizQuestionText[]): Promise<void> {
+  await setSetting(QUIZ_QUESTION_TEXTS_KEY, texts);
 }
