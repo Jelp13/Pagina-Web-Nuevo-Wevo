@@ -53,7 +53,20 @@ export default async function AdminDashboardPage() {
           >
             <h2 className="text-lg font-bold text-white">Contenido del sitio</h2>
             <p className="mt-2 text-sm text-slate-400">
-              Elige las torres destacadas del inicio y cambia la imagen de fondo del hero.
+              Torres destacadas, imagen del inicio, marcas, carruseles de mantenimientos, contacto, títulos y
+              preguntas de la encuesta.
+            </p>
+          </Link>
+        )}
+
+        {session?.role === 'admin' && (
+          <Link
+            href="/admin/legal"
+            className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-8 transition-colors hover:border-cyan-300/30 hover:bg-white/10"
+          >
+            <h2 className="text-lg font-bold text-white">Políticas legales</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              Términos y condiciones, política de privacidad, tratamiento y eliminación de datos.
             </p>
           </Link>
         )}

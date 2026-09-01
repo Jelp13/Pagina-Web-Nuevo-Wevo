@@ -28,6 +28,7 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith('/admin/videos') ||
     pathname.startsWith('/api/admin/videos') ||
     pathname.startsWith('/admin/contenido') ||
+    pathname.startsWith('/admin/legal') ||
     pathname.startsWith('/api/admin/settings');
   if (esRutaSoloAdmin && session.role !== 'admin') {
     if (isApiRoute) {

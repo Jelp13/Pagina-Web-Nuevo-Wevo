@@ -1,8 +1,11 @@
 import { db } from './db';
 import { QUIZ_QUESTIONS } from './constants';
 import type { HeroBlockKey, PageTitles } from './hero-blocks-meta';
+import { DEFAULT_LEGAL_PAGES, LEGAL_SLUGS } from './legal-pages-defaults';
+import type { LegalSlug, LegalPageContent } from './legal-pages-defaults';
 
 export type { HeroBlock, HeroBlockKey, PageTitles } from './hero-blocks-meta';
+export type { LegalSlug, LegalPageContent } from './legal-pages-defaults';
 
 function parseJson<T>(value: unknown): T {
   return typeof value === 'string' ? (JSON.parse(value) as T) : (value as T);
@@ -180,4 +183,22 @@ export async function getQuizQuestionTexts(): Promise<QuizQuestionText[]> {
 
 export async function setQuizQuestionTexts(texts: QuizQuestionText[]): Promise<void> {
   await setSetting(QUIZ_QUESTION_TEXTS_KEY, texts);
+}
+
+function legalKey(slug: LegalSlug): string {
+  return `legal_${slug}`;
+}
+
+export async function getLegalPage(slug: LegalSlug): Promise<LegalPageContent> {
+  const saved = await getSetting<LegalPageContent>(legalKey(slug));
+  return saved ?? DEFAULT_LEGAL_PAGES[slug];
+}
+
+export async function getAllLegalPagesForAdmin(): Promise<Record<LegalSlug, LegalPageContent>> {
+  const entries = await Promise.all(LEGAL_SLUGS.map(async (slug) => [slug, await getLegalPage(slug)] as const));
+  return Object.fromEntries(entries) as Record<LegalSlug, LegalPageContent>;
+}
+
+export async function setLegalPage(slug: LegalSlug, content: LegalPageContent): Promise<void> {
+  await setSetting(legalKey(slug), content);
 }
