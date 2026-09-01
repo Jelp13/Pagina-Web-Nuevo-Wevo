@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac } from 'crypto';
-import { updateOrderStatusByReference } from '@/lib/orders-db';
+import { updateOrderStatusByReference, getOrderByReference } from '@/lib/orders-db';
+import { sendThankYouEmail } from '@/lib/mailer';
 
 function mapMpStatus(mpStatus: string): 'pagado' | 'rechazado' | 'cancelado' | 'pendiente' {
   if (mpStatus === 'approved') return 'pagado';
@@ -53,7 +54,16 @@ export async function POST(req: NextRequest) {
           const { status, external_reference } = payment;
 
           if (external_reference) {
-            await updateOrderStatusByReference(external_reference, mapMpStatus(status), String(data.id));
+            const nuevoEstado = mapMpStatus(status);
+            const pedido = await getOrderByReference(external_reference);
+
+            await updateOrderStatusByReference(external_reference, nuevoEstado, String(data.id));
+
+            // Solo se envía al pasar A "pagado" — evita duplicados si Mercado
+            // Pago reenvía la misma notificación (webhooks no son exactly-once).
+            if (pedido && pedido.status !== 'pagado' && nuevoEstado === 'pagado') {
+              sendThankYouEmail(pedido);
+            }
           }
         }
       }

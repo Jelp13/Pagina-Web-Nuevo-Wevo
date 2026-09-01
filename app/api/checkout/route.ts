@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createOrder } from '@/lib/orders-db';
+import { sendThankYouEmail } from '@/lib/mailer';
 
 interface CartItem {
   id: string;
@@ -89,8 +90,10 @@ export async function POST(req: NextRequest) {
       paymentMethod,
     });
 
-    // Contra entrega: sin pasarela de pago
+    // Contra entrega: sin pasarela de pago — se considera pedido confirmado
+    // de una vez (se paga al recibir), así que el correo va de inmediato.
     if (paymentMethod === 'contra-entrega') {
+      sendThankYouEmail({ reference, nombres: form.nombres, email: form.email, items, total, paymentMethod });
       return NextResponse.json({
         reference,
         method: 'contra-entrega',
@@ -151,6 +154,7 @@ export async function POST(req: NextRequest) {
 
     // BRE-B: pago por código QR — se verifica manualmente vía comprobante por WhatsApp
     if (paymentMethod === 'breb') {
+      sendThankYouEmail({ reference, nombres: form.nombres, email: form.email, items, total, paymentMethod });
       return NextResponse.json({
         reference,
         method: 'breb',

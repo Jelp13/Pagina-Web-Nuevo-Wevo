@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { getOrderById, updateOrderStatusManually } from '@/lib/orders-db';
 import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
+import { sendThankYouEmail } from '@/lib/mailer';
+
+function parseItems(json: unknown) {
+  if (Array.isArray(json)) return json;
+  if (typeof json === 'string' && json.trim()) return JSON.parse(json);
+  return [];
+}
 
 const VALID_TARGET_STATUS = ['pagado', 'cancelado'] as const;
 
@@ -38,6 +45,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     await updateOrderStatusManually(id, status, reason.trim(), session.username);
+
+    if (status === 'pagado') {
+      sendThankYouEmail({
+        reference: order.reference,
+        nombres: order.nombres,
+        email: order.email,
+        items: parseItems(order.items),
+        total: order.total,
+        paymentMethod: order.payment_method,
+      });
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {

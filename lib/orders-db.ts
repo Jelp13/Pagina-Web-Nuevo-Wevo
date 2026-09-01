@@ -129,6 +129,30 @@ export async function getOrderById(id: number) {
   return db.selectFrom('orders').selectAll().where('id', '=', id).executeTakeFirst();
 }
 
+export interface ThankYouOrder {
+  reference: string;
+  nombres: string;
+  email: string;
+  items: OrderItem[];
+  total: number;
+  paymentMethod: string;
+  status: OrderRow['status'];
+}
+
+export async function getOrderByReference(reference: string): Promise<ThankYouOrder | null> {
+  const row = await db.selectFrom('orders').selectAll().where('reference', '=', reference).executeTakeFirst();
+  if (!row) return null;
+  return {
+    reference: row.reference,
+    nombres: row.nombres,
+    email: row.email,
+    items: parseItems(row.items),
+    total: row.total,
+    paymentMethod: row.payment_method,
+    status: row.status,
+  };
+}
+
 export async function updateOrderStatusManually(
   id: number,
   status: 'pagado' | 'cancelado',
