@@ -1,5 +1,6 @@
 import { db } from './db';
 import type { OrderRow } from './db';
+import { sendThankYouEmail } from './mailer';
 
 export interface OrderItem {
   id: string;
@@ -64,21 +65,87 @@ export async function updateOrderStatusByReference(
 // consideran abandonados y se marcan como cancelados automáticamente.
 // Contra entrega, BRE-B y ADDI se dejan intactos: esos sí se confirman
 // manualmente por WhatsApp y pueden quedar "pendiente" varios días.
+//
+// Antes de cancelar cada candidato se verifica directamente contra la API
+// de Mercado Pago: el webhook puede fallar en llegar (nos pasó con un
+// pedido real que el cliente sí pagó y el sistema canceló solo), así que
+// esta es la red de seguridad que evita cancelar un pedido que en
+// realidad sí se pagó.
 const ABANDONO_HORAS = 2;
 const METODOS_EN_LINEA = ['tarjeta', 'pse', 'nequi'] as const;
 
+interface MpPaymentSearchResult {
+  results?: { id: number; status: string }[];
+}
+
+async function buscarPagoAprobadoEnMercadoPago(reference: string): Promise<string | null> {
+  const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+  if (!accessToken) return null;
+
+  try {
+    const res = await fetch(
+      `https://api.mercadopago.com/v1/payments/search?external_reference=${encodeURIComponent(reference)}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    if (!res.ok) return null;
+
+    const data = (await res.json()) as MpPaymentSearchResult;
+    const aprobado = data.results?.find((p) => p.status === 'approved');
+    return aprobado ? String(aprobado.id) : null;
+  } catch (err) {
+    console.error(`Error verificando pago con Mercado Pago para ${reference}:`, err);
+    return null;
+  }
+}
+
 async function sweepAbandonedOrders(): Promise<void> {
-  await db
-    .updateTable('orders')
-    .set({
-      status: 'cancelado',
-      status_reason: 'Cancelado automáticamente: el cliente no completó el pago en línea.',
-      status_updated_by: 'sistema',
-    })
+  const candidatos = await db
+    .selectFrom('orders')
+    .select(['id', 'reference', 'nombres', 'email', 'items', 'total', 'payment_method'])
     .where('status', '=', 'pendiente')
     .where('payment_method', 'in', [...METODOS_EN_LINEA])
     .where('created_at', '<', new Date(Date.now() - ABANDONO_HORAS * 60 * 60 * 1000))
     .execute();
+
+  for (const candidato of candidatos) {
+    // eslint-disable-next-line no-await-in-loop
+    const mpPaymentId = await buscarPagoAprobadoEnMercadoPago(candidato.reference);
+
+    if (mpPaymentId) {
+      // eslint-disable-next-line no-await-in-loop
+      await db
+        .updateTable('orders')
+        .set({
+          status: 'pagado',
+          status_reason: 'Confirmado automáticamente contra la API de Mercado Pago (el webhook no había actualizado el pedido).',
+          status_updated_by: 'sistema',
+          mp_payment_id: mpPaymentId,
+        })
+        .where('id', '=', candidato.id)
+        .execute();
+
+      sendThankYouEmail({
+        reference: candidato.reference,
+        nombres: candidato.nombres,
+        email: candidato.email,
+        items: parseItems(candidato.items),
+        total: candidato.total,
+        paymentMethod: candidato.payment_method,
+      });
+      continue;
+    }
+
+    // eslint-disable-next-line no-await-in-loop
+    await db
+      .updateTable('orders')
+      .set({
+        status: 'cancelado',
+        status_reason: 'Cancelado automáticamente: el cliente no completó el pago en línea.',
+        status_updated_by: 'sistema',
+      })
+      .where('id', '=', candidato.id)
+      .execute();
+  }
 }
 
 export interface AdminOrder {
