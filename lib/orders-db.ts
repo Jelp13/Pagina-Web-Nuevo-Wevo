@@ -63,8 +63,6 @@ export async function updateOrderStatusByReference(
 // "pendiente" porque el cliente nunca terminó el pago en Mercado Pago
 // (cerró la pestaña, no llegó webhook, etc.) — pasado este tiempo se
 // consideran abandonados y se marcan como cancelados automáticamente.
-// Contra entrega, BRE-B y ADDI se dejan intactos: esos sí se confirman
-// manualmente por WhatsApp y pueden quedar "pendiente" varios días.
 //
 // Antes de cancelar cada candidato se verifica directamente contra la API
 // de Mercado Pago: el webhook puede fallar en llegar (nos pasó con un
@@ -73,6 +71,15 @@ export async function updateOrderStatusByReference(
 // realidad sí se pagó.
 const ABANDONO_HORAS = 2;
 const METODOS_EN_LINEA = ['tarjeta', 'pse', 'nequi'] as const;
+
+// Contra entrega, BRE-B y ADDI se confirman manualmente (WhatsApp o panel
+// admin) y no tienen forma de verificarse contra una API externa, así que
+// se les da más margen antes de considerarlos abandonados. ADDI en
+// particular no tiene integración real (solo redirige) y nunca cambia de
+// estado por sí solo, por lo que sin este barrido quedaría "pendiente"
+// para siempre.
+const ABANDONO_HORAS_MANUAL = 24 * 3;
+const METODOS_MANUALES = ['contra-entrega', 'breb', 'addi'] as const;
 
 interface MpPaymentSearchResult {
   results?: { id: number; status: string }[];
@@ -146,6 +153,21 @@ async function sweepAbandonedOrders(): Promise<void> {
       .where('id', '=', candidato.id)
       .execute();
   }
+
+  // Contra entrega, BRE-B y ADDI que llevan más de 3 días sin confirmarse
+  // manualmente (nunca se marcó "pagado" desde /admin/ventas): se dan por
+  // abandonados y se cancelan automáticamente.
+  await db
+    .updateTable('orders')
+    .set({
+      status: 'cancelado',
+      status_reason: 'Cancelado automáticamente: el pedido no fue confirmado a tiempo.',
+      status_updated_by: 'sistema',
+    })
+    .where('status', '=', 'pendiente')
+    .where('payment_method', 'in', [...METODOS_MANUALES])
+    .where('created_at', '<', new Date(Date.now() - ABANDONO_HORAS_MANUAL * 60 * 60 * 1000))
+    .execute();
 }
 
 export interface AdminOrder {
