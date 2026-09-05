@@ -39,8 +39,11 @@ function validateDocumento(tipo: TipoDocumento, doc: string): boolean {
   return false;
 }
 
+// Contra entrega solo aplica para pedidos de hasta este monto.
+const CONTRA_ENTREGA_MAX = 400000;
+
 function validateBody(body: CheckoutBody): string | null {
-  const { form, items, total } = body;
+  const { form, items, total, paymentMethod } = body;
   if (!form?.nombres?.trim() || !NAME_REGEX.test(form.nombres)) return 'Nombres inválidos';
   if (!form?.apellidos?.trim() || !NAME_REGEX.test(form.apellidos)) return 'Apellidos inválidos';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Email inválido';
@@ -57,6 +60,10 @@ function validateBody(body: CheckoutBody): string | null {
   if (Math.abs(calculatedTotal - total) > 1) return 'Total manipulado';
 
   if (total < 10000) return 'Monto mínimo de compra: $10.000 COP';
+
+  if (paymentMethod === 'contra-entrega' && total > CONTRA_ENTREGA_MAX) {
+    return `Contra entrega solo está disponible para pedidos de hasta $${CONTRA_ENTREGA_MAX.toLocaleString('es-CO')} COP`;
+  }
 
   return null;
 }

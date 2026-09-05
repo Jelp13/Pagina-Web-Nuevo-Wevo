@@ -60,8 +60,9 @@ export async function sendThankYouEmail(order: ThankYouEmailOrder): Promise<void
       <div style="font-family: Arial, Helvetica, sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h1 style="font-size: 22px; margin-bottom: 4px;">¡Gracias por tu compra, ${order.nombres}!</h1>
         <p style="color: #555; line-height: 1.5;">
-          Recibimos tu pedido <strong>${order.reference}</strong> y ya lo estamos preparando. Te avisaremos por
-          WhatsApp o correo en cuanto haya novedades con el envío.
+          Recibimos tu pedido <strong>${order.reference}</strong> y ya lo estamos preparando. Tu equipo se entrega
+          en <strong>3 a 6 días hábiles</strong>. Te avisaremos por WhatsApp o correo en cuanto haya novedades con
+          el envío.
         </p>
         <table style="width:100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;">
           ${itemsRows}

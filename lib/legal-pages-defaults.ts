@@ -227,11 +227,7 @@ Nuevo Wevo S.A.S. se reserva el derecho de suspender o reprogramar una entrega c
 
 ### Entregas nacionales — Transportadoras certificadas
 
-Para envíos fuera de Bogotá, Nuevo Wevo S.A.S. utiliza transportadoras certificadas a nivel nacional. Los tiempos estimados de entrega son:
-
-- **Ciudades principales:** 1 a 2 días hábiles.
-- **Municipios intermedios:** 2 a 3 días hábiles.
-- **Zonas de difícil acceso:** hasta 5 días hábiles.
+Para envíos fuera de Bogotá, Nuevo Wevo S.A.S. utiliza transportadoras certificadas a nivel nacional. El tiempo estimado de entrega es de **3 a 6 días hábiles**, sin importar la ciudad o municipio de destino.
 
 Una vez el pedido es entregado a la transportadora, la responsabilidad sobre el envío recae en dicha empresa conforme a la normativa colombiana de transporte de carga. En caso de pérdida o daño durante el transporte, Nuevo Wevo S.A.S. acompañará al cliente en el proceso de reclamación ante la transportadora correspondiente.
 

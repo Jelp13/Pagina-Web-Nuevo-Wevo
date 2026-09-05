@@ -56,7 +56,7 @@ function validateDocumento(tipo: TipoDocumento, doc: string): string | null {
   return null;
 }
 
-const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: string; disabled?: boolean }[] = [
+const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: string }[] = [
   { id: 'contra-entrega', label: 'Contra entrega', icon: '🚚', desc: 'Paga cuando recibas tu pedido' },
   { id: 'tarjeta', label: 'Tarjeta de crédito / débito', icon: '💳', desc: 'Visa, Mastercard, American Express' },
   { id: 'pse', label: 'PSE', icon: '🏦', desc: 'Débito directo desde tu cuenta bancaria' },
@@ -64,6 +64,9 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: s
   { id: 'addi', label: 'ADDI', icon: '💰', desc: 'Compra ahora y paga en cuotas sin interés' },
   { id: 'breb', label: 'BRE-B', icon: '📷', desc: 'Pago por código QR' },
 ];
+
+// Contra entrega solo aplica para pedidos de hasta este monto.
+const CONTRA_ENTREGA_MAX = 400000;
 
 
 function validate(form: FormData): Partial<Record<keyof FormData, string>> {
@@ -162,6 +165,11 @@ export default function CheckoutPageClient() {
     }
     if (!paymentMethod) {
       setPaymentError('Selecciona un método de pago');
+      return;
+    }
+    if (paymentMethod === 'contra-entrega' && subtotal > CONTRA_ENTREGA_MAX) {
+      setPaymentMethod(null);
+      setPaymentError(`Contra entrega ya no está disponible: tu pedido supera los ${formatCOP(CONTRA_ENTREGA_MAX)}. Elige otro método de pago.`);
       return;
     }
     setPaymentError('');
@@ -426,40 +434,45 @@ export default function CheckoutPageClient() {
               <section className="rounded-[28px] border border-cyan-400/10 bg-white/5 p-6 sm:p-8">
                 <h2 className="mb-6 text-lg font-bold text-white">Método de pago</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {PAYMENT_METHODS.map((method) => (
-                    <button
-                      key={method.id}
-                      type="button"
-                      disabled={method.disabled}
-                      onClick={() => {
-                        if (method.disabled) return;
-                        setPaymentMethod(method.id);
-                        setPaymentError('');
-                      }}
-                      className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all ${
-                        method.disabled
-                          ? 'cursor-not-allowed border-slate-800 bg-slate-900/30 opacity-50'
-                          : paymentMethod === method.id
-                          ? 'border-cyan-400/50 bg-cyan-300/10 ring-1 ring-cyan-400/30'
-                          : 'border-slate-700 bg-slate-900/60 hover:border-slate-600'
-                      }`}
-                    >
-                      <span className="text-2xl">{method.icon}</span>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-white">{method.label}</p>
-                        <p className="truncate text-xs text-slate-500">{method.desc}</p>
-                      </div>
-                      {!method.disabled && (
-                        <div
-                          className={`ml-auto h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
-                            paymentMethod === method.id
-                              ? 'border-cyan-300 bg-cyan-300'
-                              : 'border-slate-600 bg-transparent'
-                          }`}
-                        />
-                      )}
-                    </button>
-                  ))}
+                  {PAYMENT_METHODS.map((method) => {
+                    const disabled = method.id === 'contra-entrega' && subtotal > CONTRA_ENTREGA_MAX;
+                    return (
+                      <button
+                        key={method.id}
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => {
+                          if (disabled) return;
+                          setPaymentMethod(method.id);
+                          setPaymentError('');
+                        }}
+                        className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-all ${
+                          disabled
+                            ? 'cursor-not-allowed border-slate-800 bg-slate-900/30 opacity-50'
+                            : paymentMethod === method.id
+                            ? 'border-cyan-400/50 bg-cyan-300/10 ring-1 ring-cyan-400/30'
+                            : 'border-slate-700 bg-slate-900/60 hover:border-slate-600'
+                        }`}
+                      >
+                        <span className="text-2xl">{method.icon}</span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-white">{method.label}</p>
+                          <p className="truncate text-xs text-slate-500">
+                            {disabled ? `Solo para pedidos hasta ${formatCOP(CONTRA_ENTREGA_MAX)}` : method.desc}
+                          </p>
+                        </div>
+                        {!disabled && (
+                          <div
+                            className={`ml-auto h-4 w-4 shrink-0 rounded-full border-2 transition-colors ${
+                              paymentMethod === method.id
+                                ? 'border-cyan-300 bg-cyan-300'
+                                : 'border-slate-600 bg-transparent'
+                            }`}
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {paymentError && (
@@ -469,13 +482,9 @@ export default function CheckoutPageClient() {
                 )}
 
                 {paymentMethod === 'contra-entrega' && (
-                  <div className={`mt-4 rounded-xl border px-4 py-3 ${subtotal >= 400000 ? 'bg-amber-500/10 border-amber-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
-                    <p className={`text-sm ${subtotal >= 400000 ? 'text-amber-300' : 'text-red-300'}`}>
-                      {subtotal >= 400000 ? (
-                        <><strong>Contra entrega:</strong> Nuestro equipo se contactará contigo por WhatsApp para coordinar la entrega y el pago.</>
-                      ) : (
-                        <><strong>Aviso:</strong> La opción de contra entrega aplica únicamente para pedidos mayores a $400.000 COP. Para pedidos de menor valor se cobrará una tarifa de envío adicional.</>
-                      )}
+                  <div className="mt-4 rounded-xl border px-4 py-3 bg-amber-500/10 border-amber-500/20">
+                    <p className="text-sm text-amber-300">
+                      <strong>Contra entrega:</strong> Nuestro equipo se contactará contigo por WhatsApp para coordinar la entrega y el pago.
                     </p>
                   </div>
                 )}

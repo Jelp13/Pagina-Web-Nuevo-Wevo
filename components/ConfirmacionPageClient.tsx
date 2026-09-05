@@ -60,20 +60,20 @@ function ConfirmationContent() {
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">1.</span> Envíanos el comprobante de pago por WhatsApp</p>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">2.</span> Verificamos tu pago</p>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">3.</span> Confirmamos tu pedido por WhatsApp</p>
-              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">4.</span> Te hacemos entrega de tu pedido en los próximos días</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">4.</span> Te hacemos entrega de tu pedido en 3 a 6 días hábiles</p>
             </>
           ) : isContraEntrega ? (
             <>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">1.</span> Revisamos disponibilidad de tu equipo</p>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">2.</span> Te contactamos por WhatsApp en menos de 2 horas</p>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">3.</span> Coordinamos fecha y hora de entrega</p>
-              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">4.</span> Pagas al recibir tu pedido</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">4.</span> Pagas y recibes tu pedido en 3 a 6 días hábiles</p>
             </>
           ) : (
             <>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">1.</span> Recibirás un correo de confirmación</p>
-              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">2.</span> Preparamos tu equipo (1–2 días hábiles)</p>
-              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">3.</span> Envío express a tu ciudad</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">2.</span> Preparamos tu equipo</p>
+              <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">3.</span> Tu equipo se entrega de 3 a 6 días hábiles</p>
               <p className="flex gap-2 text-slate-400"><span className="text-cyan-300">4.</span> Te notificamos el seguimiento por WhatsApp</p>
             </>
           )}
