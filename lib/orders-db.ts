@@ -72,14 +72,18 @@ export async function updateOrderStatusByReference(
 const ABANDONO_HORAS = 2;
 const METODOS_EN_LINEA = ['tarjeta', 'pse', 'nequi'] as const;
 
-// Contra entrega, BRE-B y ADDI se confirman manualmente (WhatsApp o panel
-// admin) y no tienen forma de verificarse contra una API externa, así que
-// se les da más margen antes de considerarlos abandonados. ADDI en
-// particular no tiene integración real (solo redirige) y nunca cambia de
-// estado por sí solo, por lo que sin este barrido quedaría "pendiente"
-// para siempre.
+// Contra entrega y ADDI se confirman manualmente (WhatsApp o panel admin)
+// y no tienen forma de verificarse contra una API externa, así que se les
+// da más margen antes de considerarlos abandonados. ADDI en particular no
+// tiene integración real (solo redirige) y nunca cambia de estado por sí
+// solo, por lo que sin este barrido quedaría "pendiente" para siempre —
+// se deja listo para cuando se integre correctamente.
+//
+// BRE-B queda fuera de este barrido a propósito: el equipo prefiere
+// revisar el comprobante y marcar manualmente el pedido como pagado o
+// cancelado desde /admin/ventas, sin un cierre automático por tiempo.
 const ABANDONO_HORAS_MANUAL = 24 * 3;
-const METODOS_MANUALES = ['contra-entrega', 'breb', 'addi'] as const;
+const METODOS_MANUALES = ['contra-entrega', 'addi'] as const;
 
 interface MpPaymentSearchResult {
   results?: { id: number; status: string }[];

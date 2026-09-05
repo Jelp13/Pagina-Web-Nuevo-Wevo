@@ -68,6 +68,9 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: s
 // Contra entrega solo aplica para pedidos de hasta este monto.
 const CONTRA_ENTREGA_MAX = 400000;
 
+// ADDI deshabilitado temporalmente: la integración no está funcionando bien.
+const ADDI_ENABLED = false;
+
 
 function validate(form: FormData): Partial<Record<keyof FormData, string>> {
   const errors: Partial<Record<keyof FormData, string>> = {};
@@ -170,6 +173,11 @@ export default function CheckoutPageClient() {
     if (paymentMethod === 'contra-entrega' && subtotal > CONTRA_ENTREGA_MAX) {
       setPaymentMethod(null);
       setPaymentError(`Contra entrega ya no está disponible: tu pedido supera los ${formatCOP(CONTRA_ENTREGA_MAX)}. Elige otro método de pago.`);
+      return;
+    }
+    if (paymentMethod === 'addi' && !ADDI_ENABLED) {
+      setPaymentMethod(null);
+      setPaymentError('ADDI no está disponible temporalmente. Elige otro método de pago.');
       return;
     }
     setPaymentError('');
@@ -435,7 +443,9 @@ export default function CheckoutPageClient() {
                 <h2 className="mb-6 text-lg font-bold text-white">Método de pago</h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {PAYMENT_METHODS.map((method) => {
-                    const disabled = method.id === 'contra-entrega' && subtotal > CONTRA_ENTREGA_MAX;
+                    const disabled =
+                      (method.id === 'contra-entrega' && subtotal > CONTRA_ENTREGA_MAX) ||
+                      (method.id === 'addi' && !ADDI_ENABLED);
                     return (
                       <button
                         key={method.id}
@@ -458,7 +468,11 @@ export default function CheckoutPageClient() {
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-white">{method.label}</p>
                           <p className="truncate text-xs text-slate-500">
-                            {disabled ? `Solo para pedidos hasta ${formatCOP(CONTRA_ENTREGA_MAX)}` : method.desc}
+                            {disabled
+                              ? method.id === 'contra-entrega'
+                                ? `Solo para pedidos hasta ${formatCOP(CONTRA_ENTREGA_MAX)}`
+                                : 'Temporalmente no disponible'
+                              : method.desc}
                           </p>
                         </div>
                         {!disabled && (
