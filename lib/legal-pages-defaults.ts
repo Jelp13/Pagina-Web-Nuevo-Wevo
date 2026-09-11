@@ -424,6 +424,10 @@ Los plazos para efectuar el reembolso son los siguientes:
 
 Nuevo Wevo S.A.S. no realizará reembolsos en efectivo por compras realizadas con tarjeta de crédito, débito u otros medios de pago electrónicos, salvo en casos excepcionales debidamente justificados y autorizados por gerencia.
 
+### Retenciones y comisiones de las pasarelas de pago
+
+Cuando el medio de pago utilizado por el cliente (incluyendo, entre otros, Mercado Pago, ADDI o cualquier otra pasarela o entidad financiera) cobre a Nuevo Wevo S.A.S. una comisión, retención o cualquier otro cargo asociado al procesamiento de la transacción, y la compra correspondiente sea posteriormente cancelada por cualquier causa, dicho valor no será asumido por Nuevo Wevo S.A.S. En consecuencia, el monto de la comisión o retención cobrada por la pasarela será descontado del valor a reembolsar al cliente, y el reembolso se realizará por el valor neto resultante. Nuevo Wevo S.A.S. informará previamente al cliente el valor exacto de este descuento antes de hacer efectiva la devolución.
+
 ## Exoneración de Responsabilidad
 
 Nuevo Wevo S.A.S. no asumirá responsabilidad en los siguientes casos:
