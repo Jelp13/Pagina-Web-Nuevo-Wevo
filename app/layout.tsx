@@ -143,8 +143,8 @@ export default function RootLayout({
         {/* Preconectar a dominios externos para mejorar velocidad */}
         <link rel="dns-prefetch" href="https://wa.me" />
 
-        {/* Favicon y app icons */}
-        <link rel="icon" href="/favicon.ico" />
+        {/* Favicon y app icons: generados automáticamente por Next.js desde
+            app/favicon.ico, app/icon.png y app/apple-icon.png */}
       </head>
       <body className="bg-[#05080f] text-[#eef4ff] antialiased">
         {children}
