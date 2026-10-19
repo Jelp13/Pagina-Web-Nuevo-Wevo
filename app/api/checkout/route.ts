@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ reference, checkoutUrl: result.init_point });
     }
 
-    // BRE-B: pago por código QR — se verifica manualmente vía comprobante por WhatsApp
+    // BRE-B: pago con llave — se verifica manualmente vía comprobante por WhatsApp
     if (paymentMethod === 'breb') {
       sendThankYouEmail({ reference, nombres: form.nombres, email: form.email, items, total, paymentMethod });
       return NextResponse.json({

@@ -3,7 +3,6 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useCartStore, formatCOP, getCartTotal } from '@/lib/cart-store';
@@ -62,7 +61,7 @@ const PAYMENT_METHODS: { id: PaymentMethod; label: string; icon: string; desc: s
   { id: 'pse', label: 'PSE', icon: '🏦', desc: 'Débito directo desde tu cuenta bancaria' },
   { id: 'nequi', label: 'Nequi', icon: '📱', desc: 'Paga desde tu billetera Nequi' },
   { id: 'addi', label: 'ADDI', icon: '💰', desc: 'Compra ahora y paga en cuotas sin interés' },
-  { id: 'breb', label: 'BRE-B', icon: '📷', desc: 'Pago por código QR' },
+  { id: 'breb', label: 'BRE-B', icon: '🔑', desc: 'Paga con la llave BRE-B' },
 ];
 
 // Contra entrega solo aplica para pedidos de hasta este monto.
@@ -522,23 +521,12 @@ export default function CheckoutPageClient() {
                 {paymentMethod === 'breb' && (
                   <div className="mt-4 rounded-2xl border border-cyan-400/20 bg-cyan-300/5 px-4 py-5">
                     <p className="text-sm text-slate-300">
-                      Escanea este código QR con tu app bancaria (Bancolombia, Nequi, DaviPlata, etc.) y paga el total de{' '}
+                      Paga con tu app bancaria (Bancolombia, Nequi, DaviPlata, etc.) usando la llave BRE-B y transfiere el total de{' '}
                       <strong className="text-cyan-300">{formatCOP(subtotal)}</strong>.
                     </p>
-                    <div className="mt-4 flex justify-center">
-                      <div className="rounded-2xl border border-cyan-400/20 bg-white p-3">
-                        <Image
-                          src="/Imagenes/Qr.png"
-                          alt="Código QR de pago BRE-B"
-                          width={280}
-                          height={280}
-                          className="h-auto w-[280px]"
-                        />
-                      </div>
-                    </div>
 
                     <div className="mt-4 text-center">
-                      <p className="text-xs text-slate-500">¿El código no te funciona? Paga con la llave BRE-B</p>
+                      <p className="text-xs text-slate-500">Llave BRE-B</p>
                       <button
                         type="button"
                         onClick={handleCopyKey}
