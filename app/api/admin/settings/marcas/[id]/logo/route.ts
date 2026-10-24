@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { replaceBrandLogo } from '@/lib/brands-db';
+import { requireApiSession } from '@/lib/require-session';
 
 const MAX_SIZE = 4 * 1024 * 1024; // 4MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const id = Number(params.id);
     if (!Number.isInteger(id)) return NextResponse.json({ error: 'Id inválido' }, { status: 400 });

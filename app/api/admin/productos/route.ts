@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createProduct } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
 import { sanitizeRows } from '@/lib/sanitize-list-fields';
+import { requireApiSession } from '@/lib/require-session';
 import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
 const VALID_SECTIONS = ['torres', 'perifericos', 'portatiles'];
 
 export async function POST(req: NextRequest) {
+  const auth = await requireApiSession(req);
+  if ('error' in auth) return auth.error;
+
   try {
     const body = await req.json();
     const {

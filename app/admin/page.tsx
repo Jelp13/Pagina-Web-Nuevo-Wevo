@@ -1,13 +1,11 @@
 import Link from 'next/link';
-import { cookies } from 'next/headers';
-import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import AdminLogoutButton from '@/components/AdminLogoutButton';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  const token = cookies().get(SESSION_COOKIE)?.value;
-  const session = token ? await verifySessionToken(token) : null;
+  const session = await requirePageSession();
 
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">

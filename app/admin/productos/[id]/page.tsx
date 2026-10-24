@@ -2,10 +2,13 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAdminProductById } from '@/lib/admin-products';
 import AdminProductEditForm from '@/components/AdminProductEditForm';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProductoEditPage({ params }: { params: { id: string } }) {
+  await requirePageSession();
+
   const producto = await getAdminProductById(params.id);
   if (!producto) notFound();
 

@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminProductById, updateProduct, deleteProduct } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
 import { sanitizeRows } from '@/lib/sanitize-list-fields';
+import { requireApiSession } from '@/lib/require-session';
 import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req);
+  if ('error' in auth) return auth.error;
+
   try {
     const existing = await getAdminProductById(params.id);
     if (!existing) {
@@ -72,7 +76,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req);
+  if ('error' in auth) return auth.error;
+
   try {
     const existing = await getAdminProductById(params.id);
     if (!existing) {

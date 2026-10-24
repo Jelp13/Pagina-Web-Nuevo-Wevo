@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAdminProductById, addProductImage, removeProductImage } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
+import { requireApiSession } from '@/lib/require-session';
 
 const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req);
+  if ('error' in auth) return auth.error;
+
   try {
     const product = await getAdminProductById(params.id);
     if (!product) return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 });
@@ -35,6 +39,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req);
+  if ('error' in auth) return auth.error;
+
   try {
     const product = await getAdminProductById(params.id);
     if (!product) return NextResponse.json({ error: 'Producto no encontrado' }, { status: 404 });

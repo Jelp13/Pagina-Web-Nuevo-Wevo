@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllOrdersForAdmin } from '@/lib/orders-db';
 import { formatCOP } from '@/lib/format';
 import OrderStatusAction from '@/components/admin/OrderStatusAction';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
@@ -50,6 +51,8 @@ export default async function AdminVentasPage({
 }: {
   searchParams: { estado?: string };
 }) {
+  await requirePageSession();
+
   const pedidos = await getAllOrdersForAdmin();
   const filtro: Filtro = (['pendiente', 'exitoso', 'cancelado'] as const).includes(
     searchParams.estado as 'pendiente' | 'exitoso' | 'cancelado',

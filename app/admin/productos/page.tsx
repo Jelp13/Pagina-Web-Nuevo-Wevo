@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getAllProductsForAdmin } from '@/lib/admin-products';
 import { formatCOP } from '@/lib/format';
 import ProductImage from '@/components/ProductImage';
+import { requirePageSession } from '@/lib/require-session';
 
 const SECTION_LABEL: Record<string, string> = {
   torres: 'Torres',
@@ -13,6 +14,8 @@ const SECTION_LABEL: Record<string, string> = {
 export const dynamic = 'force-dynamic';
 
 export default async function AdminProductosPage() {
+  await requirePageSession();
+
   const productos = await getAllProductsForAdmin();
 
   return (

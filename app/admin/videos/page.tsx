@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import { getAllVideosForAdmin } from '@/lib/admin-videos';
 import AdminVideosClient from '@/components/AdminVideosClient';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminVideosPage() {
+  await requirePageSession({ role: 'admin' });
+
   const videos = await getAllVideosForAdmin();
   const homeVideos = videos.filter((v) => v.placement === 'home');
   const empresasVideo = videos.find((v) => v.placement === 'mantenimientos_empresas') ?? null;

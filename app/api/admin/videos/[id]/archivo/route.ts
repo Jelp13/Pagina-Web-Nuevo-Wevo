@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getVideoById, replaceVideoFile } from '@/lib/admin-videos';
+import { requireApiSession } from '@/lib/require-session';
 
 const MAX_SIZE = 60 * 1024 * 1024; // 60MB
 const ALLOWED_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
@@ -11,6 +12,9 @@ function revalidateForPlacement(placement: string) {
 }
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const id = Number(params.id);
     if (!Number.isInteger(id)) return NextResponse.json({ error: 'Id inválido' }, { status: 400 });

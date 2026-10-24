@@ -3,8 +3,12 @@ import { revalidatePath } from 'next/cache';
 import { setLegalPage } from '@/lib/site-settings';
 import { LEGAL_SLUGS } from '@/lib/legal-pages-defaults';
 import type { LegalSlug } from '@/lib/legal-pages-defaults';
+import { requireApiSession } from '@/lib/require-session';
 
 export async function PATCH(req: NextRequest, { params }: { params: { slug: string } }) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     if (!LEGAL_SLUGS.includes(params.slug as LegalSlug)) {
       return NextResponse.json({ error: 'Página legal no encontrada' }, { status: 404 });

@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { createMaintenanceCard } from '@/lib/maintenance-cards-db';
+import { requireApiSession } from '@/lib/require-session';
 
 const VALID_CATEGORIES = ['torres', 'portatiles', 'otros'];
 
 export async function POST(req: NextRequest) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const body = await req.json();
     const { category, gama, title, description, icon, accentColor, services } = body;

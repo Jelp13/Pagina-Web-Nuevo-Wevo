@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { setQuizQuestionTexts } from '@/lib/site-settings';
 import { QUIZ_QUESTIONS } from '@/lib/constants';
+import { requireApiSession } from '@/lib/require-session';
 
 export async function PATCH(req: NextRequest) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const { texts } = await req.json();
 

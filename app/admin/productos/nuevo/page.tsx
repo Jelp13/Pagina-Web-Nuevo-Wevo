@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import AdminProductCreateForm from '@/components/AdminProductCreateForm';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
-export default function AdminProductoNuevoPage() {
+export default async function AdminProductoNuevoPage() {
+  await requirePageSession();
+
   return (
     <main className="min-h-screen bg-[#05080f] px-6 py-12">
       <div className="mx-auto max-w-[820px]">

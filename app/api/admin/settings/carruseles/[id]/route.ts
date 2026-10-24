@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { updateMaintenanceCard, deleteMaintenanceCard } from '@/lib/maintenance-cards-db';
+import { requireApiSession } from '@/lib/require-session';
 
 const VALID_CATEGORIES = ['torres', 'portatiles', 'otros'];
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const id = Number(params.id);
     if (!Number.isInteger(id)) return NextResponse.json({ error: 'Id inválido' }, { status: 400 });
@@ -51,7 +55,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const id = Number(params.id);
     if (!Number.isInteger(id)) return NextResponse.json({ error: 'Id inválido' }, { status: 400 });

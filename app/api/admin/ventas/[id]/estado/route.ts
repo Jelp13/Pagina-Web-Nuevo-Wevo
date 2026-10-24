@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { getOrderById, updateOrderStatusManually } from '@/lib/orders-db';
-import { SESSION_COOKIE, verifySessionToken } from '@/lib/session';
 import { sendThankYouEmail } from '@/lib/mailer';
+import { requireApiSession } from '@/lib/require-session';
 
 function parseItems(json: unknown) {
   if (Array.isArray(json)) return json;
@@ -13,13 +12,11 @@ function parseItems(json: unknown) {
 const VALID_TARGET_STATUS = ['pagado', 'cancelado'] as const;
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    const token = cookies().get(SESSION_COOKIE)?.value;
-    const session = token ? await verifySessionToken(token) : null;
-    if (!session) {
-      return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
-    }
+  const auth = await requireApiSession(req);
+  if ('error' in auth) return auth.error;
+  const { session } = auth;
 
+  try {
     const id = Number(params.id);
     if (!Number.isInteger(id)) {
       return NextResponse.json({ error: 'Id inválido' }, { status: 400 });

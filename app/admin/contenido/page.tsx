@@ -9,10 +9,13 @@ import AdminMaintenanceCardsSection from '@/components/admin/AdminMaintenanceCar
 import AdminContactInfoSection from '@/components/admin/AdminContactInfoSection';
 import AdminPageTitlesSection from '@/components/admin/AdminPageTitlesSection';
 import AdminQuizQuestionsSection from '@/components/admin/AdminQuizQuestionsSection';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminContenidoPage() {
+  await requirePageSession({ role: 'admin' });
+
   const [torres, featuredIds, heroImageUrl, brands, maintenanceCards, contactInfo, pageTitles, quizQuestions] =
     await Promise.all([
       getTorres(),

@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { setHomeHeroImage, clearHomeHeroImage } from '@/lib/site-settings';
+import { requireApiSession } from '@/lib/require-session';
 
 const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export async function POST(req: NextRequest) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const formData = await req.formData();
     const file = formData.get('file');
@@ -31,7 +35,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(req: NextRequest) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     await clearHomeHeroImage();
     revalidatePath('/');

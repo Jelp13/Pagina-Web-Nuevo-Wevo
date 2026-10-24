@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { setContactInfo } from '@/lib/site-settings';
+import { requireApiSession } from '@/lib/require-session';
 
 export async function PATCH(req: NextRequest) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const { phone, email, address, hours } = await req.json();
 

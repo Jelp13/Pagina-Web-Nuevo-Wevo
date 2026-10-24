@@ -4,10 +4,13 @@ import { getLegalPage } from '@/lib/site-settings';
 import { LEGAL_SLUGS, LEGAL_PAGE_META } from '@/lib/legal-pages-defaults';
 import type { LegalSlug } from '@/lib/legal-pages-defaults';
 import AdminLegalEditForm from '@/components/admin/AdminLegalEditForm';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLegalEditPage({ params }: { params: { slug: string } }) {
+  await requirePageSession({ role: 'admin' });
+
   if (!LEGAL_SLUGS.includes(params.slug as LegalSlug)) notFound();
   const slug = params.slug as LegalSlug;
 

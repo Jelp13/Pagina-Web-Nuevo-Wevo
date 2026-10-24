@@ -3,10 +3,14 @@ import { revalidatePath } from 'next/cache';
 import { setPageTitles } from '@/lib/site-settings';
 import { HERO_BLOCK_META } from '@/lib/hero-blocks-meta';
 import type { PageTitles, HeroBlockKey } from '@/lib/hero-blocks-meta';
+import { requireApiSession } from '@/lib/require-session';
 
 const BLOCK_KEYS = Object.keys(HERO_BLOCK_META) as HeroBlockKey[];
 
 export async function PATCH(req: NextRequest) {
+  const auth = await requireApiSession(req, { role: 'admin' });
+  if ('error' in auth) return auth.error;
+
   try {
     const body = await req.json();
 

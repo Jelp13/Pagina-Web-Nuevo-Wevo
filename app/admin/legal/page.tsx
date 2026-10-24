@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import { getAllLegalPagesForAdmin } from '@/lib/site-settings';
 import { LEGAL_SLUGS, LEGAL_PAGE_META } from '@/lib/legal-pages-defaults';
+import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminLegalPage() {
+  await requirePageSession({ role: 'admin' });
+
   const pages = await getAllLegalPagesForAdmin();
 
   return (
