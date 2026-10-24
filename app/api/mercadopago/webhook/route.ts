@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac } from 'crypto';
-import { updateOrderStatusByReference, getOrderByReference } from '@/lib/orders-db';
+import { updateOrderStatusByReference, getOrderByReference, flagSuspiciousPayment } from '@/lib/orders-db';
 import { sendThankYouEmail } from '@/lib/mailer';
 
 function mapMpStatus(mpStatus: string): 'pagado' | 'rechazado' | 'cancelado' | 'pendiente' {
@@ -51,18 +51,31 @@ export async function POST(req: NextRequest) {
             transaction_amount: number;
           };
 
-          const { status, external_reference } = payment;
+          const { status, external_reference, transaction_amount } = payment;
 
           if (external_reference) {
             const nuevoEstado = mapMpStatus(status);
             const pedido = await getOrderByReference(external_reference);
 
-            await updateOrderStatusByReference(external_reference, nuevoEstado, String(data.id));
+            // El monto pagado en Mercado Pago debe coincidir con el total
+            // real del pedido (calculado en el servidor al crear la orden).
+            // Si no coincide, nunca se marca como "pagado" automáticamente
+            // — probablemente la preferencia de pago fue manipulada antes
+            // de llegar a Mercado Pago — queda pendiente para revisión manual.
+            if (pedido && nuevoEstado === 'pagado' && Math.abs(transaction_amount - pedido.total) > 1) {
+              await flagSuspiciousPayment(
+                external_reference,
+                String(data.id),
+                `Mercado Pago reportó un pago aprobado por $${transaction_amount}, pero el pedido vale $${pedido.total}. Posible manipulación del monto — revisar manualmente antes de confirmar o cancelar.`,
+              );
+            } else {
+              await updateOrderStatusByReference(external_reference, nuevoEstado, String(data.id));
 
-            // Solo se envía al pasar A "pagado" — evita duplicados si Mercado
-            // Pago reenvía la misma notificación (webhooks no son exactly-once).
-            if (pedido && pedido.status !== 'pagado' && nuevoEstado === 'pagado') {
-              sendThankYouEmail(pedido);
+              // Solo se envía al pasar A "pagado" — evita duplicados si Mercado
+              // Pago reenvía la misma notificación (webhooks no son exactly-once).
+              if (pedido && pedido.status !== 'pagado' && nuevoEstado === 'pagado') {
+                sendThankYouEmail(pedido);
+              }
             }
           }
         }

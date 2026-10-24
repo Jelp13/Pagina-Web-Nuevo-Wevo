@@ -137,3 +137,30 @@ export async function getLaptopById(id: string): Promise<PeripheralProduct | und
     .executeTakeFirst();
   return row ? rowToPeripheralProduct(row) : undefined;
 }
+
+// ── Verificación de precios (checkout) ─────────────────────────────────
+//
+// El precio de un producto NUNCA debe tomarse de lo que envía el cliente
+// (carrito/checkout): se busca aquí, en la base de datos, por id, sin
+// importar la sección. Esta es la única fuente de verdad del precio real.
+
+export interface ProductPriceInfo {
+  id: string;
+  name: string;
+  numericPrice: number;
+  inStock: boolean;
+}
+
+export async function getProductPricesByIds(ids: string[]): Promise<Map<string, ProductPriceInfo>> {
+  if (ids.length === 0) return new Map();
+
+  const rows = await db
+    .selectFrom('products')
+    .select(['id', 'name', 'numeric_price', 'in_stock'])
+    .where('id', 'in', ids)
+    .execute();
+
+  return new Map(
+    rows.map((r) => [r.id, { id: r.id, name: r.name, numericPrice: r.numeric_price, inStock: Boolean(r.in_stock) }]),
+  );
+}

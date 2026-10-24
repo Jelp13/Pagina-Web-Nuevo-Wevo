@@ -59,6 +59,17 @@ export async function updateOrderStatusByReference(
     .execute();
 }
 
+// Deja un pago aprobado por un monto distinto al real del pedido marcado
+// para revisión manual, sin tocar su estado — nunca se confirma ni se
+// cancela solo, porque eso es una decisión que debe tomar una persona.
+export async function flagSuspiciousPayment(reference: string, mpPaymentId: string, reason: string): Promise<void> {
+  await db
+    .updateTable('orders')
+    .set({ status_reason: reason, status_updated_by: 'sistema', mp_payment_id: mpPaymentId })
+    .where('reference', '=', reference)
+    .execute();
+}
+
 // Pedidos con pago en línea (tarjeta, PSE, Nequi) que se quedaron en
 // "pendiente" porque el cliente nunca terminó el pago en Mercado Pago
 // (cerró la pestaña, no llegó webhook, etc.) — pasado este tiempo se
@@ -86,10 +97,15 @@ const ABANDONO_HORAS_MANUAL = 24 * 3;
 const METODOS_MANUALES = ['contra-entrega', 'addi'] as const;
 
 interface MpPaymentSearchResult {
-  results?: { id: number; status: string }[];
+  results?: { id: number; status: string; transaction_amount?: number }[];
 }
 
-async function buscarPagoAprobadoEnMercadoPago(reference: string): Promise<string | null> {
+interface PagoAprobado {
+  id: string;
+  amount: number;
+}
+
+async function buscarPagoAprobadoEnMercadoPago(reference: string): Promise<PagoAprobado | null> {
   const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
   if (!accessToken) return null;
 
@@ -102,7 +118,7 @@ async function buscarPagoAprobadoEnMercadoPago(reference: string): Promise<strin
 
     const data = (await res.json()) as MpPaymentSearchResult;
     const aprobado = data.results?.find((p) => p.status === 'approved');
-    return aprobado ? String(aprobado.id) : null;
+    return aprobado ? { id: String(aprobado.id), amount: aprobado.transaction_amount ?? 0 } : null;
   } catch (err) {
     console.error(`Error verificando pago con Mercado Pago para ${reference}:`, err);
     return null;
@@ -120,9 +136,10 @@ async function sweepAbandonedOrders(): Promise<void> {
 
   for (const candidato of candidatos) {
     // eslint-disable-next-line no-await-in-loop
-    const mpPaymentId = await buscarPagoAprobadoEnMercadoPago(candidato.reference);
+    const pago = await buscarPagoAprobadoEnMercadoPago(candidato.reference);
 
-    if (mpPaymentId) {
+    // Pago aprobado y el monto coincide con el total real del pedido: se confirma.
+    if (pago && Math.abs(pago.amount - candidato.total) <= 1) {
       // eslint-disable-next-line no-await-in-loop
       await db
         .updateTable('orders')
@@ -130,7 +147,7 @@ async function sweepAbandonedOrders(): Promise<void> {
           status: 'pagado',
           status_reason: 'Confirmado automáticamente contra la API de Mercado Pago (el webhook no había actualizado el pedido).',
           status_updated_by: 'sistema',
-          mp_payment_id: mpPaymentId,
+          mp_payment_id: pago.id,
         })
         .where('id', '=', candidato.id)
         .execute();
@@ -143,6 +160,19 @@ async function sweepAbandonedOrders(): Promise<void> {
         total: candidato.total,
         paymentMethod: candidato.payment_method,
       });
+      continue;
+    }
+
+    // Hay un pago aprobado pero por un monto distinto al real del pedido
+    // (posible manipulación del precio antes de pagar): nunca se confirma
+    // ni se cancela sola — queda pendiente para que un admin la revise.
+    if (pago) {
+      // eslint-disable-next-line no-await-in-loop
+      await flagSuspiciousPayment(
+        candidato.reference,
+        pago.id,
+        `Mercado Pago reportó un pago aprobado por $${pago.amount}, pero el pedido vale $${candidato.total}. Posible manipulación del monto — revisar manualmente antes de confirmar o cancelar.`,
+      );
       continue;
     }
 

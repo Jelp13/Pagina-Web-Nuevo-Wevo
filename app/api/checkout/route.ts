@@ -3,12 +3,56 @@ import { randomUUID } from 'crypto';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createOrder } from '@/lib/orders-db';
 import { sendThankYouEmail } from '@/lib/mailer';
+import { getProductPricesByIds } from '@/lib/products-db';
 
 interface CartItem {
   id: string;
   name: string;
   price: number;
   quantity: number;
+}
+
+interface VerifiedItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+// Tope de unidades por producto en el carrito — evita pedidos absurdos y
+// está alineado con la política de "venta orientada al consumidor final"
+// de los términos y condiciones (no mayoristas/reventa).
+const MAX_QTY_POR_PRODUCTO = 10;
+
+// El precio de cada producto SIEMPRE se recalcula en el servidor a partir
+// de la base de datos — nunca se confía en el precio que manda el cliente
+// (es trivial de manipular desde las herramientas de desarrollador antes
+// de pagar). `items` del cliente solo se usa para saber QUÉ productos y
+// EN QUÉ cantidad, nunca a qué precio.
+async function resolveVerifiedItems(
+  items: CartItem[],
+): Promise<{ items: VerifiedItem[]; total: number } | { error: string }> {
+  if (!Array.isArray(items) || items.length === 0) return { error: 'Carrito vacío' };
+
+  for (const item of items) {
+    if (!item?.id || typeof item.id !== 'string') return { error: 'Producto inválido' };
+    if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > MAX_QTY_POR_PRODUCTO) {
+      return { error: 'Cantidad inválida' };
+    }
+  }
+
+  const priceMap = await getProductPricesByIds(items.map((i) => i.id));
+
+  const verified: VerifiedItem[] = [];
+  for (const item of items) {
+    const product = priceMap.get(item.id);
+    if (!product) return { error: 'Uno de los productos de tu carrito ya no está disponible' };
+    if (!product.inStock) return { error: `${product.name} está agotado` };
+    verified.push({ id: product.id, name: product.name, price: product.numericPrice, quantity: item.quantity });
+  }
+
+  const total = verified.reduce((s, i) => s + i.price * i.quantity, 0);
+  return { items: verified, total };
 }
 
 type TipoDocumento = 'CC' | 'CE' | 'PA';
@@ -45,8 +89,12 @@ const CONTRA_ENTREGA_MAX = 400000;
 // ADDI deshabilitado temporalmente: la integración no está funcionando bien.
 const ADDI_ENABLED = false;
 
+// Valida únicamente los datos del formulario y el método de pago — el
+// precio y el total NUNCA se validan aquí porque NUNCA se confía en lo
+// que manda el cliente; eso lo resuelve `resolveVerifiedItems` contra la
+// base de datos.
 function validateBody(body: CheckoutBody): string | null {
-  const { form, items, total, paymentMethod } = body;
+  const { form } = body;
   if (!form?.nombres?.trim() || !NAME_REGEX.test(form.nombres)) return 'Nombres inválidos';
   if (!form?.apellidos?.trim() || !NAME_REGEX.test(form.apellidos)) return 'Apellidos inválidos';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Email inválido';
@@ -56,21 +104,6 @@ function validateBody(body: CheckoutBody): string | null {
   if (!form.direccion?.trim() || form.direccion.length < 8) return 'Dirección inválida';
   if (!form.ciudad?.trim()) return 'Ciudad requerida';
   if (!/^[3]\d{9}$/.test(form.telefono)) return 'Teléfono inválido';
-  if (!Array.isArray(items) || items.length === 0) return 'Carrito vacío';
-
-  // Anti-tampering: verificar que el total coincide con los ítems
-  const calculatedTotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
-  if (Math.abs(calculatedTotal - total) > 1) return 'Total manipulado';
-
-  if (total < 10000) return 'Monto mínimo de compra: $10.000 COP';
-
-  if (paymentMethod === 'contra-entrega' && total > CONTRA_ENTREGA_MAX) {
-    return `Contra entrega solo está disponible para pedidos de hasta $${CONTRA_ENTREGA_MAX.toLocaleString('es-CO')} COP`;
-  }
-
-  if (paymentMethod === 'addi' && !ADDI_ENABLED) {
-    return 'ADDI no está disponible temporalmente';
-  }
 
   return null;
 }
@@ -79,12 +112,34 @@ export async function POST(req: NextRequest) {
   try {
     const body: CheckoutBody = await req.json();
 
-    const error = validateBody(body);
-    if (error) {
-      return NextResponse.json({ error }, { status: 400 });
+    const formError = validateBody(body);
+    if (formError) {
+      return NextResponse.json({ error: formError }, { status: 400 });
     }
 
-    const { form, paymentMethod, items, total } = body;
+    const { form, paymentMethod } = body;
+
+    const resolved = await resolveVerifiedItems(body.items);
+    if ('error' in resolved) {
+      return NextResponse.json({ error: resolved.error }, { status: 400 });
+    }
+    const { items, total } = resolved;
+
+    if (total < 10000) {
+      return NextResponse.json({ error: 'Monto mínimo de compra: $10.000 COP' }, { status: 400 });
+    }
+
+    if (paymentMethod === 'contra-entrega' && total > CONTRA_ENTREGA_MAX) {
+      return NextResponse.json(
+        { error: `Contra entrega solo está disponible para pedidos de hasta $${CONTRA_ENTREGA_MAX.toLocaleString('es-CO')} COP` },
+        { status: 400 },
+      );
+    }
+
+    if (paymentMethod === 'addi' && !ADDI_ENABLED) {
+      return NextResponse.json({ error: 'ADDI no está disponible temporalmente' }, { status: 400 });
+    }
+
     const reference = `WEVO-${Date.now()}-${randomUUID().split('-')[0].toUpperCase()}`;
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 

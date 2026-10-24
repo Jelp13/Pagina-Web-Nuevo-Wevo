@@ -428,6 +428,12 @@ Nuevo Wevo S.A.S. no realizará reembolsos en efectivo por compras realizadas co
 
 Cuando el medio de pago utilizado por el cliente (incluyendo, entre otros, Mercado Pago, ADDI o cualquier otra pasarela o entidad financiera) cobre a Nuevo Wevo S.A.S. una comisión, retención o cualquier otro cargo asociado al procesamiento de la transacción, y la compra correspondiente sea posteriormente cancelada por cualquier causa, dicho valor no será asumido por Nuevo Wevo S.A.S. En consecuencia, el monto de la comisión o retención cobrada por la pasarela será descontado del valor a reembolsar al cliente, y el reembolso se realizará por el valor neto resultante. Nuevo Wevo S.A.S. informará previamente al cliente el valor exacto de este descuento antes de hacer efectiva la devolución.
 
+### Pagos por un valor manipulado o inferior al precio real
+
+En caso de que, por cualquier medio no autorizado (incluyendo, entre otros, la alteración de solicitudes técnicas, la manipulación de parámetros de pago o cualquier otra forma de intervención indebida sobre la plataforma o sus pasarelas de pago), se registre un pago por un valor inferior al precio real publicado del producto o servicio, dicho pago no será reconocido como válido para efectos de la compra. Nuevo Wevo S.A.S. no estará obligada a hacer entrega del producto ni del servicio, y no reembolsará el valor efectivamente pagado, por tratarse de una transacción irregular ajena al precio legítimamente ofertado y no imputable a la compañía.
+
+Nuevo Wevo S.A.S. se reserva el derecho de cancelar la orden correspondiente, suspender el acceso del usuario involucrado conforme a lo previsto en la sección "Impedimento de Uso", y reportar la conducta ante las autoridades competentes y adelantar las acciones legales a que haya lugar, de conformidad con la Ley 1273 de 2009 y demás normas aplicables en materia de delitos informáticos.
+
 ## Exoneración de Responsabilidad
 
 Nuevo Wevo S.A.S. no asumirá responsabilidad en los siguientes casos:
