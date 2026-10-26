@@ -37,7 +37,39 @@ const nextConfig = {
       '/mantenimientos',
       '/legal/:path*',
     ];
-    return rutasDinamicas.map((source) => ({ source, headers: [noStore] }));
+
+    // Encabezados de seguridad estándar en todo el sitio. El único recurso
+    // externo embebido es el mapa de Google (components/ContactoMantenimientos.tsx),
+    // por eso frame-src lo incluye explícitamente. style-src necesita
+    // 'unsafe-inline' porque varios componentes usan `style={{...}}` (colores
+    // dinámicos del CMS, animaciones) — no hay scripts externos ni next/font,
+    // así que script-src se mantiene estricto en 'self'.
+    const securityHeaders = [
+      { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
+      {
+        key: 'Content-Security-Policy',
+        value: [
+          "default-src 'self'",
+          "script-src 'self'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data:",
+          "font-src 'self'",
+          "connect-src 'self'",
+          "frame-src https://maps.google.com",
+          "frame-ancestors 'none'",
+          "object-src 'none'",
+          "base-uri 'self'",
+        ].join('; '),
+      },
+    ];
+
+    return [
+      ...rutasDinamicas.map((source) => ({ source, headers: [noStore] })),
+      { source: '/:path*', headers: securityHeaders },
+    ];
   },
 };
 
