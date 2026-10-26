@@ -2,6 +2,20 @@ import nodemailer from 'nodemailer';
 import { formatCOP } from './format';
 import type { OrderItem } from './orders-db';
 
+// Hoy `nombres`/`reference` ya están restringidos por validación en el
+// checkout y no permiten HTML, pero se escapan igual antes de meterlos en
+// el correo: si en el futuro se agrega otro campo al correo sin la misma
+// validación estricta, esto evita que alguien pueda inyectar HTML/scripts
+// en el mensaje que reciben los clientes.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function getTransporter() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT ?? 465);
@@ -50,7 +64,7 @@ export async function sendThankYouEmail(order: ThankYouEmailOrder): Promise<void
       .map(
         (item) => `
           <tr>
-            <td style="padding:8px 0; border-bottom:1px solid #eee;">${item.name} × ${item.quantity}</td>
+            <td style="padding:8px 0; border-bottom:1px solid #eee;">${escapeHtml(item.name)} × ${item.quantity}</td>
             <td style="padding:8px 0; border-bottom:1px solid #eee; text-align:right; white-space:nowrap;">${formatCOP(item.price * item.quantity)}</td>
           </tr>`,
       )
@@ -58,9 +72,9 @@ export async function sendThankYouEmail(order: ThankYouEmailOrder): Promise<void
 
     const html = `
       <div style="font-family: Arial, Helvetica, sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
-        <h1 style="font-size: 22px; margin-bottom: 4px;">¡Gracias por tu compra, ${order.nombres}!</h1>
+        <h1 style="font-size: 22px; margin-bottom: 4px;">¡Gracias por tu compra, ${escapeHtml(order.nombres)}!</h1>
         <p style="color: #555; line-height: 1.5;">
-          Recibimos tu pedido <strong>${order.reference}</strong> y ya lo estamos preparando. Tu equipo se entrega
+          Recibimos tu pedido <strong>${escapeHtml(order.reference)}</strong> y ya lo estamos preparando. Tu equipo se entrega
           en <strong>3 a 6 días hábiles</strong>. Te avisaremos por WhatsApp o correo en cuanto haya novedades con
           el envío.
         </p>
