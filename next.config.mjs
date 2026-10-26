@@ -42,8 +42,12 @@ const nextConfig = {
     // externo embebido es el mapa de Google (components/ContactoMantenimientos.tsx),
     // por eso frame-src lo incluye explícitamente. style-src necesita
     // 'unsafe-inline' porque varios componentes usan `style={{...}}` (colores
-    // dinámicos del CMS, animaciones) — no hay scripts externos ni next/font,
-    // así que script-src se mantiene estricto en 'self'.
+    // dinámicos del CMS, animaciones). script-src también necesita
+    // 'unsafe-inline': Next.js (App Router) inyecta varios <script> en línea
+    // en el propio HTML para transmitir el contenido renderizado en el
+    // servidor al navegador (self.__next_f.push(...)) — sin esto, el sitio
+    // completo se queda en blanco porque esos scripts nunca llegan a
+    // ejecutarse. No hay scripts externos ni next/font.
     const securityHeaders = [
       { key: 'X-Frame-Options', value: 'DENY' },
       { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -53,7 +57,7 @@ const nextConfig = {
         key: 'Content-Security-Policy',
         value: [
           "default-src 'self'",
-          "script-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data:",
           "font-src 'self'",
