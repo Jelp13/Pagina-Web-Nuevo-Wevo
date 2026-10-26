@@ -52,6 +52,15 @@ export async function updateOrderStatusByReference(
   status: OrderRow['status'],
   mpPaymentId?: string,
 ): Promise<void> {
+  // Mercado Pago no garantiza que las notificaciones lleguen en el orden en
+  // que ocurrieron los eventos. Un pedido que ya quedó "pagado" nunca debe
+  // retroceder a otro estado por un webhook tardío o fuera de orden.
+  const actual = await db.selectFrom('orders').select('status').where('reference', '=', reference).executeTakeFirst();
+  if (actual?.status === 'pagado' && status !== 'pagado') {
+    console.warn(`Webhook intentó mover el pedido ${reference} de "pagado" a "${status}" — se ignora.`);
+    return;
+  }
+
   await db
     .updateTable('orders')
     .set({ status, ...(mpPaymentId ? { mp_payment_id: mpPaymentId } : {}) })
