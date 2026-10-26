@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminProductById, addProductImage, removeProductImage } from '@/lib/admin-products';
 import { revalidateProductPaths } from '@/lib/revalidate-product';
 import { requireApiSession } from '@/lib/require-session';
+import { verifyImageType } from '@/lib/validate-file';
 
 const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -27,6 +28,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (!(await verifyImageType(buffer, ALLOWED_TYPES))) {
+      return NextResponse.json({ error: 'El archivo no es una imagen JPG, PNG o WEBP válida' }, { status: 400 });
+    }
+
     const url = await addProductImage(params.id, buffer, file.type);
 
     revalidateProductPaths(product.section, params.id);

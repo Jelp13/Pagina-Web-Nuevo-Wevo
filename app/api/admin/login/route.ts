@@ -2,9 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { createSessionToken, SESSION_COOKIE } from '@/lib/session';
 import { verifyPassword } from '@/lib/passwords';
+import { checkRateLimit, resetRateLimit, getClientIp } from '@/lib/rate-limit';
+
+// Protección contra fuerza bruta: 5 intentos fallidos por IP cada 15 minutos.
+const MAX_INTENTOS = 5;
+const VENTANA_MS = 15 * 60 * 1000;
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req);
+    const rateLimitKey = `login:${ip}`;
+
+    const { allowed, retryAfterMs } = checkRateLimit(rateLimitKey, MAX_INTENTOS, VENTANA_MS);
+    if (!allowed) {
+      const minutos = Math.ceil(retryAfterMs / 60000);
+      return NextResponse.json(
+        { error: `Demasiados intentos. Intenta de nuevo en ${minutos} minuto${minutos === 1 ? '' : 's'}.` },
+        { status: 429 },
+      );
+    }
+
     const { username, password } = await req.json();
 
     if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
@@ -25,6 +42,9 @@ export async function POST(req: NextRequest) {
 
     const ok = await verifyPassword(password, admin.password_hash);
     if (!ok) return invalid();
+
+    // Login exitoso: se limpia el contador de esta IP.
+    resetRateLimit(rateLimitKey);
 
     const token = await createSessionToken({ adminId: admin.id, username: admin.username, role: admin.role });
 

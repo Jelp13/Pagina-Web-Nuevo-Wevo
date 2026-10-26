@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getVideoById, replaceVideoFile } from '@/lib/admin-videos';
 import { requireApiSession } from '@/lib/require-session';
+import { verifyVideoType } from '@/lib/validate-file';
 
 const MAX_SIZE = 60 * 1024 * 1024; // 60MB
 const ALLOWED_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
@@ -35,6 +36,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (!verifyVideoType(buffer)) {
+      return NextResponse.json({ error: 'El archivo no es un video MP4, WEBM o MOV válido' }, { status: 400 });
+    }
+
     const newId = await replaceVideoFile(id, buffer, file.type);
 
     revalidateForPlacement(video.placement);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { createBrand } from '@/lib/brands-db';
 import { requireApiSession } from '@/lib/require-session';
+import { verifyImageType } from '@/lib/validate-file';
 
 const MAX_SIZE = 4 * 1024 * 1024; // 4MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -29,6 +30,10 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (!(await verifyImageType(buffer, ALLOWED_TYPES))) {
+      return NextResponse.json({ error: 'El archivo no es una imagen JPG, PNG o WEBP válida' }, { status: 400 });
+    }
+
     const id = await createBrand(name.trim(), buffer, file.type);
 
     revalidatePath('/');

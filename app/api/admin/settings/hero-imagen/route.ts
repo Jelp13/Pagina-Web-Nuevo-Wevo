@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { setHomeHeroImage, clearHomeHeroImage } from '@/lib/site-settings';
 import { requireApiSession } from '@/lib/require-session';
+import { verifyImageType } from '@/lib/validate-file';
 
 const MAX_SIZE = 8 * 1024 * 1024; // 8MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -24,6 +25,10 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
+    if (!(await verifyImageType(buffer, ALLOWED_TYPES))) {
+      return NextResponse.json({ error: 'El archivo no es una imagen JPG, PNG o WEBP válida' }, { status: 400 });
+    }
+
     await setHomeHeroImage(buffer, file.type);
 
     revalidatePath('/');
