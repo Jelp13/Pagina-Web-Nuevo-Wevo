@@ -39,8 +39,11 @@ const nextConfig = {
     ];
 
     // Encabezados de seguridad estándar en todo el sitio. El único recurso
-    // externo embebido es el mapa de Google (components/ContactoMantenimientos.tsx),
-    // por eso frame-src lo incluye explícitamente. style-src necesita
+    // externo embebido es el mapa de Google (components/ContactoMantenimientos.tsx):
+    // la URL que arma el componente apunta a maps.google.com, pero Google la
+    // redirige (301) a www.google.com/maps/embed — por eso frame-src debe
+    // incluir ambos dominios, no solo el que se usa al armar el link.
+    // style-src necesita
     // 'unsafe-inline' porque varios componentes usan `style={{...}}` (colores
     // dinámicos del CMS, animaciones). script-src también necesita
     // 'unsafe-inline': Next.js (App Router) inyecta varios <script> en línea
@@ -62,7 +65,7 @@ const nextConfig = {
           "img-src 'self' data:",
           "font-src 'self'",
           "connect-src 'self'",
-          "frame-src https://maps.google.com",
+          "frame-src https://maps.google.com https://www.google.com",
           "frame-ancestors 'none'",
           "object-src 'none'",
           "base-uri 'self'",

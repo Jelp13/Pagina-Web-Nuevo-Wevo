@@ -124,6 +124,10 @@ const dialect = new MysqlDialect({
     database: process.env.DB_NAME,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
+    // mysql2 negocia 'utf8' (3 bytes) por defecto si no se especifica nada
+    // explícitamente — se fuerza utf8mb4 para evitar que tildes/ñ/emojis se
+    // guarden o lean mal según lo que el servidor haya negociado por su cuenta.
+    charset: 'utf8mb4',
     // El límite de 75 conexiones del plan es por proceso concurrente, no por
     // esta sola app: en runtime solo hay UN proceso de Node corriendo (a
     // diferencia del build, que sí abría varios workers en paralelo), así
