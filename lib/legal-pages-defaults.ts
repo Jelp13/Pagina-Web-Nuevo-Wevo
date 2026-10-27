@@ -160,7 +160,7 @@ Los cambios entrarán en vigencia desde el momento de su publicación. El uso co
 
 El contrato de compraventa entre el cliente y Nuevo Wevo S.A.S. se perfecciona en el momento en que Nuevo Wevo confirma la aceptación de la orden de compra, lo cual se comunicará al cliente mediante un correo electrónico de confirmación enviado a la dirección registrada en el sitio.
 
-Nuevo Wevo S.A.S. se reserva el derecho de rechazar o cancelar cualquier orden de compra por razones de disponibilidad de inventario, errores en el precio publicado u otras causas operativas. En estos casos, Nuevo Wevo S.A.S. procederá a la devolución íntegra del valor pagado por el cliente dentro de los plazos establecidos por la ley, sin que dicha cancelación genere derecho a indemnización, compensación adicional o reconocimiento de perjuicios a favor del cliente.
+Toda venta realizada a través de www.nuevowevo.com queda sujeta a verificación por parte de Nuevo Wevo S.A.S., incluyendo la verificación de que el precio cobrado corresponda al precio real y vigente del producto o servicio adquirido. Nuevo Wevo S.A.S. se reserva el derecho de rechazar o cancelar cualquier orden de compra por razones de disponibilidad de inventario, errores de digitación, de sistema o de cualquier otra naturaleza en el precio publicado, u otras causas operativas, siempre que dicho error no sea atribuible al cliente. En estos casos, Nuevo Wevo S.A.S. procederá a la devolución íntegra del valor pagado por el cliente dentro de los plazos establecidos por la ley, sin que dicha cancelación genere derecho a indemnización, compensación adicional o reconocimiento de perjuicios a favor del cliente.
 
 Los servicios de este sitio están disponibles únicamente para personas con capacidad legal para contratar según la legislación colombiana vigente. Se entiende que tienen capacidad legal para contratar las personas mayores de 18 años. Si usted es menor de edad, le solicitamos que realice sus compras con la asistencia de un adulto responsable.
 
@@ -433,6 +433,8 @@ Cuando el medio de pago utilizado por el cliente (incluyendo, entre otros, Merca
 En caso de que, por cualquier medio no autorizado (incluyendo, entre otros, la alteración de solicitudes técnicas, la manipulación de parámetros de pago o cualquier otra forma de intervención indebida sobre la plataforma o sus pasarelas de pago), se registre un pago por un valor inferior al precio real publicado del producto o servicio, dicho pago no será reconocido como válido para efectos de la compra. Nuevo Wevo S.A.S. no estará obligada a hacer entrega del producto ni del servicio, y no reembolsará el valor efectivamente pagado, por tratarse de una transacción irregular ajena al precio legítimamente ofertado y no imputable a la compañía.
 
 Nuevo Wevo S.A.S. se reserva el derecho de cancelar la orden correspondiente, suspender el acceso del usuario involucrado conforme a lo previsto en la sección "Impedimento de Uso", y reportar la conducta ante las autoridades competentes y adelantar las acciones legales a que haya lugar, de conformidad con la Ley 1273 de 2009 y demás normas aplicables en materia de delitos informáticos.
+
+En caso de que, a criterio exclusivo de Nuevo Wevo S.A.S., llegase a proceder algún tipo de reembolso relacionado con una transacción de este tipo, dicho reembolso no se hará efectivo sin que previamente se haya reportado la situación ante las autoridades competentes.
 
 ## Exoneración de Responsabilidad
 
