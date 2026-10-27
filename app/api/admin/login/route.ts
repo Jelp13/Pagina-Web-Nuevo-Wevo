@@ -10,12 +10,17 @@ const VENTANA_MS = 15 * 60 * 1000;
 
 export async function POST(req: NextRequest) {
   try {
+    // La IP declarada en X-Forwarded-For puede ser falsificada por quien
+    // hace la solicitud (confirmado: se puede evadir este límite mandando
+    // una IP distinta en cada intento), así que no basta por sí sola.
+    // El límite por usuario es la defensa real: no importa cuántas IPs
+    // falsas use el atacante, la cuenta objetivo se bloquea igual.
     const ip = getClientIp(req);
-    const rateLimitKey = `login:${ip}`;
+    const ipRateLimitKey = `login:ip:${ip}`;
 
-    const { allowed, retryAfterMs } = checkRateLimit(rateLimitKey, MAX_INTENTOS, VENTANA_MS);
-    if (!allowed) {
-      const minutos = Math.ceil(retryAfterMs / 60000);
+    const { allowed: ipAllowed, retryAfterMs: ipRetryAfterMs } = checkRateLimit(ipRateLimitKey, MAX_INTENTOS, VENTANA_MS);
+    if (!ipAllowed) {
+      const minutos = Math.ceil(ipRetryAfterMs / 60000);
       return NextResponse.json(
         { error: `Demasiados intentos. Intenta de nuevo en ${minutos} minuto${minutos === 1 ? '' : 's'}.` },
         { status: 429 },
@@ -26,6 +31,16 @@ export async function POST(req: NextRequest) {
 
     if (!username || !password || typeof username !== 'string' || typeof password !== 'string') {
       return NextResponse.json({ error: 'Usuario y contraseña son obligatorios' }, { status: 400 });
+    }
+
+    const userRateLimitKey = `login:user:${username.toLowerCase()}`;
+    const { allowed: userAllowed, retryAfterMs: userRetryAfterMs } = checkRateLimit(userRateLimitKey, MAX_INTENTOS, VENTANA_MS);
+    if (!userAllowed) {
+      const minutos = Math.ceil(userRetryAfterMs / 60000);
+      return NextResponse.json(
+        { error: `Demasiados intentos. Intenta de nuevo en ${minutos} minuto${minutos === 1 ? '' : 's'}.` },
+        { status: 429 },
+      );
     }
 
     const admin = await db
@@ -43,8 +58,9 @@ export async function POST(req: NextRequest) {
     const ok = await verifyPassword(password, admin.password_hash);
     if (!ok) return invalid();
 
-    // Login exitoso: se limpia el contador de esta IP.
-    resetRateLimit(rateLimitKey);
+    // Login exitoso: se limpian ambos contadores.
+    resetRateLimit(ipRateLimitKey);
+    resetRateLimit(userRateLimitKey);
 
     const token = await createSessionToken({ adminId: admin.id, username: admin.username, role: admin.role });
 
