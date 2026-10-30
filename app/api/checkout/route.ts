@@ -4,6 +4,7 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createOrder } from '@/lib/orders-db';
 import { sendThankYouEmail } from '@/lib/mailer';
 import { getProductPricesByIds } from '@/lib/products-db';
+import { tryAcquireCheckoutLock } from '@/lib/checkout-lock';
 
 interface CartItem {
   id: string;
@@ -124,6 +125,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: resolved.error }, { status: 400 });
     }
     const { items, total } = resolved;
+
+    // Colapsa envíos duplicados del mismo carrito (doble clic, varias
+    // pestañas, varias peticiones a la vez) en una ventana corta de
+    // tiempo, para que no se generen pedidos repetidos por accidente.
+    const lockKey = `${form.email.toLowerCase()}:${paymentMethod}:${items.map((i) => `${i.id}x${i.quantity}`).sort().join(',')}`;
+    if (!tryAcquireCheckoutLock(lockKey)) {
+      return NextResponse.json(
+        { error: 'Ya estamos procesando un pedido igual a este. Espera unos segundos antes de intentar de nuevo.' },
+        { status: 409 },
+      );
+    }
 
     if (total < 10000) {
       return NextResponse.json({ error: 'Monto mínimo de compra: $10.000 COP' }, { status: 400 });
