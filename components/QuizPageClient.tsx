@@ -190,13 +190,15 @@ export default function QuizPageClient({ allTorres, featuredTorres, brands, quiz
               key={product.name}
               className="relative flex min-h-[320px] flex-col overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
             >
-              <ProductImage src={product.images[0]} alt={product.name} className="mb-6 h-40 rounded-3xl bg-slate-950/90" iconSize="text-4xl" />
+              <div className="relative mb-6">
+                <ProductImage src={product.images[0]} alt={product.name} className="h-40 rounded-3xl bg-slate-950/90" iconSize="text-4xl" />
 
-              {product.badge && (
-                <span className="absolute left-6 top-6 rounded-full bg-cyan-300/15 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-cyan-100">
-                  {product.badge}
-                </span>
-              )}
+                {product.badge && (
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-cyan-400 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-950 shadow-lg">
+                    {product.badge}
+                  </span>
+                )}
+              </div>
 
               <div className="mt-auto flex flex-col gap-4">
                 <span className="text-xs uppercase tracking-[0.18em] text-cyan-300">{product.category}</span>

@@ -47,29 +47,31 @@ export default async function TorresPage() {
                 href={`/torres/${product.id}`}
                 className="group relative flex flex-col overflow-hidden rounded-[28px] border border-cyan-400/10 bg-white/5 p-7 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
               >
-                {/* Badges */}
-                {product.badge && (
-                  <span className="absolute left-7 top-7 rounded-full bg-cyan-300/15 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-cyan-100">
-                    {product.badge}
-                  </span>
-                )}
-                {!product.inStock ? (
-                  <span className="absolute right-7 top-7 rounded-full bg-slate-800/90 px-2.5 py-1 text-[10px] font-bold text-slate-300">
-                    Agotado
-                  </span>
-                ) : discount ? (
-                  <span className="absolute right-7 top-7 rounded-full bg-red-500/20 px-2.5 py-1 text-[10px] font-bold text-red-300">
-                    -{discount}%
-                  </span>
-                ) : null}
-
                 {/* Imagen del producto */}
-                <ProductImage
-                  src={product.images[0]}
-                  alt={product.name}
-                  className={`mb-6 h-80 rounded-3xl bg-slate-950/90 ${!product.inStock ? 'opacity-50' : ''}`}
-                  iconSize="text-6xl"
-                />
+                <div className="relative mb-6">
+                  <ProductImage
+                    src={product.images[0]}
+                    alt={product.name}
+                    className={`h-80 rounded-3xl bg-slate-950/90 ${!product.inStock ? 'opacity-80' : ''}`}
+                    iconSize="text-6xl"
+                  />
+
+                  {/* Badges */}
+                  {product.badge && (
+                    <span className="absolute left-3 top-3 z-10 rounded-full bg-cyan-400 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-950 shadow-lg">
+                      {product.badge}
+                    </span>
+                  )}
+                  {!product.inStock ? (
+                    <span className="absolute right-3 top-3 z-10 rounded-full bg-slate-900 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-lg">
+                      Agotado
+                    </span>
+                  ) : discount ? (
+                    <span className="absolute right-3 top-3 z-10 rounded-full bg-red-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-lg">
+                      -{discount}%
+                    </span>
+                  ) : null}
+                </div>
 
                 <div className="flex flex-col gap-3">
                   <span className="text-xs uppercase tracking-[0.18em] text-cyan-300">{product.category}</span>
