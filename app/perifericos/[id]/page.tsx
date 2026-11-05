@@ -10,6 +10,7 @@ import ProductImage from '@/components/ProductImage';
 import { getPeripheralProducts, getPeripheralById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+import { truncateForMeta, buildProductJsonLd } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   if (!product) return {};
   return {
     title: `${product.name} | Nuevo Wevo`,
-    description: product.shortDescription ?? product.description,
+    description: truncateForMeta(product.shortDescription ?? product.description),
   };
 }
 
@@ -48,8 +49,23 @@ export default async function PerifericoDetailPage({
     `Hola, me interesa el ${product.name} (${product.price}). ¿Tienen disponibilidad?`,
   );
 
+  const jsonLd = buildProductJsonLd({
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    shortDescription: product.shortDescription,
+    images: product.images,
+    numericPrice: product.numericPrice,
+    inStock: product.inStock,
+    path: `/perifericos/${product.id}`,
+  });
+
   return (
     <main className="min-h-screen bg-[#05080f]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       {/* Breadcrumb */}
