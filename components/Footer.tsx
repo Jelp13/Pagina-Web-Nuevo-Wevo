@@ -1,4 +1,4 @@
-import { SITE_NAME, ROUTES, WHATSAPP_LINK } from '@/lib/config';
+import { SITE_NAME, ROUTES, WHATSAPP_LINK, CONTACT_EMAIL } from '@/lib/config';
 
 export default function Footer() {
   return (
@@ -13,7 +13,6 @@ export default function Footer() {
           <div>
             <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Tienda</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
-              <li><a href="https://nuevowevo.com/shop/?categories=computadores" target="_blank" rel="noreferrer" className="hover:text-cyan-300">Computadores</a></li>
               <li><a href={ROUTES.torres} className="hover:text-cyan-300">Torres</a></li>
               <li><a href={ROUTES.peripherals} className="hover:text-cyan-300">Periféricos</a></li>
               <li><a href={ROUTES.brands} className="hover:text-cyan-300">Marcas</a></li>
@@ -32,7 +31,7 @@ export default function Footer() {
             <p className="text-sm uppercase tracking-[0.18em] text-cyan-300">Contacto</p>
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
               <li><a href={WHATSAPP_LINK} target="_blank" rel="noreferrer" className="hover:text-cyan-300">WhatsApp</a></li>
-              <li><a href="mailto:contact@nuevowevo.com" className="hover:text-cyan-300">contact@nuevowevo.com</a></li>
+              <li><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-cyan-300">{CONTACT_EMAIL}</a></li>
             </ul>
           </div>
           <div>

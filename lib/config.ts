@@ -7,7 +7,7 @@
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://nuevowevo.com';
 export const WHATSAPP_LINK = 'https://wa.me/573163713928';
 export const BREB_KEY = '0031416621';
-export const CONTACT_EMAIL = 'contact@nuevowevo.com';
+export const CONTACT_EMAIL = 'ventas@nuevowevo.com';
 
 // Metadata y SEO
 export const SITE_NAME = 'Nuevo Wevo';
@@ -46,7 +46,7 @@ export const ROUTES = {
   products: '#products-anchor',
   peripherals: '/perifericos',
   portatiles: '/portatiles',
-  brands: '#brands',
+  brands: '/#brands',
   cart: '/carrito',
   checkout: '/checkout',
   confirmation: '/checkout/confirmacion',
