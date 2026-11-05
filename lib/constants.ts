@@ -80,8 +80,8 @@ export interface PeripheralProduct {
 
 // Características principales de Nuevo Wevo
 export const FEATURES: Feature[] = [
-  { icon: '⚡', text: 'Envío exprés en Colombia' },
-  { icon: '💬', text: 'Asesoría rápida por WhatsApp' },
+  { icon: '⚡', text: 'Envío a todo Colombia' },
+  { icon: '💬', text: 'Asesoría personalizada por WhatsApp' },
   { icon: '🔐', text: 'Compra segura y confiable' },
   { icon: '🛠️', text: 'Montaje y soporte incluidos' },
 ];
@@ -89,7 +89,7 @@ export const FEATURES: Feature[] = [
 // Periféricos recomendados
 export const PERIPHERALS: Peripheral[] = [
   { icon: '🖱️', name: 'Mouse gaming',      desc: 'Precisión avanzada y máximo control.',           slug: 'mouse'      },
-  { icon: '⌨️', name: 'Teclados mecánicos', desc: 'Switches táctiles y diseño sobrio.',             slug: 'teclados'   },
+  { icon: '⌨️', name: 'Teclados mecánicos', desc: 'Switches de calidad y diseño sobrio.',           slug: 'teclados'   },
   { icon: '🎧', name: 'Audífonos',          desc: 'Sonido envolvente para juego y stream.',          slug: 'audifonos'  },
   { icon: '🎤', name: 'Micrófonos',         desc: 'Voz clara y profesional para todo uso.',          slug: 'microfonos' },
   { icon: '🖥️', name: 'Monitores',          desc: 'Alta tasa de refresco y colores nítidos.',        slug: 'monitores'  },

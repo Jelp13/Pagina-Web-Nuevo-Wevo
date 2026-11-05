@@ -2,6 +2,7 @@ import MarkdownContent from '@/components/MarkdownContent';
 import LegalPage from '@/components/LegalPage';
 import { getLegalPage } from '@/lib/site-settings';
 import { LEGAL_PAGE_META } from '@/lib/legal-pages-defaults';
+import { absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,7 @@ const meta = LEGAL_PAGE_META['politica-privacidad'];
 export const metadata = {
   title: meta.metaTitle,
   description: meta.metaDescription,
+  alternates: { canonical: absoluteUrl('/legal/politica-privacidad') },
 };
 
 export default async function PoliticaPrivacidadPage() {

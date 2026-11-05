@@ -195,14 +195,17 @@ export default function CartPageClient() {
 
               {/* Sellos de seguridad */}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3 border-t border-cyan-400/10 pt-5">
-                {['SSL', 'MERCADO PAGO', 'NEQUI', 'PSE'].map((tag) => (
+                {['MERCADO PAGO', 'NEQUI', 'PSE'].map((tag) => (
                   <span key={tag} className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-400">
                     {tag}
                   </span>
                 ))}
               </div>
-              <p className="mt-3 text-center text-xs text-slate-600">
-                Pago 100% seguro y encriptado
+              <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-slate-600">
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Pago 100% seguro y encriptado (SSL)
               </p>
             </div>
           </div>

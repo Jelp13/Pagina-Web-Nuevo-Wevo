@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { SITE_NAME, ROUTES, WHATSAPP_LINK, CONTACT_EMAIL } from '@/lib/config';
 
 export default function Footer() {
@@ -5,9 +6,13 @@ export default function Footer() {
     <footer className="border-t border-cyan-400/10 bg-slate-950/70 px-6 py-10">
       <div className="mx-auto flex max-w-[1180px] flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
-          <p className="text-xl font-black tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-500">
-            {SITE_NAME}
-          </p>
+          <Image
+            src="/Imagenes/Group.png"
+            alt={`${SITE_NAME} - Logo`}
+            width={140}
+            height={42}
+            className="h-10 w-auto"
+          />
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>

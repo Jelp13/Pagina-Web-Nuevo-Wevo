@@ -7,12 +7,14 @@ import { getPeripheralProducts } from '@/lib/products-db';
 import { getPageTitles } from '@/lib/site-settings';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+import { absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Periféricos Gamer en Colombia | Nuevo Wevo',
   description: 'Periféricos gamer en Colombia: monitores, mouse, teclados y audífonos gaming con envío a todo el país.',
+  alternates: { canonical: absoluteUrl('/perifericos') },
 };
 
 export default async function Perifericos({

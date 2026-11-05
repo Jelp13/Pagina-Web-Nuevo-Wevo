@@ -1,6 +1,3 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
 import MantenimientosCarousel, { type Card } from './MantenimientosCarousel';
 
 function ColumnHeader({ icon, label }: { icon: string; label: string }) {
@@ -21,36 +18,20 @@ interface Props {
 }
 
 export default function MantenimientosGrid({ torresCards, portatilesCards, otrosCards }: Props) {
-  const middleRef = useRef<HTMLDivElement>(null);
-  const [syncedHeight, setSyncedHeight] = useState<number | undefined>(undefined);
-
-  useEffect(() => {
-    const measure = () => {
-      const card = middleRef.current?.querySelector('[data-mcard]') as HTMLElement | null;
-      if (card) setSyncedHeight(card.offsetHeight);
-    };
-
-    measure();
-
-    const ro = new ResizeObserver(measure);
-    if (middleRef.current) ro.observe(middleRef.current);
-    return () => ro.disconnect();
-  }, []);
-
   return (
     <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-      {/* Carrusel 1 — Torres */}
+      {/* Columna 1 — Torres */}
       <div>
         <ColumnHeader icon="🖥️" label="Torres" />
         {torresCards.length > 0 ? (
-          <MantenimientosCarousel cards={torresCards} height={syncedHeight} />
+          <MantenimientosCarousel cards={torresCards} />
         ) : (
           <p className="text-sm italic text-slate-600">Sin tarjetas todavía.</p>
         )}
       </div>
 
-      {/* Carrusel 2 — Portátiles (referencia de altura) */}
-      <div ref={middleRef}>
+      {/* Columna 2 — Portátiles */}
+      <div>
         <ColumnHeader icon="💻" label="Portátiles" />
         {portatilesCards.length > 0 ? (
           <MantenimientosCarousel cards={portatilesCards} />
@@ -59,12 +40,12 @@ export default function MantenimientosGrid({ torresCards, portatilesCards, otros
         )}
       </div>
 
-      {/* Carrusel 3 — Otros Equipos */}
+      {/* Columna 3 — Otros Equipos */}
       <div className="md:col-span-2 lg:col-span-1">
         <div className="md:mx-auto md:max-w-[calc(50%-20px)] lg:max-w-full">
           <ColumnHeader icon="🎮" label="Otros Equipos" />
           {otrosCards.length > 0 ? (
-            <MantenimientosCarousel cards={otrosCards} height={syncedHeight} />
+            <MantenimientosCarousel cards={otrosCards} />
           ) : (
             <p className="text-sm italic text-slate-600">Sin tarjetas todavía.</p>
           )}

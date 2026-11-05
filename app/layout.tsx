@@ -67,11 +67,6 @@ export const metadata: Metadata = {
     follow: true,
     nocache: false,
   },
-
-  // Verificación del sitio
-  verification: {
-    google: 'your-google-site-verification',
-  },
 };
 
 // Configuración del viewport para optimizar en mobile

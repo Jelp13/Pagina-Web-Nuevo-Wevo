@@ -10,8 +10,15 @@ import { getTorres, getFeaturedTorres } from '@/lib/products-db';
 import { getFeaturedTorresIds, getPageTitles, getQuizQuestionTexts } from '@/lib/site-settings';
 import { getBrandsForPublic } from '@/lib/brands-db';
 import { QUIZ_QUESTIONS } from '@/lib/constants';
+import { absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata = {
+  title: 'Recomendación Inteligente de PC Gamer | Nuevo Wevo',
+  description: 'Responde unas preguntas rápidas y te recomendamos la torre gamer ideal para tu presupuesto y uso.',
+  alternates: { canonical: absoluteUrl('/quiz') },
+};
 
 export default async function QuizPage() {
   const featuredIds = await getFeaturedTorresIds();

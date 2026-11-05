@@ -11,7 +11,7 @@ import { getTorreById, getFeaturedTorres } from '@/lib/products-db';
 import { getFeaturedTorresIds } from '@/lib/site-settings';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
-import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph } from '@/lib/seo';
+import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   return {
     title: `${product.name} | Nuevo Wevo`,
     description: truncateForMeta(product.shortDescription ?? product.description),
+    alternates: { canonical: absoluteUrl(`/torres/${product.id}`) },
     openGraph: buildProductOpenGraph({
       name: product.name,
       description: product.description,

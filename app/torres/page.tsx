@@ -6,6 +6,7 @@ import { getTorres } from '@/lib/products-db';
 import { getPageTitles } from '@/lib/site-settings';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+import { absoluteUrl } from '@/lib/seo';
 
 // Dinámica siempre: los productos nuevos deben verse de inmediato, sin
 // depender de la revalidación por tiempo (ISR) ni de que se dispare bien
@@ -15,6 +16,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Torres Gamer en Colombia | Nuevo Wevo',
   description: 'Torres gamer y computadores gaming armados en Colombia. Envío a todo el país y asesoría personalizada.',
+  alternates: { canonical: absoluteUrl('/torres') },
 };
 
 export default async function TorresPage() {

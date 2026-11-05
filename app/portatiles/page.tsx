@@ -6,6 +6,7 @@ import { getLaptopProducts } from '@/lib/products-db';
 import { getPageTitles } from '@/lib/site-settings';
 import { WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
+import { absoluteUrl } from '@/lib/seo';
 
 // Dinámica siempre: los productos nuevos deben verse de inmediato, sin
 // depender de la revalidación por tiempo (ISR) ni de que se dispare bien
@@ -15,6 +16,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Portátiles Gamer en Colombia | Nuevo Wevo',
   description: 'Portátiles gamer para juegos, estudio y trabajo diario, con envío a toda Colombia.',
+  alternates: { canonical: absoluteUrl('/portatiles') },
 };
 
 export default async function PortatilesPage() {

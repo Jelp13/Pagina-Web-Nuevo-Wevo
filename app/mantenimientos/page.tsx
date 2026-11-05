@@ -7,12 +7,14 @@ import ContactoMantenimientos from '@/components/ContactoMantenimientos';
 import { getMantenimientosEmpresasVideo } from '@/lib/videos-db';
 import { getAllMaintenanceCards } from '@/lib/maintenance-cards-db';
 import { getContactInfo, getPageTitles } from '@/lib/site-settings';
+import { absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Mantenimientos | Nuevo Wevo',
   description: 'Servicio de mantenimiento preventivo para computadores, portátiles, consolas y equipos de alto rendimiento en Colombia.',
+  alternates: { canonical: absoluteUrl('/mantenimientos') },
 };
 
 export default async function MantenimientosPage() {
