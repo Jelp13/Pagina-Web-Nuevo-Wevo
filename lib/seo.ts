@@ -23,8 +23,32 @@ export interface ProductJsonLdInput {
   path: string; // ej. '/torres/mi-torre'
 }
 
-function absoluteUrl(url: string): string {
+export function absoluteUrl(url: string): string {
   return url.startsWith('http') ? url : `${SITE_URL}${url}`;
+}
+
+export interface ProductOpenGraphInput {
+  name: string;
+  description: string;
+  shortDescription?: string;
+  images: string[];
+  path: string;
+}
+
+// Open Graph específico del producto — sin esto, compartir la ficha de
+// cualquier producto muestra siempre el título/imagen genérico de la
+// home, porque Next hereda tal cual el openGraph del layout si la página
+// no define el suyo propio.
+export function buildProductOpenGraph(product: ProductOpenGraphInput) {
+  const description = truncateForMeta(product.shortDescription ?? product.description);
+  return {
+    title: product.name,
+    description,
+    url: absoluteUrl(product.path),
+    images: product.images.length > 0
+      ? [{ url: absoluteUrl(product.images[0]), width: 1200, height: 630, alt: product.name }]
+      : undefined,
+  };
 }
 
 // Datos estructurados (schema.org/Product) para que Google pueda mostrar

@@ -10,7 +10,7 @@ import ProductImage from '@/components/ProductImage';
 import { getLaptopProducts, getLaptopById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
-import { truncateForMeta, buildProductJsonLd } from '@/lib/seo';
+import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +20,13 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   return {
     title: `${product.name} | Nuevo Wevo`,
     description: truncateForMeta(product.shortDescription ?? product.description),
+    openGraph: buildProductOpenGraph({
+      name: product.name,
+      description: product.description,
+      shortDescription: product.shortDescription,
+      images: product.images,
+      path: `/portatiles/${product.id}`,
+    }),
   };
 }
 
