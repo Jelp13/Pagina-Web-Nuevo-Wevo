@@ -20,17 +20,19 @@ export default function RelatedProducts({ products }: { products: Product[] }) {
               href={`/torres/${p.id}`}
               className="group relative flex flex-col gap-4 rounded-[24px] border border-cyan-400/10 bg-white/5 p-5 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20 hover:bg-white/10"
             >
-              {p.badge && (
-                <span className="absolute left-5 top-5 rounded-full bg-cyan-300/15 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-cyan-100">
-                  {p.badge}
-                </span>
-              )}
-              {discount && (
-                <span className="absolute right-5 top-5 rounded-full bg-red-500/20 px-2 py-1 text-[10px] font-bold text-red-300">
-                  -{discount}%
-                </span>
-              )}
-              <ProductImage src={p.images[0]} alt={p.name} className="h-52 rounded-2xl bg-slate-950/80" iconSize="text-4xl" />
+              <div className="relative">
+                <ProductImage src={p.images[0]} alt={p.name} className="h-52 rounded-2xl bg-slate-950/80" iconSize="text-4xl" />
+                {p.badge && (
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-cyan-400 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-950 shadow-lg">
+                    {p.badge}
+                  </span>
+                )}
+                {discount && (
+                  <span className="absolute right-3 top-3 z-10 rounded-full bg-red-500 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-lg">
+                    -{discount}%
+                  </span>
+                )}
+              </div>
               <div className="flex flex-col gap-2">
                 <span className="text-xs uppercase tracking-[0.18em] text-cyan-300">{p.category}</span>
                 <h3 className="font-bold text-white group-hover:text-cyan-100 transition-colors">{p.name}</h3>

@@ -84,12 +84,12 @@ export default async function TowerDetailPage({ params }: { params: { id: string
           {/* Galería */}
           <div className="relative">
             {product.badge && (
-              <span className="absolute left-5 top-5 z-10 rounded-full bg-cyan-300/15 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-cyan-100">
+              <span className="absolute left-5 top-5 z-10 rounded-full bg-cyan-400 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-950 shadow-lg">
                 {product.badge}
               </span>
             )}
             {discount && (
-              <span className="absolute right-5 top-5 z-10 rounded-full bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300">
+              <span className="absolute right-5 top-5 z-10 rounded-full bg-red-500 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-white shadow-lg">
                 -{discount}% OFF
               </span>
             )}
