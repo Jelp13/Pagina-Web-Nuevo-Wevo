@@ -13,8 +13,8 @@ import { formatCOP } from '@/lib/format';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Portátiles | Nuevo Wevo',
-  description: 'Catálogo completo de portátiles para gaming, estudio y trabajo diario.',
+  title: 'Portátiles Gamer en Colombia | Nuevo Wevo',
+  description: 'Portátiles gamer para juegos, estudio y trabajo diario, con envío a toda Colombia.',
 };
 
 export default async function PortatilesPage() {

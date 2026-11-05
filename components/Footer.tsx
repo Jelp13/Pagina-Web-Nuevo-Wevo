@@ -15,7 +15,6 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
               <li><a href={ROUTES.torres} className="hover:text-cyan-300">Torres</a></li>
               <li><a href={ROUTES.peripherals} className="hover:text-cyan-300">Periféricos</a></li>
-              <li><a href={ROUTES.brands} className="hover:text-cyan-300">Marcas</a></li>
             </ul>
           </div>
           <div>

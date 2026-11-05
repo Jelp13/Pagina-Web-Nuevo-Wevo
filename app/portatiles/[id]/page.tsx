@@ -164,10 +164,6 @@ export default async function PortatilDetailPage({
                 Cotizar por WhatsApp
               </a>
             </div>
-
-            <p className="text-center text-xs text-slate-600">
-              Envío a toda Colombia · IVA incluido · Soporte técnico incluido
-            </p>
           </div>
         </div>
       </section>

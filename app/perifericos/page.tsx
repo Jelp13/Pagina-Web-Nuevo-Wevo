@@ -11,8 +11,8 @@ import { formatCOP } from '@/lib/format';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Periféricos | Nuevo Wevo',
-  description: 'Catálogo completo de periféricos gaming: monitores, mouse, teclados, audífonos y más.',
+  title: 'Periféricos Gamer en Colombia | Nuevo Wevo',
+  description: 'Periféricos gamer en Colombia: monitores, mouse, teclados y audífonos gaming con envío a todo el país.',
 };
 
 export default async function Perifericos({

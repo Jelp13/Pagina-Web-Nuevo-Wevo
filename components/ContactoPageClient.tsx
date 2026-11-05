@@ -64,7 +64,12 @@ export default function ContactoPageClient({ contactInfo, hero }: { contactInfo:
           >
             <span className="text-3xl">📞</span>
             <p className="font-bold text-white">Llamadas</p>
-            <p className="text-sm text-slate-400">¿Prefieres hablar directamente? Llámanos en nuestro horario de atención.</p>
+            <p className="text-sm text-slate-400">¿Prefieres hablar directamente? Llámanos en nuestro horario de atención:</p>
+            <p className="text-xs text-slate-500">
+              {contactInfo.hours.split('\n').map((line, i) => (
+                <span key={i} className="block">{line}</span>
+              ))}
+            </p>
             <span className="mt-auto text-sm font-semibold text-cyan-300">{formatPhoneCO(contactInfo.phone)} →</span>
           </a>
 
@@ -110,7 +115,7 @@ export default function ContactoPageClient({ contactInfo, hero }: { contactInfo:
                     required
                     value={form.nombre}
                     onChange={handleChange}
-                    placeholder="Juan Pérez"
+                    placeholder="Tu nombre completo"
                     className="rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/20 transition-colors"
                   />
                 </div>
@@ -122,7 +127,7 @@ export default function ContactoPageClient({ contactInfo, hero }: { contactInfo:
                     required
                     value={form.email}
                     onChange={handleChange}
-                    placeholder="juan@correo.com"
+                    placeholder="correo@ejemplo.com"
                     className="rounded-2xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/20 transition-colors"
                   />
                 </div>

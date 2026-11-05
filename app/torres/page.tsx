@@ -13,8 +13,8 @@ import { formatCOP } from '@/lib/format';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Torres | Nuevo Wevo',
-  description: 'Catálogo completo de torres gaming minimalistas. Encuentra tu PC ideal.',
+  title: 'Torres Gamer en Colombia | Nuevo Wevo',
+  description: 'Torres gamer y computadores gaming armados en Colombia. Envío a todo el país y asesoría personalizada.',
 };
 
 export default async function TorresPage() {

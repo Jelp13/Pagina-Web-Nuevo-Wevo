@@ -55,7 +55,7 @@ export default function ProductCard({ product }: Props) {
       <ProductImage
         src={product.images[0]}
         alt={product.name}
-        className={`mb-6 h-56 rounded-3xl bg-slate-950/90 ${!product.inStock ? 'opacity-50' : ''}`}
+        className={`mb-6 h-56 rounded-3xl bg-slate-950/90 ${!product.inStock ? 'opacity-80' : ''}`}
         iconSize="text-6xl"
       />
 
