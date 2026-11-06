@@ -10,14 +10,14 @@ import ProductImage from '@/components/ProductImage';
 import { getPeripheralProducts, getPeripheralById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
-import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, buildProductTitle, absoluteUrl } from '@/lib/seo';
+import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, buildPeripheralTitle, absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getPeripheralById(params.id);
   if (!product) return {};
-  const title = buildProductTitle({ name: product.name, fullSpecs: product.fullSpecs, kind: 'Periférico Gamer' });
+  const title = buildPeripheralTitle({ name: product.name, categorySlug: product.categorySlug, fullSpecs: product.fullSpecs });
   return {
     title,
     description: truncateForMeta(product.shortDescription ?? product.description),
