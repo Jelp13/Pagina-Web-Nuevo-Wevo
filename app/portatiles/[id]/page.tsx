@@ -10,24 +10,28 @@ import ProductImage from '@/components/ProductImage';
 import { getLaptopProducts, getLaptopById } from '@/lib/products-db';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
-import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, absoluteUrl } from '@/lib/seo';
+import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, buildProductTitle, absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getLaptopById(params.id);
   if (!product) return {};
+  const title = buildProductTitle({ name: product.name, fullSpecs: product.fullSpecs, kind: 'Portátil Gamer' });
   return {
-    title: `${product.name} | Nuevo Wevo`,
+    title,
     description: truncateForMeta(product.shortDescription ?? product.description),
     alternates: { canonical: absoluteUrl(`/portatiles/${product.id}`) },
-    openGraph: buildProductOpenGraph({
-      name: product.name,
-      description: product.description,
-      shortDescription: product.shortDescription,
-      images: product.images,
-      path: `/portatiles/${product.id}`,
-    }),
+    openGraph: {
+      ...buildProductOpenGraph({
+        name: product.name,
+        description: product.description,
+        shortDescription: product.shortDescription,
+        images: product.images,
+        path: `/portatiles/${product.id}`,
+      }),
+      title,
+    },
   };
 }
 

@@ -11,24 +11,28 @@ import { getTorreById, getFeaturedTorres } from '@/lib/products-db';
 import { getFeaturedTorresIds } from '@/lib/site-settings';
 import { ROUTES, WHATSAPP_LINK } from '@/lib/config';
 import { formatCOP } from '@/lib/format';
-import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, absoluteUrl } from '@/lib/seo';
+import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, buildProductTitle, absoluteUrl } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const product = await getTorreById(params.id);
   if (!product) return {};
+  const title = buildProductTitle({ name: product.name, fullSpecs: product.fullSpecs, kind: 'PC Gamer' });
   return {
-    title: `${product.name} | Nuevo Wevo`,
+    title,
     description: truncateForMeta(product.shortDescription ?? product.description),
     alternates: { canonical: absoluteUrl(`/torres/${product.id}`) },
-    openGraph: buildProductOpenGraph({
-      name: product.name,
-      description: product.description,
-      shortDescription: product.shortDescription,
-      images: product.images,
-      path: `/torres/${product.id}`,
-    }),
+    openGraph: {
+      ...buildProductOpenGraph({
+        name: product.name,
+        description: product.description,
+        shortDescription: product.shortDescription,
+        images: product.images,
+        path: `/torres/${product.id}`,
+      }),
+      title,
+    },
   };
 }
 

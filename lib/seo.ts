@@ -12,6 +12,53 @@ export function truncateForMeta(text: string, maxLength = 155): string {
   return `${cut.slice(0, lastSpace > 0 ? lastSpace : maxLength)}…`;
 }
 
+export interface ProductSpecLite {
+  label: string;
+  value: string;
+}
+
+// "AMD Ryzen 5 7600X (6C/12T, hasta 5.3 GHz)" -> "Ryzen 5 7600X"
+function shortenCpu(raw: string): string {
+  return raw
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/^AMD\s+/i, '')
+    .replace(/^Intel\s+/i, '')
+    .trim();
+}
+
+// "NVIDIA GeForce RTX 5060 Ti 8GB" -> "RTX 5060 Ti"
+function shortenGpu(raw: string): string {
+  return raw
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/^NVIDIA\s+GeForce\s+/i, '')
+    .replace(/^NVIDIA\s+/i, '')
+    .replace(/^AMD\s+/i, '')
+    .replace(/\s+\d+\s*GB$/i, '')
+    .trim();
+}
+
+// Título de producto enriquecido con CPU/GPU para búsqueda ("Torre Wevo
+// Pochado – PC Gamer Ryzen 5 7600X RTX 5060 Ti | Nuevo Wevo") en vez del
+// genérico "{nombre} | Nuevo Wevo". Las specs son texto libre cargado
+// desde el panel admin (sin una etiqueta fija), así que se busca por
+// coincidencia de palabra clave en el label, no por un nombre exacto.
+// Si no hay CPU/GPU identificable (periféricos) o el resultado queda
+// demasiado largo para un title tag, cae de vuelta al título simple.
+export function buildProductTitle(input: { name: string; fullSpecs: ProductSpecLite[]; kind: string }): string {
+  const cpuSpec = input.fullSpecs.find((s) => /procesador|\bcpu\b/i.test(s.label));
+  const gpuSpec = input.fullSpecs.find((s) => /gr[aá]fic|\bgpu\b/i.test(s.label));
+
+  const parts: string[] = [];
+  if (cpuSpec?.value) parts.push(shortenCpu(cpuSpec.value));
+  if (gpuSpec?.value) parts.push(shortenGpu(gpuSpec.value));
+
+  if (parts.length === 0) return `${input.name} | Nuevo Wevo`;
+
+  const core = `${input.name} – ${input.kind} ${parts.join(' ')}`;
+  if (core.length > 75) return `${input.name} | Nuevo Wevo`;
+  return `${core} | Nuevo Wevo`;
+}
+
 export interface ProductJsonLdInput {
   id: string;
   name: string;
