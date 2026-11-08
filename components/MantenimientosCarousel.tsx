@@ -42,19 +42,22 @@ export default function MantenimientosCarousel({ cards }: { cards: Card[] }) {
             </div>
           </div>
 
-          {/* Services section */}
+          {/* Services section — chips compactos en vez de lista en dos
+              columnas: dicen lo mismo ocupando menos espacio vertical. */}
           <div className="flex-1 border-t border-cyan-400/10 p-7">
             {card.services ? (
               <>
                 <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                   Servicios disponibles
                 </p>
-                <div className="grid grid-cols-1 gap-y-2.5 sm:grid-cols-2 sm:gap-x-6">
+                <div className="flex flex-wrap gap-2">
                   {card.services.map((s) => (
-                    <div key={s} className="flex items-center gap-2.5 text-sm text-slate-400">
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400/70" />
+                    <span
+                      key={s}
+                      className="rounded-full border border-cyan-400/15 bg-white/5 px-3 py-1.5 text-xs text-slate-300"
+                    >
                       {s}
-                    </div>
+                    </span>
                   ))}
                 </div>
               </>
