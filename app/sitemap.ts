@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/config';
 import { getTorres, getLaptopProducts, getPeripheralProducts } from '@/lib/products-db';
+import { PERIPHERALS } from '@/lib/constants';
 
 // force-dynamic (igual que el resto de páginas del sitio): evita que Next
 // intente conectarse a la base de datos durante el build para "congelar"
@@ -33,11 +34,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
   }));
 
+  const categoriasPerifericos: MetadataRoute.Sitemap = PERIPHERALS.map((cat) => ({
+    url: `${SITE_URL}/perifericos/categoria/${cat.slug}`,
+    lastModified: new Date(),
+  }));
+
   const productos: MetadataRoute.Sitemap = [
     ...torres.map((p) => ({ url: `${SITE_URL}/torres/${p.id}`, lastModified: new Date() })),
     ...portatiles.map((p) => ({ url: `${SITE_URL}/portatiles/${p.id}`, lastModified: new Date() })),
     ...perifericos.map((p) => ({ url: `${SITE_URL}/perifericos/${p.id}`, lastModified: new Date() })),
   ];
 
-  return [...estaticas, ...productos];
+  return [...estaticas, ...categoriasPerifericos, ...productos];
 }
