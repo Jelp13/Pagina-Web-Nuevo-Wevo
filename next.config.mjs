@@ -1,5 +1,21 @@
 const nextConfig = {
   reactStrictMode: true,
+  // www.nuevowevo.com servía una copia completa del sitio (200 en cada
+  // página) en vez de redirigir a la versión sin "www", que es la única
+  // que se usa como canonical en todo el código (SITE_URL en lib/config.ts).
+  // Google terminaba rastreando el sitio dos veces — eso infla de más el
+  // reporte de Search Console de "página alternativa con canónica
+  // adecuada", aunque cada una apuntara bien a la version correcta.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.nuevowevo.com' }],
+        destination: 'https://nuevowevo.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     // Evita que el build abra demasiadas conexiones simultáneas a MySQL
     // durante la generación de páginas estáticas (el plan de Hostinger
