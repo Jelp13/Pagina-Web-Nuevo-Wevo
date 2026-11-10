@@ -127,8 +127,11 @@ export default async function AdminVentasPage({
                       <p className="font-semibold text-white">
                         {p.nombres} {p.apellidos}
                       </p>
+                      <p className="text-xs text-slate-500">{p.tipoDocumento} {p.documento}</p>
                       <p className="text-xs text-slate-500">{p.email}</p>
                       <p className="text-xs text-slate-500">{p.telefono}</p>
+                      <p className="text-xs text-slate-500">{p.direccion}</p>
+                      <p className="text-xs text-slate-500">{p.ciudad}, {p.departamento}</p>
                     </td>
                     <td className="px-5 py-4 text-slate-300">
                       {p.items.map((item, i) => (

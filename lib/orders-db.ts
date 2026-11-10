@@ -219,7 +219,12 @@ export interface AdminOrder {
   nombres: string;
   apellidos: string;
   email: string;
+  tipoDocumento: string;
+  documento: string;
   telefono: string;
+  direccion: string;
+  departamento: string;
+  ciudad: string;
   items: OrderItem[];
   total: number;
   paymentMethod: string;
@@ -246,7 +251,12 @@ export async function getAllOrdersForAdmin(): Promise<AdminOrder[]> {
     nombres: r.nombres,
     apellidos: r.apellidos,
     email: r.email,
+    tipoDocumento: r.tipo_documento,
+    documento: r.documento,
     telefono: r.telefono,
+    direccion: r.direccion,
+    departamento: r.departamento,
+    ciudad: r.ciudad,
     items: parseItems(r.items),
     total: r.total,
     paymentMethod: r.payment_method,
