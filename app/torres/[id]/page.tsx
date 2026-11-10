@@ -15,7 +15,8 @@ import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, buildProduc
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const product = await getTorreById(params.id);
   if (!product) return {};
   const title = buildProductTitle({ name: product.name, fullSpecs: product.fullSpecs, kind: 'PC Gamer' });
@@ -36,7 +37,8 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default async function TowerDetailPage({ params }: { params: { id: string } }) {
+export default async function TowerDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const product = await getTorreById(params.id);
   if (!product) notFound();
 

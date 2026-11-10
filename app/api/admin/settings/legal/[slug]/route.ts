@@ -5,7 +5,8 @@ import { LEGAL_SLUGS } from '@/lib/legal-pages-defaults';
 import type { LegalSlug } from '@/lib/legal-pages-defaults';
 import { requireApiSession } from '@/lib/require-session';
 
-export async function PATCH(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req, { role: 'admin' });
   if ('error' in auth) return auth.error;
 

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getVideoById } from '@/lib/admin-videos';
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const id = Number(params.id);
   if (!Number.isInteger(id)) return new NextResponse('Not found', { status: 404 });
 

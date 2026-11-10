@@ -3,7 +3,8 @@ import { revalidatePath } from 'next/cache';
 import { updateBrandName, deleteBrand } from '@/lib/brands-db';
 import { requireApiSession } from '@/lib/require-session';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req, { role: 'admin' });
   if ('error' in auth) return auth.error;
 
@@ -27,7 +28,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req, { role: 'admin' });
   if ('error' in auth) return auth.error;
 

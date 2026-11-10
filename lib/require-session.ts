@@ -28,7 +28,7 @@ export async function requireApiSession(
 }
 
 export async function requirePageSession(options: { role?: AdminRole } = {}): Promise<AdminSession> {
-  const token = cookies().get(SESSION_COOKIE)?.value;
+  const token = (await cookies()).get(SESSION_COOKIE)?.value;
   const session = token ? await verifySessionToken(token) : null;
 
   if (!session) redirect('/admin/login');

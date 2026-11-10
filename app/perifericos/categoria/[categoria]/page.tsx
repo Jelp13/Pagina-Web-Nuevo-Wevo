@@ -11,7 +11,8 @@ import { PERIPHERAL_CATEGORY_SEO } from '@/lib/peripheral-category-seo';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { categoria: string } }) {
+export async function generateMetadata(props: { params: Promise<{ categoria: string }> }) {
+  const params = await props.params;
   const seo = PERIPHERAL_CATEGORY_SEO[params.categoria];
   if (!seo) return {};
   return {
@@ -21,7 +22,8 @@ export async function generateMetadata({ params }: { params: { categoria: string
   };
 }
 
-export default async function PerifericoCategoriaPage({ params }: { params: { categoria: string } }) {
+export default async function PerifericoCategoriaPage(props: { params: Promise<{ categoria: string }> }) {
+  const params = await props.params;
   const categoria = PERIPHERALS.find((p) => p.slug === params.categoria);
   if (!categoria) notFound();
 

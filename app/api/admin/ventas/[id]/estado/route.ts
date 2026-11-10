@@ -11,7 +11,8 @@ function parseItems(json: unknown) {
 
 const VALID_TARGET_STATUS = ['pagado', 'cancelado'] as const;
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req);
   if ('error' in auth) return auth.error;
   const { session } = auth;

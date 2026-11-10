@@ -6,7 +6,8 @@ import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminProductoEditPage({ params }: { params: { id: string } }) {
+export default async function AdminProductoEditPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   await requirePageSession();
 
   const producto = await getAdminProductById(params.id);

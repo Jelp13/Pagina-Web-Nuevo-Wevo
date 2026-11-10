@@ -46,11 +46,12 @@ function formatFecha(date: Date): string {
   }).format(new Date(date));
 }
 
-export default async function AdminVentasPage({
-  searchParams,
-}: {
-  searchParams: { estado?: string };
-}) {
+export default async function AdminVentasPage(
+  props: {
+    searchParams: Promise<{ estado?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   await requirePageSession();
 
   const pedidos = await getAllOrdersForAdmin();

@@ -12,7 +12,8 @@ function revalidateForPlacement(placement: string) {
   if (placement === 'mantenimientos_empresas') revalidatePath('/mantenimientos');
 }
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req, { role: 'admin' });
   if ('error' in auth) return auth.error;
 

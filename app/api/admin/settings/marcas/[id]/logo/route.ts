@@ -7,7 +7,8 @@ import { verifyImageType } from '@/lib/validate-file';
 const MAX_SIZE = 4 * 1024 * 1024; // 4MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req, { role: 'admin' });
   if ('error' in auth) return auth.error;
 

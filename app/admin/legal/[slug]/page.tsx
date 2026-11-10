@@ -8,7 +8,8 @@ import { requirePageSession } from '@/lib/require-session';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminLegalEditPage({ params }: { params: { slug: string } }) {
+export default async function AdminLegalEditPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   await requirePageSession({ role: 'admin' });
 
   if (!LEGAL_SLUGS.includes(params.slug as LegalSlug)) notFound();

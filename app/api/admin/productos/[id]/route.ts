@@ -5,7 +5,8 @@ import { sanitizeRows } from '@/lib/sanitize-list-fields';
 import { requireApiSession } from '@/lib/require-session';
 import type { ProductSpec, GamingPerf, CreativePerf, ProductFeature } from '@/lib/constants';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req);
   if ('error' in auth) return auth.error;
 
@@ -76,7 +77,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const auth = await requireApiSession(req);
   if ('error' in auth) return auth.error;
 

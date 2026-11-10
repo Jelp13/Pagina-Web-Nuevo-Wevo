@@ -14,7 +14,8 @@ import { truncateForMeta, buildProductJsonLd, buildProductOpenGraph, buildPeriph
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const product = await getPeripheralById(params.id);
   if (!product) return {};
   const title = buildPeripheralTitle({ name: product.name, categorySlug: product.categorySlug, fullSpecs: product.fullSpecs });
@@ -35,11 +36,12 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default async function PerifericoDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function PerifericoDetailPage(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const product = await getPeripheralById(params.id);
   if (!product) notFound();
 

@@ -16,11 +16,12 @@ export const metadata = {
   alternates: { canonical: absoluteUrl('/perifericos') },
 };
 
-export default async function Perifericos({
-  searchParams,
-}: {
-  searchParams: { categoria?: string };
-}) {
+export default async function Perifericos(
+  props: {
+    searchParams: Promise<{ categoria?: string }>;
+  }
+) {
+  const searchParams = await props.searchParams;
   const categoriaActiva = searchParams.categoria ?? null;
 
   const [todosLosPerifericos, titles] = await Promise.all([getPeripheralProducts(), getPageTitles()]);
