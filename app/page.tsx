@@ -158,7 +158,7 @@ export default async function Home() {
             href={ROUTES.quiz}
             className="mt-8 inline-flex rounded-full bg-gradient-to-r from-cyan-300 to-blue-500 px-8 py-4 text-sm font-semibold text-slate-950 shadow-lg hover:opacity-95 transition-opacity"
           >
-            Encunentra tu PC ideal 
+            Encuentra tu PC ideal
           </a>
         </div>
       </section>
